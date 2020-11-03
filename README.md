@@ -4,7 +4,7 @@
 
 Go to the repo directory
 
-```d <path>/ByteCryb/```
+```cd <path>/ByteCryb/```
 
 # Using Docker
 
