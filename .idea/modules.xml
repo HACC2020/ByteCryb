@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/clio-web.iml" filepath="$PROJECT_DIR$/.idea/clio-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ByteCryb.iml" filepath="$PROJECT_DIR$/.idea/ByteCryb.iml" />
     </modules>
   </component>
 </project>
