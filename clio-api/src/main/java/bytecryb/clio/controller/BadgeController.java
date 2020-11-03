@@ -1,12 +1,17 @@
 package bytecryb.clio.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestController;
 
 import bytecryb.clio.repository.BadgeRepository;
 import bytecryb.clio.repository.Badge;
 
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping("/api/badges")
@@ -20,7 +25,7 @@ public class BadgeController {
         return this.badgeRepo.findAll();
     }
 
-    //get badge by score
+    /*//get badge by score
     @GetMapping("/{score}")
     public ResponseEntity<Badge> getBadgeByScore(@PathVariable(value = "score") Integer score)
         throws ResourceNotFoundException {
@@ -28,6 +33,6 @@ public class BadgeController {
                 .orElseThrow(() -> new ResourceNotFoundException("Badge not found for this score: " + badge));       
         
         return ResponseEntity.ok().body(badge);
-        }
+        }*/
 
 }
