@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: clio
+      POSTGRES_USER: the_monitor
+      POSTGRES_PASSWORD: 4n9MTY6bJ5IeZuqEwwBN
+    volumes:
+      - ./sql-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
