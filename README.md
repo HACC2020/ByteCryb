@@ -14,11 +14,13 @@ run ```docker-compose up -d``` (-d = run in background) to setup PostgreSQL
 
 run ```docker-compose down``` to shutdown container
 
-To start the backend
+To start the backend:
 
 ```cd clio-api```
 
 run ```./mvnw spring-boot:run```
+
+Crtl + C to shutdown
 
 # Copyright © 2020 ByteCryb
 
