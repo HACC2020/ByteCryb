@@ -1,17 +1,21 @@
 # Team: ByteCryb
 
 # Setup
+
 Go to the repo directory
+
 'cd pathToDir/ByteCryb/'
 
 To setup PostgreSQL
-!!! Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
-run 'docker-compose up -d'
--d = run in background
+Install Docker Desktop: https://www.docker.com/products/docker-desktop
+
+run 'docker-compose up -d' (-d = run in background)
 
 To start the backend
+
 'cd clio-api'
+
 run './mvnw spring-boot:run'
 
 Copyright © 2020 ByteCryb
