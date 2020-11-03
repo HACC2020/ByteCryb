@@ -6,9 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import jdk.jfr.events.CertificateId;
 
 @Entity
 @Table(name = "badges")
@@ -23,7 +22,7 @@ public class Badge {
     @Column(name = "name")
     private String name;
 
-    @Column(score = "score")
+    @Column(name = "score")
     private int score;
 
     public Badge() {
@@ -51,7 +50,7 @@ public class Badge {
         this.name = name;
     }
 
-    public int setScore(int score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
