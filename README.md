@@ -5,10 +5,10 @@ Go to the repo directory
 'cd pathToDir/ByteCryb/'
 
 To setup PostgreSQL
-* Install Docker Desktop: https://www.docker.com/products/docker-desktop
+!!! Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
 run 'docker-compose up -d'
-*-d = run in background
+-d = run in background
 
 To start the backend
 'cd clio-api'
