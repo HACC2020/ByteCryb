@@ -1,17 +1,8 @@
 import React from 'react';
-import { Navbar, Nav, NavDropdown, Form, Button, FormControl, Image } from 'react-bootstrap';
-import { Link, withRouter } from 'react-router-dom';
+import { Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
 
 class NavBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    }
-  }
-
-  handleItemClick = (e, { name }) => {
-    this.setState({ activeItem: name });
-  };
 
   render() {
 
@@ -30,7 +21,7 @@ class NavBar extends React.Component {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link href="/features">Categories</Nav.Link>
-              <Nav.Link href="/leaderbaord">Leaderboard</Nav.Link>
+              <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
             </Nav>
             <Nav>
               <NavDropdown title="Profile" id="collasible-nav-dropdown" drop={'left'}>

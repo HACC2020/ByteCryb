@@ -1,30 +1,48 @@
 import React from 'react';
-import { Container, Row, Col, Image, Form, Button, NavLink } from 'react-bootstrap';
-import { Link, withRouter } from 'react-router-dom';
+import { Container, Row, Col, Card, Button, ListGroup } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
+import { faFileAlt, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class Landing extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      month: 0
+    }
   }
 
-  handleItemClick = (e, { name }) => {
-    this.setState({ activeItem: name });
-  };
 
   render() {
-    const { activeItem } = this.state;
 
-    const imgStyle = {
-      height: '20%',
-      width: 'auto',
+    const months = ['All Time', 'Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept',
+                    'Oct', 'Nov', 'Dec'];
+
+    const onNextMonth = () => {
+      if (this.state.month >= 12 || this.state.month < 0) {
+        this.setState({ month: 0 })
+      } else {
+        const number = this.state.month + 1;
+        this.setState({ month: number })
+      }
     };
 
+    const onPrevMonth = () => {
+      if (this.state.month > 12) {
+        this.setState({ month: 0 })
+      } else if (this.state.month <= 0) {
+        this.setState({ month: 12 })
+      } else {
+        const number = this.state.month - 1 ;
+        this.setState({ month: number })
+      }
+    };
+    
     return (
         <Container>
           <Row>
             <Col xs={6}>
-              <Image src={'./hsa-logo.png'} style={imgStyle} />
+              <h2 align={'center'}>Categories</h2>
               <p style={{ paddingTop: '1rem' }}>
                 We need your help! The Public Archives of Hawai'i is the keeper of public memory.
                 As such, we have millions of records that protect your rights, identity, property
@@ -36,25 +54,45 @@ class Landing extends React.Component {
               </p>
             </Col>
             <Col xs={6}>
-              <h2 align={'center'}>Login</h2>
-              <Form>
-                <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control type="email" placeholder="Enter email" />
-                </Form.Group>
-
-                <Form.Group controlId="formBasicPassword">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Password" />
-                  <Form.Text className="text-muted">
-                    <NavLink href="/signup">Not registered yet? Sign up here!
-                    </NavLink>
-                  </Form.Text>
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                  Login
-                </Button>
-              </Form>
+              <Card className="text-center">
+                <Card.Header>
+                  <Card.Title>
+                    <FontAwesomeIcon icon={faAngleLeft} style={{ marginRight: '0.5rem' }}
+                      onClick={onPrevMonth}/>
+                    Leaderboard
+                    <FontAwesomeIcon icon={faAngleRight} style={{ marginLeft: '0.5rem' }}
+                      onClick={onNextMonth}/>
+                  </Card.Title>
+                  ({months[this.state.month]})
+                </Card.Header>
+                <Card.Body>
+                  <ListGroup variant="flush">
+                    <ListGroup.Item>John Foo - 423
+                      <FontAwesomeIcon icon={faFileAlt} style={{ marginLeft: '0.5rem' }}/>
+                    </ListGroup.Item>
+                    <ListGroup.Item>Jane Foo - 325 records</ListGroup.Item>
+                    <ListGroup.Item>Admin Hello - 210 records </ListGroup.Item>
+                    <ListGroup.Item>Jake Smith - 100 records </ListGroup.Item>
+                  </ListGroup>
+                </Card.Body>
+              </Card>
+              <Card className="text-center" style={{ marginTop: '3rem' }}>
+                <Card.Header>
+                  <Card.Title>
+                    Activity
+                  </Card.Title>
+                </Card.Header>
+                <Card.Body>
+                  <ListGroup variant="flush">
+                    <ListGroup.Item>John Foo - 423
+                      <FontAwesomeIcon icon={faFileAlt} style={{ marginLeft: '0.5rem' }}/>
+                    </ListGroup.Item>
+                    <ListGroup.Item>Jane Foo - 325 records</ListGroup.Item>
+                    <ListGroup.Item>Admin Hello - 210 records </ListGroup.Item>
+                    <ListGroup.Item>Jake Smith - 100 records </ListGroup.Item>
+                  </ListGroup>
+                </Card.Body>
+              </Card>
             </Col>
           </Row>
         </Container>

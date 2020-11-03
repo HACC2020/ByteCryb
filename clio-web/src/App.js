@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './ui/components/NavBar';
+import Login from './ui/pages/Login';
 import Landing from './ui/pages/Landing';
 
 class App extends React.Component {
@@ -11,7 +12,8 @@ class App extends React.Component {
         <Router>
           <NavBar/>
           <Switch>
-            <Route exact path='/' component={Landing}/>
+            <Route exact path='/' component={Login}/>
+            <Route exact path='/landing' component={Landing}/>
           </Switch>
         </Router>
         // <div className="App">
