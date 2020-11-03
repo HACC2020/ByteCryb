@@ -4,23 +4,23 @@
 
 Go to the repo directory
 
-{cd <path>/ByteCryb/}
+```d <path>/ByteCryb/```
 
-To setup PostgreSQL
+# Using Docker
 
 Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
-run {docker-compose up -d} (-d = run in background)
+run ```docker-compose up -d``` (-d = run in background) to setup PostgreSQL
 
-run {docker-compose down} to shutdown container
+run ```docker-compose down``` to shutdown container
 
 To start the backend
 
-{cd clio-api}
+```cd clio-api```
 
-run {./mvnw spring-boot:run}
+run ```./mvnw spring-boot:run```
 
-Copyright © 2020 ByteCryb
+# Copyright © 2020 ByteCryb
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
