@@ -1,0 +1,5 @@
+### PostgreSQL ###
+sql-data/
+
+### VS CODE ###
+.DS_Store
