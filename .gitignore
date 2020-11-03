@@ -3,3 +3,6 @@ sql-data/
 
 ### VS CODE ###
 .DS_Store
+
+### .IntelliJ Folder ##
+.idea
