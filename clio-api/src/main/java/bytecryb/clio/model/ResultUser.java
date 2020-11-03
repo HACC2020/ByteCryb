@@ -1,18 +1,18 @@
 package bytecryb.clio.model;
 
 public class ResultUser {
-    private int id;
+    private long id;
     private String username;
     private String firstName;
     private String lastName;
     private String email;
-    private int roleId;
+    private long roleId;
 
     public ResultUser() {
         super();
     }
     
-	public ResultUser(int id, String username, String firstName, String lastName, String email, int roleId) {
+	public ResultUser(long id, String username, String firstName, String lastName, String email, long roleId) {
 		super();
         this.id = id;
         this.username = username;
@@ -22,11 +22,11 @@ public class ResultUser {
         this.roleId = roleId;
     }
 
-    public int getId() {
+    public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -62,11 +62,11 @@ public class ResultUser {
 		this.email = email;
 	}
 
-	public int getRoleId() {
+	public long getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(int roleId) {
+	public void setRoleId(long roleId) {
 		this.roleId = roleId;
 	}
 

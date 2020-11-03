@@ -31,7 +31,7 @@ public class User {
 	private String pwd_hash;
 
 	@Column(name = "role_id")
-	private int roleId;
+	private long roleId;
 
     @Column(name = "first_name")
     private String firstName;
@@ -43,7 +43,7 @@ public class User {
 		super();
 	}
 
-	public User(long userId, String username, String email, String salt, String pwd_hash, int roleId, String firstName, String lastName) {
+	public User(long userId, String username, String email, String salt, String pwd_hash, long roleId, String firstName, String lastName) {
 		super();
         this.userId = userId;
         this.username = username;
@@ -95,11 +95,11 @@ public class User {
         this.pwd_hash = pwd_hash;
     }
 
-    public int getRoleId() {
+    public long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(int roleId) {
+    public void setRoleId(long roleId) {
         this.roleId = roleId;
     }
 
