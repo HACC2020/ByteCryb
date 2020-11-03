@@ -12,4 +12,9 @@ public class UserController {
     public String getAllUsers() {
         return "Hello! This basic endpoint works!";
     }
+
+    @GetMapping("/restricted")
+    public String restricted() {
+        return "You must be logged in to view this.";
+    }
 }
