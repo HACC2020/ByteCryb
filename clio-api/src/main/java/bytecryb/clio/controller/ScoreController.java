@@ -27,6 +27,7 @@ public class ScoreController {
 
 	// GET yearly top scores
 
+	// temp endpoint
 	@GetMapping("weekly")
 	public ResponseEntity<List<ResultScore>> getWeeklyTopScores() {
 		List<Score> query = this.scoreRepo.findAll();
