@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestController;
 
 import bytecryb.clio.repository.BadgeRepository;
-import bytecryb.clio.repository.Badge;
+import bytecryb.clio.model.Badge;
 
 
 @RestController
