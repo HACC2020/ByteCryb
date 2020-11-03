@@ -11,7 +11,7 @@ class App extends React.Component {
         <Router>
           <NavBar/>
           <Switch>
-            <Landing/>
+            <Route exact path='/' component={Landing}/>
           </Switch>
         </Router>
         // <div className="App">

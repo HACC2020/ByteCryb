@@ -21,25 +21,25 @@ class NavBar extends React.Component {
     };
 
     return (
-        <Navbar collapseOnSelect expand="lg" bg="light" variant="light" style={{ marginBottom: '5rem' }}>
-          <Navbar.Brand href="#home">
+        <Navbar collapseOnSelect expand="lg" bg="light" variant="light" style={{ marginBottom: '5rem' }}
+          sticky={'top'}>
+          <Navbar.Brand href="/">
             <Image src={'./hsa-logo.png'} style={imgStyle} />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="#features">Categories</Nav.Link>
-              <Nav.Link href="#pricing">Leaderboard</Nav.Link>
-              <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Categories</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">Leaderboard</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Link href="/features">Categories</Nav.Link>
+              <Nav.Link href="/leaderbaord">Leaderboard</Nav.Link>
             </Nav>
             <Nav>
-              <Nav.Link href="#deets">Profile</Nav.Link>
+              <NavDropdown title="Profile" id="collasible-nav-dropdown" drop={'left'}>
+                <NavDropdown.Item href="/view-profile">View Profile</NavDropdown.Item>
+                <NavDropdown.Item href="/edit-profile">Edit Profile</NavDropdown.Item>
+                <NavDropdown.Item href="/my-jobs">My Jobs</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="/action/3.4">Sign Out</NavDropdown.Item>
+              </NavDropdown>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

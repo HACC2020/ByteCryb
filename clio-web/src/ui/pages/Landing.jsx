@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Image, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Image, Form, Button, NavLink } from 'react-bootstrap';
 import { Link, withRouter } from 'react-router-dom';
 
 class Landing extends React.Component {
@@ -36,18 +36,20 @@ class Landing extends React.Component {
               </p>
             </Col>
             <Col xs={6}>
+              <h2 align={'center'}>Login</h2>
               <Form>
                 <Form.Group controlId="formBasicEmail">
                   <Form.Label>Email address</Form.Label>
                   <Form.Control type="email" placeholder="Enter email" />
-                  <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
-                  </Form.Text>
                 </Form.Group>
 
                 <Form.Group controlId="formBasicPassword">
                   <Form.Label>Password</Form.Label>
                   <Form.Control type="password" placeholder="Password" />
+                  <Form.Text className="text-muted">
+                    <NavLink href="/signup">Not registered yet? Sign up here!
+                    </NavLink>
+                  </Form.Text>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                   Login
