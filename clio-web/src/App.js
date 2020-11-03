@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './ui/components/NavBar';
 import Login from './ui/pages/Login';
 import Landing from './ui/pages/Landing';
+import Admin from './ui/pages/Admin';
 
 class App extends React.Component {
   render () {
@@ -14,6 +15,7 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' component={Login}/>
             <Route exact path='/landing' component={Landing}/>
+            <Route exact path='/admin' component={Admin}/>
           </Switch>
         </Router>
         // <div className="App">
