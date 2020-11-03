@@ -6,7 +6,7 @@ Go to the repo directory
 
 ```cd <path>/ByteCryb/```
 
-# Using Docker
+## Using Docker
 
 Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
