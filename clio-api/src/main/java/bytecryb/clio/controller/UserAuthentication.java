@@ -12,8 +12,8 @@ import bytecryb.clio.model.ResultUser;
 @RequestMapping("/auth")
 public class UserAuthentication {
 
-    @PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
-    public ResultUser addUser(@RequestBody ResultUser user) {
-        return user;
+    @PostMapping(path = "/login", consumes = "application/json")
+    public String addUser(@RequestBody ResultUser user) {
+        return user.getFirstName();
     }
 }
