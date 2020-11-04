@@ -4,7 +4,7 @@ import {
   Container,
   Tooltip,
   Button,
-  OverlayTrigger, Row, Col, Table
+  OverlayTrigger, Row, Col, Table, NavLink
 } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 
@@ -68,8 +68,12 @@ class ViewProfile extends React.Component {
               </OverlayTrigger>
             </Col>
             <Col xs={4}>
-              <Button size="lg" block >Edit Profile</Button>
-              <Button size="lg" block>My Jobs</Button>
+              <NavLink href={'/edit-profile'}>
+                <Button size="lg" block>Edit Profile</Button>
+              </NavLink>
+              <NavLink href={'/my-job'}>
+                <Button size="lg" block>My Jobs</Button>
+              </NavLink>
             </Col>
           </Row>
           <h3 style={{marginTop: '2rem'}}>Records Indexed</h3>

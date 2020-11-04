@@ -10,6 +10,8 @@ import ViewProfile from './ui/pages/ViewProfile';
 import Categories from './ui/pages/Categories';
 import RookieTraining from './ui/pages/RookieTraining';
 import SignUp from './ui/pages/SignUp';
+import Footer from './ui/components/Footer';
+import MyJob from './ui/pages/MyJob';
 
 class App extends React.Component {
   render () {
@@ -19,12 +21,14 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' component={Login}/>
             <Route exact path='/signup' component={SignUp}/>
+            <Route exact path='/my-job' component={MyJob}/>
             <Route exact path='/landing' component={Landing}/>
             <Route exact path='/admin' component={Admin}/>
             <Route exact path='/view-profile' component={ViewProfile}/>
             <Route exact path='/categories' component={Categories}/>
             <Route exact path='/training' component={RookieTraining}/>
           </Switch>
+          <Footer/>
         </Router>
         // <div className="App">
         //   <header className="App-header">

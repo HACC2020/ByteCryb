@@ -48,7 +48,7 @@ class RookieTraining extends React.Component {
       )
     }
 
-    console.log(this.state.pageNum)
+    console.log(this.state.pageNum);
 
     return (
         <Container>
