@@ -22,9 +22,6 @@ public class Role {
     @Column(name = "role_name")
     private String name;
 
-    @Column(name = "badge_id")
-    private long badgeId;
-
     public Role() {
         super();
     }
