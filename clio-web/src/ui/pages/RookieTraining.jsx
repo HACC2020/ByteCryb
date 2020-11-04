@@ -1,14 +1,21 @@
 import React from 'react';
-import { Container, Nav, Form, Image, Tab, Row, Col, Table, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
-import { AutoForm, AutoField, ErrorField, LongTextField, SelectField, SubmitField, DateField } from 'uniforms-bootstrap4';
+import {
+  AutoForm,
+  AutoField,
+  ErrorField,
+  TextField,
+  SelectField,
+  SubmitField,
+  DateField
+} from 'uniforms-bootstrap4';
 
 import { bridge as schema } from '../../api/RookieTraining';
 
 class RookieTraining extends React.Component {
 
   render() {
-
 
     return (
         <Container>
@@ -17,28 +24,24 @@ class RookieTraining extends React.Component {
               <embed src="./ChineseArrivals_1847-1870_00001.pdf" width="450rem" height="550rem"/>
             </Col>
             <Col xs={7}>
-              <AutoForm schema={schema} onSubmit={console.log} >
+              <AutoForm schema={schema} onSubmit={console.log}>
                 <h4>Test Data</h4>
-                <AutoField name="name" />
-                <ErrorField name="name">
-                  <span>You have to provide their name</span>
-                </ErrorField>
-                <AutoField name="age" />
-                <ErrorField
-                    name="age"
-                    errorMessage="You have to provide their age!"
-                />
-                <AutoField name="gender" />
+                <AutoField name="name"/>
+                <AutoField name="age"/>
+                <SelectField name="gender"
+                             allowedValues={['Male', 'Female']}/>
 
+                <TextField name="dateOfArrival"
+                          placeholder={'2012-01-13'}/>
                 {/*<DateField*/}
                 {/*    showInlineError*/}
                 {/*    name="dateOfArrival"*/}
                 {/*    max={new Date(1870, 1, 1)}*/}
                 {/*    min={new Date(1847, 1, 1)}/>*/}
-                <AutoField name="nameOfShip" />
-                <AutoField name="from" />
+                <AutoField name="nameOfShip"/>
+                <AutoField name="from"/>
 
-                <SubmitField />
+                <SubmitField/>
               </AutoForm>
               {/*<Form>*/}
               {/*  <Form.Row>*/}

@@ -12,13 +12,15 @@ const schema = {
       maximum: 100,
     },
     gender: { type: 'string' },
-    // dateOfArrival: {
-    //   type: "string" },
+    dateOfArrival: {
+      type: "string",
+      format: "date",
+    },
     nameOfShip: { type: 'string' },
     from: { type: 'string' },
 
   },
-  required: ['name', 'gender'],
+  required: ['name', 'age', 'gender', 'nameOfShip', 'from', 'dateOfArrival'],
 };
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true });
