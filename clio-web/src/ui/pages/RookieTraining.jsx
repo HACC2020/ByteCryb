@@ -14,7 +14,7 @@ class RookieTraining extends React.Component {
         <Container>
           <Row>
             <Col xs={5}>
-              <embed src="./ChineseArrivals_1847-1870_00001.pdf" width="450rem" height="550rem"/>
+              <embed src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" width="450rem" height="550rem"/>
             </Col>
             <Col xs={7}>
               <AutoForm schema={schema} onSubmit={console.log} >
