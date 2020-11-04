@@ -19,7 +19,7 @@ public class RoleController {
 
     @Autowired
     private RoleRepository roleRepo;
-    //get badges
+    //get all roles
     @GetMapping("/all") 
     public List<Role> getAllRole() {
         return this.roleRepo.findAll();
