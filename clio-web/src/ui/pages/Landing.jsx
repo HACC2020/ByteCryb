@@ -74,12 +74,12 @@ class Landing extends React.Component {
                   <Row>
                     <Col>
                       <Card.Title>
-                        Negative Index Cards
+                        Chinese Immigration
                       </Card.Title>
                     </Col>
                     <Col>
                       <p align={'right'}>
-                        25% complete
+                        94% complete
                       </p>
                     </Col>
                   </Row>
@@ -127,12 +127,9 @@ class Landing extends React.Component {
                 </Card.Header>
                 <Card.Body>
                   <ListGroup variant="flush">
-                    <ListGroup.Item>John Foo - 423
-                      <FontAwesomeIcon icon={faFileAlt} style={{ marginLeft: '0.5rem' }}/>
-                    </ListGroup.Item>
-                    <ListGroup.Item>Jane Foo - 325 records</ListGroup.Item>
-                    <ListGroup.Item>Admin Hello - 210 records </ListGroup.Item>
-                    <ListGroup.Item>Jake Smith - 100 records </ListGroup.Item>
+                    <ListGroup.Item>John Foo recently indexed 5 files</ListGroup.Item>
+                    <ListGroup.Item>Jane Foo approved 2 indexes </ListGroup.Item>
+                    <ListGroup.Item>Chinese Marriage records have been completed! </ListGroup.Item>
                   </ListGroup>
                 </Card.Body>
               </Card>
