@@ -67,19 +67,19 @@ class RookieTraining extends React.Component {
             </Card>
           </Accordion>
           <Row>
-            <Col xs={5}>
-              <embed src="./ChineseArrivals_1847-1870_00001.pdf" width="450rem" height="550rem"/>
+            <Col xs={6}>
+              <embed src="./ChineseArrivals_1847-1870_00001.pdf" width="500rem" height="550rem"/>
             </Col>
-            <Col xs={7}>
+            <Col xs={5}>
               <AutoForm schema={schema} onSubmit={console.log}>
                 <h4>Test Data</h4>
                 <AutoField name="name"/>
                 <AutoField name="age"/>
                 <SelectField name="gender"
                              allowedValues={['Male', 'Female']}/>
-
+                <TextField name={'residence'}/>
                 <TextField name="dateOfArrival"
-                           placeholder={'2012-01-13'}/>
+                           placeholder={'01/23/1832'}/>
                 {/*<DateField*/}
                 {/*    showInlineError*/}
                 {/*    name="dateOfArrival"*/}
