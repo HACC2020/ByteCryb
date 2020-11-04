@@ -20,8 +20,12 @@ class NavBar extends React.Component {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="/features">Categories</Nav.Link>
+              <Nav.Link href="/categories">Categories</Nav.Link>
               <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
+              <Nav.Link href="/admin">Admin</Nav.Link>
+              <Nav.Link href="/landing">Landing</Nav.Link>
+              <Nav.Link href="/proofer">Review Submissions</Nav.Link>
+              <Nav.Link href="/training">Training</Nav.Link>
             </Nav>
             <Nav>
               <NavDropdown title="Profile" id="collasible-nav-dropdown" drop={'left'}>
@@ -29,7 +33,7 @@ class NavBar extends React.Component {
                 <NavDropdown.Item href="/edit-profile">Edit Profile</NavDropdown.Item>
                 <NavDropdown.Item href="/my-jobs">My Jobs</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="/action/3.4">Sign Out</NavDropdown.Item>
+                <NavDropdown.Item href="/sign-out">Sign Out</NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>
