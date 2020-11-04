@@ -18,10 +18,10 @@ import bytecryb.clio.model.Role;
 public class RoleController {
 
     @Autowired
-    private BadgeRepository roleRepo;
+    private RoleRepository roleRepo;
     //get badges
     @GetMapping("/all") 
-    public List<Badge> getAllRole() {
+    public List<Role> getAllRole() {
         return this.roleRepo.findAll();
     }
 
