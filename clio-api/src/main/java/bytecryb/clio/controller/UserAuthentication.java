@@ -13,7 +13,17 @@ import bytecryb.clio.model.ResultUser;
 public class UserAuthentication {
 
     @PostMapping(path = "/login", consumes = "application/json")
-    public String addUser(@RequestBody ResultUser user) {
+    public String loginUser(@RequestBody ResultUser user) {
+        return user.getFirstName();
+    }
+
+    @PostMapping(path = "/logout", consumes = "application/json")
+    public String logoutUser(@RequestBody ResultUser user) {
+        return user.getLastName();
+    }
+
+    @PostMapping(path = "/signup", consumes = "application/json")
+    public String signupUser(@RequestBody ResultUser user) {
         return user.getFirstName();
     }
 }
