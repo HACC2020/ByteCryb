@@ -5,6 +5,10 @@ import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './ui/components/NavBar';
 import Login from './ui/pages/Login';
 import Landing from './ui/pages/Landing';
+import Admin from './ui/pages/Admin';
+import ViewProfile from './ui/pages/ViewProfile';
+import Categories from './ui/pages/Categories';
+import RookieTraining from './ui/pages/RookieTraining';
 
 class App extends React.Component {
   render () {
@@ -14,6 +18,10 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' component={Login}/>
             <Route exact path='/landing' component={Landing}/>
+            <Route exact path='/admin' component={Admin}/>
+            <Route exact path='/view-profile' component={ViewProfile}/>
+            <Route exact path='/categories' component={Categories}/>
+            <Route exact path='/training' component={RookieTraining}/>
           </Switch>
         </Router>
         // <div className="App">
