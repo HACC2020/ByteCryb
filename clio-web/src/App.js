@@ -9,6 +9,7 @@ import Admin from './ui/pages/Admin';
 import ViewProfile from './ui/pages/ViewProfile';
 import Categories from './ui/pages/Categories';
 import RookieTraining from './ui/pages/RookieTraining';
+import SignUp from './ui/pages/SignUp';
 
 class App extends React.Component {
   render () {
@@ -17,6 +18,7 @@ class App extends React.Component {
           <NavBar/>
           <Switch>
             <Route exact path='/' component={Login}/>
+            <Route exact path='/signup' component={SignUp}/>
             <Route exact path='/landing' component={Landing}/>
             <Route exact path='/admin' component={Admin}/>
             <Route exact path='/view-profile' component={ViewProfile}/>
