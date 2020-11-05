@@ -43,9 +43,8 @@ public class User {
 		super();
 	}
 
-	public User(long userId, String username, String email, String salt, String pwd_hash, long roleId, String firstName, String lastName) {
+	public User(String username, String email, String salt, String pwd_hash, long roleId, String firstName, String lastName) {
 		super();
-        this.userId = userId;
         this.username = username;
         this.email = email;
         this.salt = salt;

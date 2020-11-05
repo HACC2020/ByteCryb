@@ -31,7 +31,7 @@ public class UserAuthentication {
 
     @PostMapping(path = "/signup", consumes = "application/json")
     public User signupUser(@RequestBody ResultUser resUser) {
-        User user = new User(1, resUser.getUsername(), resUser.getEmail(), "salt", "pwd_hash", 5, resUser.getFirstName(), resUser.getLastName());
+        User user = new User(resUser.getUsername(), resUser.getEmail(), "salt", "pwd_hash", 5, resUser.getFirstName(), resUser.getLastName());
         this.userRepo.save(user);
         return user;
     }
