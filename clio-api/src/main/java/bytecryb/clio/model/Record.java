@@ -14,7 +14,7 @@ public class Record {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_id_generator")
-    @SequenceGenerator(name="role_id_generator", sequenceName = "role_req")
+    @SequenceGenerator(name="role_id_generator", sequenceName = "role_seq")
     @Column(name = "id", updatable = false, nullable = false)
     private long id;
 
