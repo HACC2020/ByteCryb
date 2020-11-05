@@ -59,7 +59,7 @@ class Leaderboard extends React.Component {
           <Col>
             <Card className="text-center">
               <Card.Header>
-                <Card.Title>Leaderboard</Card.Title>({months[0]})
+                <Card.Title>Leaderboard</Card.Title>All Time
               </Card.Header>
               <Card.Body>
                 <ListGroup variant="flush">
@@ -87,7 +87,7 @@ class Leaderboard extends React.Component {
                   style={{ marginRight: "0.5rem" }}
                   onClick={onPrevMonth}
                 />
-                ({months[this.state.month]})
+                {months[this.state.month]}
                 <FontAwesomeIcon
                   icon={faAngleRight}
                   style={{ marginLeft: "0.5rem" }}
@@ -126,7 +126,7 @@ class Leaderboard extends React.Component {
                     onClick={onNextMonth}
                   />
                 </Card.Title>
-                (Daily)
+                Daily
               </Card.Header>
               <Card.Body>
                 <ListGroup variant="flush">
