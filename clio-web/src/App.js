@@ -5,10 +5,12 @@ import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './ui/components/NavBar';
 import Login from './ui/pages/Login';
 import Landing from './ui/pages/Landing';
+
 import Admin from './ui/pages/Admin';
 import ViewProfile from './ui/pages/ViewProfile';
 import Categories from './ui/pages/Categories';
 import RookieTraining from './ui/pages/RookieTraining';
+import Leaderboard from './ui/pages/Leaderboard';
 import SignUp from './ui/pages/SignUp';
 import Footer from './ui/components/Footer';
 import MyJob from './ui/pages/MyJob';
@@ -23,6 +25,7 @@ class App extends React.Component {
             <Route exact path='/signup' component={SignUp}/>
             <Route exact path='/my-job' component={MyJob}/>
             <Route exact path='/landing' component={Landing}/>
+            <Route exact path='/leaderboard' component={Leaderboard}/>
             <Route exact path='/admin' component={Admin}/>
             <Route exact path='/view-profile' component={ViewProfile}/>
             <Route exact path='/categories' component={Categories}/>
