@@ -31,7 +31,7 @@ class NavBar extends React.Component {
               <NavDropdown title="Profile" id="collasible-nav-dropdown" drop={'left'}>
                 <NavDropdown.Item href="/view-profile">View Profile</NavDropdown.Item>
                 <NavDropdown.Item href="/edit-profile">Edit Profile</NavDropdown.Item>
-                <NavDropdown.Item href="/my-jobs">My Jobs</NavDropdown.Item>
+                <NavDropdown.Item href="/my-job">My Jobs</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="/sign-out">Sign Out</NavDropdown.Item>
               </NavDropdown>

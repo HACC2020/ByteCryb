@@ -21,8 +21,8 @@ const schema = {
     from: { type: 'string', pattern: "^([a-zA-Z])+$"},
 
   },
-  required: ['from'],
-  // required: ['name', 'age', 'gender', 'residence', 'nameOfShip', 'from', 'dateOfArrival'],
+  // required: ['from'],
+  required: ['name', 'age', 'gender', 'residence', 'nameOfShip', 'from', 'dateOfArrival'],
 };
 
 const ajv = new Ajv({ allErrors: true, useDefaults: true });
