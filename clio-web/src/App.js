@@ -14,6 +14,7 @@ import Leaderboard from './ui/pages/Leaderboard';
 import SignUp from './ui/pages/SignUp';
 import Footer from './ui/components/Footer';
 import MyJob from './ui/pages/MyJob';
+import Proofer from './ui/pages/Proofer';
 
 class App extends React.Component {
   render () {
@@ -30,6 +31,7 @@ class App extends React.Component {
             <Route exact path='/view-profile' component={ViewProfile}/>
             <Route exact path='/categories' component={Categories}/>
             <Route exact path='/training' component={RookieTraining}/>
+            <Route exact path='/proofer' component={Proofer}/>
           </Switch>
           <Footer/>
         </Router>
