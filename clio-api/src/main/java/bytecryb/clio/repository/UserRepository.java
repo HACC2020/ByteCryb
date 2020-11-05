@@ -2,6 +2,7 @@ package bytecryb.clio.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
 import bytecryb.clio.model.User;
 
@@ -10,8 +11,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     Optional<User> findByUsernameOrEmail(String username, String email);
-
-    List<User> findByIdIn(List<Long> userIds);
 
     Optional<User> findByUsername(String username);
 
