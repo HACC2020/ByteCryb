@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -18,17 +20,14 @@ public class User {
 	@Column(name = "id", updatable = false, nullable = false)
 	private long userId;
 
-	@Column(name = "username")
+    @Column(name = "username")
 	private String username;
 
     @Column(name = "email")
     private String email;
 
-	@Column(name = "salt")
-	private String salt;
-
-	@Column(name = "pwd_hash")
-	private String pwd_hash;
+    @Column(name = "password")
+    private String password;
 
 	@Column(name = "role_id")
 	private long roleId;
@@ -43,15 +42,21 @@ public class User {
 		super();
 	}
 
-	public User(String username, String email, String salt, String pwd_hash, long roleId, String firstName, String lastName) {
+	public User(String username, String email, String password, long roleId, String firstName, String lastName) {
 		super();
         this.username = username;
         this.email = email;
-        this.salt = salt;
-        this.pwd_hash = pwd_hash;
+        this.password = password;
         this.roleId = roleId;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+    
+    public User(String username, String email, String password) {
+		super();
+        this.username = username;
+        this.email = email;
+        this.password = password;
 	}
 
 	public long getUserId() {
@@ -78,20 +83,12 @@ public class User {
         this.email = email;
     }
 
-    public String getSalt() {
-        return salt;
+    public String getPassword() {
+        return password;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public String getPwdHash() {
-        return pwd_hash;
-    }
-
-    public void setPwdHash(String pwd_hash) {
-        this.pwd_hash = pwd_hash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public long getRoleId() {

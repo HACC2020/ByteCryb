@@ -29,10 +29,9 @@ public class UserAuthentication {
         return resUser.getLastName();
     }
 
+        // takes in a json with the parameters {username, email, password}
     @PostMapping(path = "/signup", consumes = "application/json")
-    public User signupUser(@RequestBody ResultUser resUser) {
-        User user = new User(resUser.getUsername(), resUser.getEmail(), "salt", "pwd_hash", 5, resUser.getFirstName(), resUser.getLastName());
-        this.userRepo.save(user);
-        return user;
+    public User signupUser(@RequestBody User user) {
+        return this.userRepo.save(user);
     }
 }
