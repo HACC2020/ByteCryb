@@ -26,10 +26,9 @@ public class Role {
         super();
     }
 
-    public Role(String name, long badgeId) {
+    public Role(String name) {
         super();
         this.name = name;
-        this.badgeId = badgeId;
     }
 
     public long getId() {
