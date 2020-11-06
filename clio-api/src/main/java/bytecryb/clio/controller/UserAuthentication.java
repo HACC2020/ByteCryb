@@ -64,6 +64,12 @@ public class UserAuthentication {
 	// {username, email, password}
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public ResponseEntity<?> saveUser(@RequestBody CustomUser user) throws Exception {
+        if(userRepo.existsByUsername(user.getUsername())) {
+            return (ResponseEntity<?>) ResponseEntity.badRequest();
+        }
+        if(userRepo.existsByEmail(user.getEmail())) {
+            return (ResponseEntity<?>) ResponseEntity.badRequest();
+        }
 		return ResponseEntity.ok(userDetailsService.save(user));
 	}
 
