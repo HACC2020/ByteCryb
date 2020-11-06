@@ -1,16 +1,26 @@
 package bytecryb.clio.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import bytecryb.clio.model.AuthenticationRequest;
+import bytecryb.clio.model.AuthenticationResponse;
 import bytecryb.clio.model.ResultUser;
-import bytecryb.clio.model.User;
+import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.repository.UserRepository;
+import bytecryb.clio.service.CustomUserDetailsService;
+import bytecryb.clio.util.JwtUtil;
 
 
 @RestController
@@ -23,31 +33,38 @@ public class UserAuthentication {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    @PostMapping(path = "/login", consumes = "application/json")
-    public String loginUser(@RequestBody ResultUser resUser) {
-        return resUser.getFirstName();
-    }
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
-    @PostMapping(path = "/logout", consumes = "application/json")
-    public String logoutUser(@RequestBody ResultUser resUser) {
-        return resUser.getLastName();
-    }
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
 
-        // takes in a json with the parameters {username, email, password}
-    @PostMapping(path = "/signup", consumes = "application/json")
-    public String signupUser(@RequestBody User request) {
-        if(userRepo.existsByUsername(request.getUsername())) {
-            return "username taken";
-        }
-        if(userRepo.existsByEmail(request.getEmail())) {
-            return "email already in use";
-        }
+	@Autowired
+	private JwtUtil jwtTokenUtil;
+    
+	// {username, password}
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
+			throws Exception {
+		try {
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+		} catch (DisabledException e) {
+			throw new Exception("USER_DISABLED", e);
+		} catch (BadCredentialsException e) {
+			throw new Exception("INVALID_CREDENTIALS", e);
+		}
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        userRepo.save(user);
-        return user.getPassword();
-    }
+		final String token = jwtTokenUtil.generateToken(userDetails);
+
+		return ResponseEntity.ok(new AuthenticationResponse(token));
+	}
+	
+	// {username, email, password}
+	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	public ResponseEntity<?> saveUser(@RequestBody CustomUser user) throws Exception {
+		return ResponseEntity.ok(userDetailsService.save(user));
+	}
+
 }

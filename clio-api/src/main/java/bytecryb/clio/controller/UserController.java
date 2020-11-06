@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Score;
-import bytecryb.clio.model.User;
+import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.repository.UserRepository;
 
 @RestController
@@ -24,14 +24,14 @@ public class UserController {
 
     @GetMapping("/all")
     public ResponseEntity<List<ResultUser>> getUsers() {
-		List<User> query = this.userRepo.findAll();
+		List<CustomUser> query = this.userRepo.findAll();
 
 		List<ResultUser> result = new ArrayList<ResultUser>();
 
-		Iterator<User> userIterator = query.iterator();
+		Iterator<CustomUser> userIterator = query.iterator();
 
 		while (userIterator.hasNext()) {
-			User tmp = userIterator.next();
+			CustomUser tmp = userIterator.next();
 			result.add(new ResultUser(tmp.getUserId(), tmp.getUsername(), tmp.getFirstName(), tmp.getLastName(), tmp.getEmail(), tmp.getRoleId()));
 		}
 

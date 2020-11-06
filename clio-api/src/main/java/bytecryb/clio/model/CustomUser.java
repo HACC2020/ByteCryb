@@ -7,12 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class CustomUser {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")
@@ -38,11 +36,11 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-	public User() {
+	public CustomUser() {
 		super();
 	}
 
-	public User(String username, String email, String password, long roleId, String firstName, String lastName) {
+	public CustomUser(String username, String email, String password, long roleId, String firstName, String lastName) {
 		super();
         this.username = username;
         this.email = email;
@@ -52,7 +50,7 @@ public class User {
         this.lastName = lastName;
     }
     
-    public User(String username, String email, String password) {
+    public CustomUser(String username, String email, String password) {
 		super();
         this.username = username;
         this.email = email;
