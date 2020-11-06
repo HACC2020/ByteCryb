@@ -3,11 +3,11 @@ package bytecryb.clio.model;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.annotation.processing.Generated;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -29,6 +29,9 @@ public class Award {
 
     @Column(name = "date")
     private Date date;
+
+    @ManyToOne
+    private Badge badge;
 
     public Award() {
         super();
