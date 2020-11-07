@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,9 @@ import bytecryb.clio.model.Role;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+	
+	@Value("${welcome.message}")
+	private String welcomeMessage;
 
     @Autowired
     private UserRepository userRepo;
@@ -43,6 +47,6 @@ public class UserController {
 
     @GetMapping("/restricted")
     public String restricted() {
-        return "You must be logged in to view this.";
+    	return welcomeMessage;
     }
 }

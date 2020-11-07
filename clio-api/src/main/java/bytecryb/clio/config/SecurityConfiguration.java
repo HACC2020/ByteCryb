@@ -50,7 +50,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
 	public void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 		.authorizeRequests()
-		.antMatchers("/auth/login", "/auth/signup", "/api/users/all").permitAll().anyRequest().authenticated()
+		.antMatchers("/**", "/auth/login", "/auth/signup", "/api/users/all").permitAll().anyRequest().authenticated()
 		//if any exception occurs call this
 		.and().exceptionHandling()
         .authenticationEntryPoint(unauthorizedHandler).and().
