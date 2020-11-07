@@ -16,7 +16,7 @@ public class Job {
     @Column(name = "id", updatable = false, nullable = false)
 	private long id;
 	
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	private String name;
 	
 	@Column(name = "cat_id")
@@ -31,7 +31,7 @@ public class Job {
 	@Column(name = "num_indexed")
 	private int indexed;
 	
-	@Column(name = "size")
+	@Column(name = "size", nullable = false)
 	private int size;
 
 	public Job(String name, long categoryId, int status, String xml, int indexed, int size) {
@@ -42,6 +42,10 @@ public class Job {
 		this.xml = xml;
 		this.indexed = indexed;
 		this.size = size;
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	public String getName() {
