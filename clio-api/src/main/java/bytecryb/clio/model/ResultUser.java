@@ -6,20 +6,20 @@ public class ResultUser {
     private String firstName;
     private String lastName;
     private String email;
-    private long roleId;
+    private String roleName;
 
     public ResultUser() {
         super();
     }
     
-	public ResultUser(long id, String username, String firstName, String lastName, String email, long roleId) {
+	public ResultUser(long id, String username, String firstName, String lastName, String email, String roleName) {
 		super();
         this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.roleId = roleId;
+        this.roleName = roleName;
     }
 
     public long getId() {
@@ -62,12 +62,8 @@ public class ResultUser {
 		this.email = email;
 	}
 
-	public long getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(long roleId) {
-		this.roleId = roleId;
+	public String getRoleName() {
+		return roleName;
 	}
 
 }

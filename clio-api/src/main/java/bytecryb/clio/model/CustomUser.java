@@ -93,13 +93,13 @@ public class CustomUser {
         this.password = password;
     }
 
-    /*public long getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleId(long roleId) {
-        this.roleId = roleId;
-    }*/
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public String getFirstName() {
         return firstName;

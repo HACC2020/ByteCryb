@@ -14,6 +14,7 @@ import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Score;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.repository.UserRepository;
+import bytecryb.clio.model.Role;
 
 @RestController
 @RequestMapping("/api/users")
@@ -32,7 +33,9 @@ public class UserController {
 
 		while (userIterator.hasNext()) {
 			CustomUser tmp = userIterator.next();
-			result.add(new ResultUser(tmp.getUserId(), tmp.getUsername(), tmp.getFirstName(), tmp.getLastName(), tmp.getEmail(), tmp.getRoleId()));
+			Role currRole = tmp.getRole();
+			String roleName = currRole.getName();
+			result.add(new ResultUser(tmp.getUserId(), tmp.getUsername(), tmp.getFirstName(), tmp.getLastName(), tmp.getEmail(), roleName));
 		}
 
 		return ResponseEntity.ok().body(result);
