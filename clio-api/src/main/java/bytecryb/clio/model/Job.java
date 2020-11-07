@@ -34,6 +34,10 @@ public class Job {
 	@Column(name = "size", nullable = false)
 	private int size;
 
+	public Job() {
+		super();
+	}
+
 	public Job(String name, long categoryId, int status, String xml, int indexed, int size) {
 		super();
 		this.name = name;
