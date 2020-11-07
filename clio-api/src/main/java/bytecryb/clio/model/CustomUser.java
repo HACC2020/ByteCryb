@@ -1,10 +1,14 @@
 package bytecryb.clio.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -27,8 +31,9 @@ public class CustomUser {
     @Column(name = "password")
     private String password;
 
-	@Column(name = "role_id")
-	private long roleId;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "role_id") //creates foreign key column
+	private Role role;
 
     @Column(name = "first_name")
     private String firstName;
@@ -40,12 +45,11 @@ public class CustomUser {
 		super();
 	}
 
-	public CustomUser(String username, String email, String password, long roleId, String firstName, String lastName) {
+	public CustomUser(String username, String email, String password, String firstName, String lastName) {
 		super();
         this.username = username;
         this.email = email;
         this.password = password;
-        this.roleId = roleId;
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -89,13 +93,13 @@ public class CustomUser {
         this.password = password;
     }
 
-    public long getRoleId() {
+    /*public long getRoleId() {
         return roleId;
     }
 
     public void setRoleId(long roleId) {
         this.roleId = roleId;
-    }
+    }*/
 
     public String getFirstName() {
         return firstName;
