@@ -22,7 +22,7 @@ public class Record {
     private long jobId;
 
     @Column(name = "status")
-    private String status;
+    private int status;
 
     @Column(name = "pdf_link")
     private String pdfLink;
@@ -34,12 +34,20 @@ public class Record {
         super();
     }
 
-    public Record(long jobId, String status, String pdfLink, String fileName) {
+    public Record(long jobId, int status, String pdfLink, String fileName) {
         super();
         this.jobId = jobId;
         this.status = status;
         this.pdfLink = pdfLink;
         this.fileName = fileName;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId() {
+        this.id = id;
     }
 
     public long getJobId() {
@@ -50,11 +58,11 @@ public class Record {
         this.jobId = jobId;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
