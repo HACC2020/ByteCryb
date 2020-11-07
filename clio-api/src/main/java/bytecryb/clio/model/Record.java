@@ -46,7 +46,7 @@ public class Record {
         return id;
     }
 
-    public void setId() {
+    public void setId(long id) {
         this.id = id;
     }
 
