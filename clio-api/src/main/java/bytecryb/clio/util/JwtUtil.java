@@ -46,8 +46,8 @@ public class JwtUtil {
 		if (roles.contains(new SimpleGrantedAuthority("rookie"))) {
 			claims.put("isRookie", true);
 		}
-		if (roles.contains(new SimpleGrantedAuthority("veteran"))) {
-			claims.put("isVeteran", true);
+		if (roles.contains(new SimpleGrantedAuthority("indexer"))) {
+			claims.put("isIndexer", true);
 		}
 		if (roles.contains(new SimpleGrantedAuthority("proofer"))) {
 			claims.put("isProofer", true);
@@ -86,13 +86,13 @@ public class JwtUtil {
 		List<SimpleGrantedAuthority> roles = null;
 		Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken).getBody();
 		Boolean isRookie = claims.get("isRookie", Boolean.class);
-		Boolean isVeteran = claims.get("isVeteran", Boolean.class);
+		Boolean isIndexer = claims.get("isIndexer", Boolean.class);
 		Boolean isProofer = claims.get("isProofer", Boolean.class);
 		Boolean isArchivist = claims.get("isArchivist", Boolean.class);
 		if (isRookie != null && isRookie == true) {
 			roles = Arrays.asList(new SimpleGrantedAuthority("rookie"));
 		}
-		if (isVeteran != null && isVeteran == true) {
+		if (isIndexer != null && isIndexer == true) {
 			roles = Arrays.asList(new SimpleGrantedAuthority("veteran"));
 		}
 		if (isProofer != null && isProofer == true) {

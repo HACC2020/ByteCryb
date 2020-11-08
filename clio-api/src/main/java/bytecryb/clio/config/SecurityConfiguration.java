@@ -54,7 +54,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
 		.authorizeRequests()
 		.antMatchers("/api/users/restricted").authenticated()
 		.antMatchers("/api/users/rookie").hasAuthority("rookie")
-		.antMatchers("/api/users/veteran").hasAuthority("veteran")
+		.antMatchers("/api/users/indexer").hasAuthority("indexer")
 		.antMatchers("/api/users/proofer").hasAuthority("proofer")
 		.antMatchers("/api/users/archivist").hasAuthority("archivist")
 		.antMatchers("/auth/login", "/auth/signup", "/api/users/all")

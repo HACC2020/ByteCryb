@@ -54,9 +54,9 @@ public class UserController {
 		return "Welcome rookie";
 	}
 
-	@GetMapping("/veteran")
-	public String veteran() {
-		return "Welcome veteran";
+	@GetMapping("/indexer")
+	public String indexer() {
+		return "Welcome indexer";
 	}
 
 	@GetMapping("/proofer")
