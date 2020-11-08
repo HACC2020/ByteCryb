@@ -13,8 +13,8 @@ import javax.persistence.Table;
 public class Record {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_id_generator")
-    @SequenceGenerator(name="role_id_generator", sequenceName = "role_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "record_id_generator")
+    @SequenceGenerator(name = "record_id_generator", sequenceName = "record_seq")
     @Column(name = "id", updatable = false, nullable = false)
     private long id;
 
@@ -24,22 +24,18 @@ public class Record {
     @Column(name = "status")
     private int status;
 
-    @Column(name = "pdf_link")
+    @Column(name = "pdf_id")
     private String pdfLink;
-
-    @Column(name = "file_name")
-    private String fileName;
 
     public Record() {
         super();
     }
 
-    public Record(long jobId, int status, String pdfLink, String fileName) {
+    public Record(long jobId, int status, String pdfLink) {
         super();
         this.jobId = jobId;
         this.status = status;
         this.pdfLink = pdfLink;
-        this.fileName = fileName;
     }
 
     public long getId() {
@@ -66,21 +62,12 @@ public class Record {
         this.status = status;
     }
 
-    public String getPdfLink(){
+    public String getPdfLink() {
         return pdfLink;
     }
 
     public void setPdfLink(String pdfLink) {
         this.pdfLink = pdfLink;
     }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
 
 }
