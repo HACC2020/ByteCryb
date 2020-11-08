@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, ListGroup } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { faFileAlt, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { xmlToJSON } from '../../xmlParser';
 
 class Landing extends React.Component {
   constructor(props) {
@@ -37,6 +38,127 @@ class Landing extends React.Component {
           this.setState({ month: number })
         }
     };
+
+    var xmlString = `<indexFile>
+  <columns>
+    <!-- Name -->
+    <column>
+      <index>0</index>
+      <type>string</type>
+      <required>true</required>
+      <validations>
+        <validation>
+          <type>regex</type>
+          <configuration>
+            <pattern>[a-zA-Z ]+</pattern>
+          </configuration>
+        </validation>
+      </validations>
+    </column>
+    <!-- Age -->
+    <column>
+      <index>1</index>
+      <type>string</type>
+      <required>true</required>
+      <validations>
+        <validation>
+          <type>regex</type>
+          <configuration>
+            <pattern>([1-9][0-9]*|none|none given)</pattern>
+          </configuration>
+        </validation>
+      </validations>
+    </column>
+    <!-- Gender -->
+    <column>
+      <index>2</index>
+      <type>string</type>
+      <required>true</required>
+      <validations>
+        <validation>
+          <type>restricted-value</type>
+          <configuration>
+            <allowedValues>
+              <value>Male</value>
+              <value>Female</value>
+            </allowedValues>
+          </configuration>
+        </validation>
+      </validations>
+    </column>
+    <!-- Residence -->
+    <column>
+      <index>3</index>
+      <type>string</type>
+      <required>true</required>
+      <validations>
+        <validation>
+          <type>regex</type>
+          <configuration>
+            <pattern>[a-zA-Z ]+</pattern>
+          </configuration>
+        </validation>
+      </validations>
+    </column>
+    <!-- Date of Arrival -->
+    <column>
+      <index>4</index>
+      <type>date</type>
+      <required>true</required>
+      <parsing>
+        <format>MM/dd/yyyy</format>
+      </parsing>
+      <validations>
+        <validation>
+          <type>date-range</type>
+          <configuration>
+            <min>1847-01-01</min>
+            <max>1870-12-31</max>
+          </configuration>
+        </validation>
+      </validations>
+    </column>
+    <!-- Name of Ship -->
+    <column>
+      <index>5</index>
+      <type>string</type>
+      <required>true</required>
+      <validations>
+        <validation>
+          <type>regex</type>
+          <configuration>
+            <pattern>[a-zA-Z"“” ]+</pattern>
+          </configuration>
+        </validation>
+      </validations>
+    </column>
+    <!-- From -->
+    <column>
+      <index>6</index>
+      <type>string</type>
+      <required>true</required>
+      <validations>
+        <validation>
+          <type>regex</type>
+          <configuration>
+            <pattern>[a-zA-Z ]+</pattern>
+          </configuration>
+        </validation>
+      </validations>
+    </column>
+  </columns>
+</indexFile>`;
+
+    var parser = new DOMParser();
+    var xml = parser.parseFromString(xmlString, "text/xml");
+    var obj = xmlToJSON(xml);
+
+    console.log(obj);
+    console.log(obj.indexFile.columns);
+
+    for (let i = 0; i < obj.indexFile.columns.length; i++) {
+      console.log(obj.indexFile.columns[i])
+    }
 
     return (
         <Container>
