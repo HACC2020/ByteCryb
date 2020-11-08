@@ -1,11 +1,14 @@
 package bytecryb.clio.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -22,8 +25,8 @@ public class Role {
     @Column(name = "rolename")
     private String roleName;
 
-    @OneToOne(mappedBy = "role")
-    private CustomUser user;
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "role")
+    private Set<CustomUser> user;
 
 
     public Role() {
