@@ -1,10 +1,13 @@
 package bytecryb.clio.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -20,6 +23,9 @@ public class Role {
 
     @Column(name = "role_name")
     private String name;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "role")
+    private CustomUser customUser;
 
     public Role() {
         super();
@@ -44,5 +50,13 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public CustomUser getUser() {
+        return customUser;
+    }
+
+    public void setCustomUser(CustomUser customUser) {
+        this.customUser = customUser;
     }
 }
