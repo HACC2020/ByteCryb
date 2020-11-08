@@ -23,7 +23,7 @@ public class PDFService {
 
         String fileType = input.getContentType();
 
-        PDF pdf;
+        PDF pdf = null;
 
         if (fileName.contains("..")) {
             throw new FileException("");
@@ -34,7 +34,7 @@ public class PDFService {
         }
 
         if (!fileType.equals("application/pdf")) {
-            throw new UnsupportedFileException("File provided must be a PDF. Received Content Type: " + fileType);
+            throw new UnsupportedFileException("File provided must be a PDF. Received Content-Type: " + fileType);
         }
 
         try {
