@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,11 +11,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import bytecryb.clio.model.AuthenticationRequest;
 import bytecryb.clio.model.AuthenticationResponse;
-import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.service.CustomUserDetailsService;
@@ -29,9 +26,6 @@ public class UserAuthentication {
 
     @Autowired
     private UserRepository userRepo;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
     
 	@Autowired
 	private AuthenticationManager authenticationManager;
