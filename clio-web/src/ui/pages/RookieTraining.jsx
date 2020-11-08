@@ -17,11 +17,12 @@ class RookieTraining extends React.Component {
   constructor() {
     super();
     this.state = {
-      pageNum: 0,
+      pageNum: 1,
     };
   }
 
   render() {
+
     const onClickNext = () => {
       let num = this.state.pageNum;
       num++;

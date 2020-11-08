@@ -26,6 +26,7 @@ class NavBar extends React.Component {
               <Nav.Link href="/landing">Landing</Nav.Link>
               <Nav.Link href="/proofer">Review Submissions</Nav.Link>
               <Nav.Link href="/training">Training</Nav.Link>
+              <Nav.Link href="/testPage">XML Test</Nav.Link>
             </Nav>
             <Nav>
               <NavDropdown title="Profile" id="collasible-nav-dropdown" drop={'left'}>

@@ -1,6 +1,6 @@
 // import xml2json from 'xml2json';
 import xmljs from 'xml-js'
-import _  from 'lodash';
+import _ from 'lodash';
 
 function logRecursive(object) {
   for (let key in object) {
@@ -25,7 +25,8 @@ function xmlToJSON(xml) {
 
   const data = {};
   data.properties = {};
-  const subData = [];
+  data.required = [];
+  data.type = 'object';
 
   const schema = {
     title: 'Rookie',
@@ -53,56 +54,67 @@ function xmlToJSON(xml) {
 
   const columns = result.indexFile.columns.column;
 
-
-  // console.log(logRecursive(result))
-
   for (let i = 0; i < columns.length; i++) {
     const name = _.camelCase(result.indexFile.columns._comment[i]);
     const required = columns[i].required._text;
     const type = columns[i].type._text;
     const validations = columns[i].validations.validation;
+    let pattern = '';
+    let min = '';
+    let max = '';
+    let allowedValues = [];
+    let format = '';
+
+    if ('parsing' in columns[i]) {
+      format = columns[i].parsing.format._text;
+    }
+
     // console.log(validations)
     for (let key in validations) {
-       console.log(key)
-      console.log(validations[key])
-      for (let key2 in validations[key]) {
-        // console.log(validations[key][key2])
+      // console.log(key)
+      // console.log(validations[key])
+      if ('pattern' in validations[key]) {
+        pattern = validations[key].pattern._text;
       }
+
+      if ('min' in validations[key]) {
+        min = validations[key]['min']._text
+      }
+
+      if ('max' in validations[key]) {
+        max = validations[key]['max']._text
+      }
+
+      if ('allowedValues' in validations[key]) {
+        for (let j = 0; j < validations[key]['allowedValues'].value.length; j++) {
+          allowedValues.push(validations[key]['allowedValues'].value[j]._text);
+        }
+      }
+
     }
+    if (required === 'true') {
+      data.required.push(name);
+    }
+
     data.properties[name] = {};
-    data.properties[name].type = type
+    data.properties[name].type = 'string';
+    if (pattern.length !== 0) {
+      data.properties[name].pattern = '^(' + pattern + ')+$';
+    }
+    if (min.length !== 0) {
+      // data.properties[name].minimum = parseInt(min);
+    }
+    if (max.length !== 0) {
+      // data.properties[name].maximum = parseInt(max);
+    }
+    if (allowedValues.length !== 0) {
+      data.properties[name].enum = allowedValues;
+    }
   }
 
   console.log(data)
 
-  // for (let i = 0; i < obj.indexFile.columns.column.length; i++) {
-  //   // const name = obj.indexFile.columns['#comment'][i];
-  //   // subData.push({
-  //   //   [name]: {
-  //   //     type: obj.indexFile.columns.column[i].type['#text'],
-  //   //     required: obj.indexFile.columns.column[i].required['#text'],
-  //   //   }
-  //   //
-  //   // });
-  //   // console.log(obj.indexFile.columns['#comment'][i]);
-  //   // console.log(obj.indexFile.columns.column[i].type['#text']);
-  //   // console.log(obj.indexFile.columns.column[i].required['#text']);
-  //   // console.log(obj.indexFile.columns.column[i].validations.validation.configuration)
-  //   // for (let j = 0; j < obj.indexFile.columns.column[i].validations.validation.configuration.length; j++) {
-  //   //   // console.log(obj.indexFile.columns.column[i].validations.validation)
-  //   // }
-  //   // console.log('---')
-  // }
-
-  // data.push({
-  //   properties: subData,
-  // });
-
-  // console.log(data);
-
-  //return result;
-  //console.log(result)
-
+  return data;
 }
 
 // function xmlToJSON(xml) {
