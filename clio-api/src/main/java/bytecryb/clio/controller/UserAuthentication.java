@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import bytecryb.clio.model.AuthenticationRequest;
 import bytecryb.clio.model.AuthenticationResponse;
 import bytecryb.clio.model.CustomUser;
+import bytecryb.clio.model.Role;
+import bytecryb.clio.repository.RoleRepository;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.service.CustomUserDetailsService;
 import bytecryb.clio.util.JwtUtil;
@@ -25,7 +27,10 @@ import bytecryb.clio.util.JwtUtil;
 public class UserAuthentication {
 
     @Autowired
-    private UserRepository userRepo;
+	private UserRepository userRepo;
+	
+	@Autowired
+	private RoleRepository roleRepo;
     
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -63,7 +68,9 @@ public class UserAuthentication {
         }
         if(userRepo.existsByEmail(user.getEmail())) {
         	throw new Exception("EMAIL ALREADY IN USE");
-        }
+		}
+		Role role = roleRepo.findByRoleName("rookie");
+		user.setRole(role);
 		return ResponseEntity.ok(userDetailsService.save(user));
 	}
 

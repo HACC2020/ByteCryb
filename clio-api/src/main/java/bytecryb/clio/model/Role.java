@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -18,17 +19,20 @@ public class Role {
     @Column(name = "id", updatable = false, nullable = false)
     private long id;
 
-    @Column(name = "role_name")
-    private String name;
+    @Column(name = "rolename")
+    private String roleName;
+
+    @OneToOne(mappedBy = "role")
+    private CustomUser user;
 
 
     public Role() {
         super();
     }
 
-    public Role(String name) {
+    public Role(String roleName) {
         super();
-        this.name = name;
+        this.roleName = roleName;
     }
 
     public long getId() {
@@ -40,10 +44,10 @@ public class Role {
     }
 
     public String getName() {
-        return name;
+        return roleName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String roleName) {
+        this.roleName = roleName;
     }
 }
