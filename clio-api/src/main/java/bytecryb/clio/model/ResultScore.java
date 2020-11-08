@@ -5,6 +5,8 @@ public class ResultScore {
 	private int rank;
 
 	private String username;
+	
+	public int score;
 
 	public ResultScore() {
 		super();
@@ -16,8 +18,6 @@ public class ResultScore {
 		this.username = username;
 		this.score = score;
 	}
-
-	public int score;
 
 	public int getRank() {
 		return rank;
