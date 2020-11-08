@@ -34,4 +34,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> relayException(Exception e, WebRequest request) {
+        HttpError error = new HttpError(new Date(), e.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }
