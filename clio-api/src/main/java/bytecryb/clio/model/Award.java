@@ -7,12 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="awards")
+@Table(name="award")
 public class Award {
 
     @Id
@@ -29,9 +28,6 @@ public class Award {
 
     @Column(name = "date")
     private Date date = new Date();
-
-    @ManyToOne
-    private Badge badge;
 
     public Award() {
         super();
