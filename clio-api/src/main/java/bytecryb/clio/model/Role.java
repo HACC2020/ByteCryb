@@ -1,13 +1,14 @@
 package bytecryb.clio.model;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,19 +22,20 @@ public class Role {
     @Column(name = "id", updatable = false, nullable = false)
     private long id;
 
-    @Column(name = "role_name")
-    private String name;
+    @Column(name = "rolename")
+    private String roleName;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "role")
-    private CustomUser customUser;
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "role")
+    private Set<CustomUser> user;
+
 
     public Role() {
         super();
     }
 
-    public Role(String name) {
+    public Role(String roleName) {
         super();
-        this.name = name;
+        this.roleName = roleName;
     }
 
     public long getId() {
@@ -45,18 +47,10 @@ public class Role {
     }
 
     public String getName() {
-        return name;
+        return roleName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public CustomUser getUser() {
-        return customUser;
-    }
-
-    public void setCustomUser(CustomUser customUser) {
-        this.customUser = customUser;
+    public void setName(String roleName) {
+        this.roleName = roleName;
     }
 }

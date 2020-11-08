@@ -43,11 +43,17 @@ public class JwtUtil {
 	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
 		Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
-		if (roles.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-			claims.put("isAdmin", true);
+		if (roles.contains(new SimpleGrantedAuthority("rookie"))) {
+			claims.put("isRookie", true);
 		}
-		if (roles.contains(new SimpleGrantedAuthority("ROLE_USER"))) {
-			claims.put("isUser", true);
+		if (roles.contains(new SimpleGrantedAuthority("indexer"))) {
+			claims.put("isIndexer", true);
+		}
+		if (roles.contains(new SimpleGrantedAuthority("proofer"))) {
+			claims.put("isProofer", true);
+		}
+		if (roles.contains(new SimpleGrantedAuthority("archivist"))) {
+			claims.put("isArchivist", true);
 		}
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
@@ -79,13 +85,21 @@ public class JwtUtil {
 	public List<SimpleGrantedAuthority> getRolesFromToken(String authToken) {
 		List<SimpleGrantedAuthority> roles = null;
 		Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken).getBody();
-		Boolean isAdmin = claims.get("isAdmin", Boolean.class);
-		Boolean isUser = claims.get("isUser", Boolean.class);
-		if (isAdmin != null && isAdmin == true) {
-			roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		Boolean isRookie = claims.get("isRookie", Boolean.class);
+		Boolean isIndexer = claims.get("isIndexer", Boolean.class);
+		Boolean isProofer = claims.get("isProofer", Boolean.class);
+		Boolean isArchivist = claims.get("isArchivist", Boolean.class);
+		if (isRookie != null && isRookie == true) {
+			roles = Arrays.asList(new SimpleGrantedAuthority("rookie"));
 		}
-		if (isUser != null && isUser == true) {
-			roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+		if (isIndexer != null && isIndexer == true) {
+			roles = Arrays.asList(new SimpleGrantedAuthority("veteran"));
+		}
+		if (isProofer != null && isProofer == true) {
+			roles = Arrays.asList(new SimpleGrantedAuthority("proofer"));
+		}
+		if (isArchivist != null && isArchivist == true) {
+			roles = Arrays.asList(new SimpleGrantedAuthority("archivist"));
 		}
 		return roles;
 	}

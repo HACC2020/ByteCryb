@@ -47,11 +47,20 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
 	}
 	
 	@Override
-	public void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+		.csrf()
+		.disable()
 		.authorizeRequests()
 		.antMatchers("/api/users/restricted").authenticated()
-		.antMatchers("/auth/login", "/auth/signup", "/api/users/all").permitAll().anyRequest().authenticated()
+		.antMatchers("/api/users/rookie").hasAuthority("rookie")
+		.antMatchers("/api/users/indexer").hasAuthority("indexer")
+		.antMatchers("/api/users/proofer").hasAuthority("proofer")
+		.antMatchers("/api/users/archivist").hasAuthority("archivist")
+		.antMatchers("/auth/login", "/auth/signup", "/api/users/all")
+		.permitAll()
+		.anyRequest()
+		.authenticated()
 		//if any exception occurs call this
 		.and().exceptionHandling()
         .authenticationEntryPoint(unauthorizedHandler).and().
