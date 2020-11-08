@@ -53,10 +53,9 @@ public class UserAuthentication {
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
+
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
 		final String token = jwtTokenUtil.generateToken(userDetails);
-
 		return ResponseEntity.ok(new AuthenticationResponse(token));
 	}
 	

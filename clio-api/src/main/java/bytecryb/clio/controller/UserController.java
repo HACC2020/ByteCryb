@@ -47,5 +47,25 @@ public class UserController {
     @GetMapping("/restricted")
     public String restricted() {
     	return welcomeMessage;
-    }
+	}
+	
+	@GetMapping("/rookie")
+	public String rookie() {
+		return "Welcome rookie";
+	}
+
+	@GetMapping("/veteran")
+	public String veteran() {
+		return "Welcome veteran";
+	}
+
+	@GetMapping("/proofer")
+	public String proofer() {
+		return "Welcome proofer";
+	}
+
+	@GetMapping("/archivist")
+	public String archivist() {
+		return "Welcome archivist";
+	}
 }

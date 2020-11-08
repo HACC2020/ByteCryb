@@ -8,6 +8,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import bytecryb.clio.model.CustomUser;
+import bytecryb.clio.model.Role;
+import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 
@@ -27,6 +31,9 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private JwtUtil jwtTokenUtil;
+
+	@Autowired
+	private UserRepository userRepo;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -40,7 +47,10 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
 
 			if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
 				List<SimpleGrantedAuthority> roles = null;
-				roles = Arrays.asList(new SimpleGrantedAuthority("ADMIN"));
+				String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+				CustomUser user = userRepo.findByUsername(username);
+				Role role = user.getRole();
+				roles = Arrays.asList(new SimpleGrantedAuthority(role.getName()));
 				UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "", roles);
 
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
