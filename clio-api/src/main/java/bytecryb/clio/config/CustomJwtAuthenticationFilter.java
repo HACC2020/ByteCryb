@@ -1,6 +1,8 @@
 package bytecryb.clio.config;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,8 +39,9 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
 			String jwtToken = extractJwtFromRequest(request);
 
 			if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
-				UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
-						jwtTokenUtil.getRolesFromToken(jwtToken));
+				List<SimpleGrantedAuthority> roles = null;
+				roles = Arrays.asList(new SimpleGrantedAuthority("ADMIN"));
+				UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "", roles);
 
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
