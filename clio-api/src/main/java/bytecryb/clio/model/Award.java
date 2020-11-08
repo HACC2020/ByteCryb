@@ -28,7 +28,7 @@ public class Award {
     private long badgeId;
 
     @Column(name = "date")
-    private Date date;
+    private Date date = new Date();
 
     @ManyToOne
     private Badge badge;
@@ -37,11 +37,10 @@ public class Award {
         super();
     }
 
-    public Award(long userId, long badgeId, Date date) {
+    public Award(long userId, long badgeId) {
         super();
         this.userId = userId;
         this.badgeId = badgeId;
-        this.date = date;
     }
 
     public long getId() {
