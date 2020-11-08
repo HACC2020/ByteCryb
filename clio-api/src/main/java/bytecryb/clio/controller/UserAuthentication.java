@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import bytecryb.clio.model.AuthenticationRequest;
 import bytecryb.clio.model.AuthenticationResponse;
 import bytecryb.clio.model.CustomUser;
+import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
 import bytecryb.clio.repository.RoleRepository;
 import bytecryb.clio.repository.UserRepository;
@@ -70,7 +71,12 @@ public class UserAuthentication {
 		}
 		Role role = roleRepo.findByRoleName("rookie");
 		user.setRole(role);
-		return ResponseEntity.ok(userDetailsService.save(user));
+		CustomUser savedUser = userDetailsService.save(user);
+		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
+		final String token = jwtTokenUtil.generateToken(userDetails);
+		resUser.setAuthToken(token);
+		return ResponseEntity.ok(resUser);
 	}
 
 }
