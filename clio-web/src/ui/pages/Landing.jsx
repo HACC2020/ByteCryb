@@ -149,40 +149,10 @@ class Landing extends React.Component {
   </columns>
 </indexFile>`;
 
-    var parser = new DOMParser();
-    var xml = parser.parseFromString(xmlString, "text/xml");
-    var obj = xmlToJSON(xml);
+    var obj = xmlToJSON(xmlString);
 
-    console.log(obj);
-    console.log(obj.indexFile.columns);
+    // console.log(obj);
 
-    const data = [];
-    const subData = []
-
-    for (let i = 0; i < obj.indexFile.columns.column.length; i++) {
-      const name = obj.indexFile.columns['#comment'][i];
-      subData.push({
-        [name]: {
-          type: obj.indexFile.columns.column[i].type['#text'],
-          required: obj.indexFile.columns.column[i].required['#text'],
-        }
-
-      });
-      // console.log(obj.indexFile.columns['#comment'][i]);
-      // console.log(obj.indexFile.columns.column[i].type['#text']);
-      // console.log(obj.indexFile.columns.column[i].required['#text']);
-      console.log(obj.indexFile.columns.column[i].validations.validation.configuration)
-      for (let j = 0; j < obj.indexFile.columns.column[i].validations.validation.configuration.length; j++) {
-        console.log(obj.indexFile.columns.column[i].validations.validation)
-      }
-      // console.log('---')
-    }
-
-    data.push({
-      properties: subData,
-    });
-    
-    console.log(data);
 
     return (
         <Container>
