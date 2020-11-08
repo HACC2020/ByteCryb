@@ -21,17 +21,18 @@ function xmlToJSON(xml) {
         if (!obj['#comment']) {
           obj['#comment'] = item.nodeValue;
         }
-        // console.log(item.nodeValue)
-        // console.log(obj)
       }
       var nodeName = item.nodeName;
+
       if (typeof (obj[nodeName]) == "undefined") {
         obj[nodeName] = xmlToJSON(item);
       } else {
         if (typeof (obj[nodeName].push) == "undefined") {
-          var old = obj[nodeName];
-          obj[nodeName] = [];
-          obj[nodeName].push(old);
+          if (nodeName !== '#text') {
+            var old = obj[nodeName];
+            obj[nodeName] = [];
+            obj[nodeName].push(old);
+          }
         }
         if (nodeName !== '#text') {
           if (nodeName === '#comment') {

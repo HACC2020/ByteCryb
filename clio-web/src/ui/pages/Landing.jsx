@@ -156,9 +156,33 @@ class Landing extends React.Component {
     console.log(obj);
     console.log(obj.indexFile.columns);
 
-    for (let i = 0; i < obj.indexFile.columns.length; i++) {
-      console.log(obj.indexFile.columns[i])
+    const data = [];
+    const subData = []
+
+    for (let i = 0; i < obj.indexFile.columns.column.length; i++) {
+      const name = obj.indexFile.columns['#comment'][i];
+      subData.push({
+        [name]: {
+          type: obj.indexFile.columns.column[i].type['#text'],
+          required: obj.indexFile.columns.column[i].required['#text'],
+        }
+
+      });
+      // console.log(obj.indexFile.columns['#comment'][i]);
+      // console.log(obj.indexFile.columns.column[i].type['#text']);
+      // console.log(obj.indexFile.columns.column[i].required['#text']);
+      console.log(obj.indexFile.columns.column[i].validations.validation.configuration)
+      for (let j = 0; j < obj.indexFile.columns.column[i].validations.validation.configuration.length; j++) {
+        console.log(obj.indexFile.columns.column[i].validations.validation)
+      }
+      // console.log('---')
     }
+
+    data.push({
+      properties: subData,
+    });
+    
+    console.log(data);
 
     return (
         <Container>
@@ -181,7 +205,8 @@ class Landing extends React.Component {
                   </Row>
                   <Card.Text>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur
-                    corporis delectus dignissimos error ex fuga inventore maxime modi molestiae nulla
+                    corporis delectus dignissimos error ex fuga inventore maxime modi molestiae
+                    nulla
                     numquam provident recusandae repellat repudiandae similique, suscipit totam vel,
                     voluptatum!
                   </Card.Text>
@@ -207,7 +232,8 @@ class Landing extends React.Component {
                   </Row>
                   <Card.Text>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur
-                    corporis delectus dignissimos error ex fuga inventore maxime modi molestiae nulla
+                    corporis delectus dignissimos error ex fuga inventore maxime modi molestiae
+                    nulla
                     numquam provident recusandae repellat repudiandae similique, suscipit totam vel,
                     voluptatum!
                   </Card.Text>
