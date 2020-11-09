@@ -44,7 +44,7 @@ public class Record {
     @Getter
     @Setter
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "pdf_link")
+    @JoinColumn(name = "pdf_id")
     private PDF pdf;
 
     @Setter
