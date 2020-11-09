@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -23,9 +22,6 @@ public class Category {
 	
 	@Column(name = "name", nullable = false)
 	private String name;
-
-	@OneToMany(mappedBy = "category")
-	private List<Job> jobs;
 
 	public Category(String name) {
 		super();
