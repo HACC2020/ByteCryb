@@ -81,7 +81,7 @@ public class ScoreController {
 
 		Iterator<Score> scoreIterator = query.iterator();
 
-		int i = 0;
+		int i = 1;
 		while (scoreIterator.hasNext() && 1 < 10) {
 			Score tmp = scoreIterator.next();
 			long tmpUserId = tmp.getUserId();
@@ -91,4 +91,36 @@ public class ScoreController {
 		}
 		return ResponseEntity.ok().body(result);
 	}
+
+	// GET SCORE BY USER
+	@GetMapping("/{user_id}")
+	public ResponseEntity<ResultScore> getUserScore(@PathVariable(name = "user_id") Long userId) {
+
+		// find all scores in descending order
+		List<Score> allScores = this.scoreRepo.findAll(Sort.by("score").descending());
+
+		ResultScore result = null;
+
+		// iterate to find matching user, index to obtain user's score rank
+		for (int i = 0; i < allScores.size(); i++) {
+			Score currScore = allScores.get(i);
+			long currUserId = currScore.getUserId();
+			if (currUserId == userId) {
+				CustomUser currUser = this.userRepo.findById(currUserId);
+				result = new ResultScore(i, currUser.getUsername(), currScore.getScore());
+			}
+		}
+		/*
+		// get score of user w/ no rank
+		Score query = this.scoreRepo.findByUserId(userId);
+		long currUserId = query.getUserId();
+		CustomUser currUser = this.userRepo.findById(currUserId);
+
+		ResultScore result = new ResultScore(0, currUser.getUsername(), query.getScore());
+		*/
+		return ResponseEntity.ok().body(result);
+		
+	}
+
+
 }
