@@ -32,20 +32,15 @@ public class PDF {
 	@Column(name = "data")
 	private byte[] data;
 
-	@Getter
-	@Setter
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "pdf")
-	private Record record;
 
 	public PDF() {
 		super();
 	}
 
-	public PDF(String name, byte[] data, Record record) {
+	public PDF(String name, byte[] data) {
 		super();
 		this.name = name;
 		this.data = data;
-		this.record = record;
 	}
 
 	public Long getId() {
