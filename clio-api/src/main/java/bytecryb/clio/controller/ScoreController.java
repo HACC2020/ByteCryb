@@ -39,8 +39,8 @@ public class ScoreController {
 
 		Iterator<Score> scoreIterator = query.iterator();
 
-		int i = 0;
-		while (scoreIterator.hasNext() && i < 9) {
+		int i = 1;
+		while (scoreIterator.hasNext() && i < 10) {
 			Score tmp = scoreIterator.next();
 			long tmpUserId = tmp.getUserId();
 			CustomUser user = this.userRepo.findById(tmpUserId);
@@ -60,8 +60,8 @@ public class ScoreController {
 
 		Iterator<Score> scoreIterator = query.iterator();
 
-		int i = 0;
-		while (scoreIterator.hasNext() && i < 9) {
+		int i = 1;
+		while (scoreIterator.hasNext() && i < 10) {
 			Score tmp = scoreIterator.next();
 			long tmpUserId = tmp.getUserId();
 			CustomUser user = this.userRepo.findById(tmpUserId);
@@ -82,7 +82,7 @@ public class ScoreController {
 		Iterator<Score> scoreIterator = query.iterator();
 
 		int i = 0;
-		while (scoreIterator.hasNext() && i < 9) {
+		while (scoreIterator.hasNext() && 1 < 10) {
 			Score tmp = scoreIterator.next();
 			long tmpUserId = tmp.getUserId();
 			CustomUser user = this.userRepo.findById(tmpUserId);
