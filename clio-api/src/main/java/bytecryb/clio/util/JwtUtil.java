@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -67,7 +66,7 @@ public class JwtUtil {
 	public boolean validateToken(String authToken) {
 		try {
 			// Jwt token has not been tampered with
-			Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
+			Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
 			return true;
 		} catch (SignatureException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
 			throw new BadCredentialsException("INVALID_CREDENTIALS", ex);
