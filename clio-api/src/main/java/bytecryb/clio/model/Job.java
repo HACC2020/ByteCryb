@@ -6,37 +6,55 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@NoArgsConstructor
+@EqualsAndHashCode
+@Table(name = "jobs")
 public class Job {
-	
+
 	@Id
+	@Getter
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "job_id_generator")
-    @SequenceGenerator(name="job_id_generator", sequenceName = "job_seq")
-    @Column(name = "id", updatable = false, nullable = false)
+	@SequenceGenerator(name = "job_id_generator", sequenceName = "job_seq")
+	@Column(name = "id", updatable = false, nullable = false)
 	private long id;
-	
+
+	@Getter
+	@Setter
 	@Column(name = "name", nullable = false)
 	private String name;
-	
+
+	@Getter
+	@Setter
 	@Column(name = "cat_id")
 	private long categoryId;
-	
+
+	@Getter
+	@Setter
 	@Column(name = "status")
 	private int status;
-	
+
+	@Getter
+	@Setter
 	@Column(name = "xml")
 	private String xml;
-	
+
+	@Getter
+	@Setter
 	@Column(name = "num_indexed")
 	private int indexed;
-	
+
+	@Getter
+	@Setter
 	@Column(name = "size", nullable = false)
 	private int size;
-
-	public Job() {
-		super();
-	}
 
 	public Job(String name, long categoryId, int status, String xml, int indexed, int size) {
 		super();
@@ -47,57 +65,4 @@ public class Job {
 		this.indexed = indexed;
 		this.size = size;
 	}
-
-	public long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public long getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(long categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	public String getXml() {
-		return xml;
-	}
-
-	public void setXml(String xml) {
-		this.xml = xml;
-	}
-
-	public int getIndexed() {
-		return indexed;
-	}
-
-	public void setIndexed(int indexed) {
-		this.indexed = indexed;
-	}
-
-	public int getSize() {
-		return size;
-	}
-
-	public void setSize(int size) {
-		this.size = size;
-	}
-
 }

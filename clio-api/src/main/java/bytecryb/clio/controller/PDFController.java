@@ -37,8 +37,12 @@ public class PDFController {
     }
 
     @PostMapping("/pdf")
-    public PDF uploadPDF(@RequestParam("file") MultipartFile input) throws FileException, UnsupportedFileException {
-        return pdfService.save(input);
+    public ResponseEntity<String> uploadPDF(@RequestParam("file") MultipartFile input)
+            throws FileException, UnsupportedFileException {
+
+        PDF result = pdfService.save(input);
+
+        return ResponseEntity.ok().body(new String("Succesfully Created Job: " + result.getId()));
     }
 
 }

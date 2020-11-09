@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bytecryb.clio.model.ResultUser;
-import bytecryb.clio.model.Score;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.model.Role;
@@ -48,5 +47,25 @@ public class UserController {
     @GetMapping("/restricted")
     public String restricted() {
     	return welcomeMessage;
-    }
+	}
+	
+	@GetMapping("/rookie")
+	public String rookie() {
+		return "Welcome rookie";
+	}
+
+	@GetMapping("/indexer")
+	public String indexer() {
+		return "Welcome indexer";
+	}
+
+	@GetMapping("/proofer")
+	public String proofer() {
+		return "Welcome proofer";
+	}
+
+	@GetMapping("/archivist")
+	public String archivist() {
+		return "Welcome archivist";
+	}
 }

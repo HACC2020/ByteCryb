@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -22,8 +22,8 @@ import javax.persistence.Table;
 public class CustomUser {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")
-	@SequenceGenerator(name = "user_id_generator", sequenceName = "user_req")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")
+	@SequenceGenerator(name = "user_id_generator", sequenceName = "user_req", initialValue = 5)
 	@Column(name = "id", updatable = false, nullable = false)
 	private long userId;
 
@@ -36,7 +36,7 @@ public class CustomUser {
     @Column(name = "password")
     private String password;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne()
 	@JoinColumn(name = "role_id") //creates foreign key column
 	private Role role;
 
@@ -58,13 +58,14 @@ public class CustomUser {
 		super();
 	}
 
-	public CustomUser(String username, String email, String password, String firstName, String lastName) {
+	public CustomUser(String username, String email, String password, String firstName, String lastName, Role role) {
 		super();
         this.username = username;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.role = role;
     }
     
     public CustomUser(String username, String email, String password) {

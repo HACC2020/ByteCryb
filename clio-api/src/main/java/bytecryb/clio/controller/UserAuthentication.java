@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,12 +11,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import bytecryb.clio.model.AuthenticationRequest;
 import bytecryb.clio.model.AuthenticationResponse;
-import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.CustomUser;
+import bytecryb.clio.model.ResultUser;
+import bytecryb.clio.model.Role;
+import bytecryb.clio.repository.RoleRepository;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.service.CustomUserDetailsService;
 import bytecryb.clio.util.JwtUtil;
@@ -28,10 +28,10 @@ import bytecryb.clio.util.JwtUtil;
 public class UserAuthentication {
 
     @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+	private UserRepository userRepo;
+	
+	@Autowired
+	private RoleRepository roleRepo;
     
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -54,10 +54,9 @@ public class UserAuthentication {
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
+
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
 		final String token = jwtTokenUtil.generateToken(userDetails);
-
 		return ResponseEntity.ok(new AuthenticationResponse(token));
 	}
 	
@@ -69,8 +68,15 @@ public class UserAuthentication {
         }
         if(userRepo.existsByEmail(user.getEmail())) {
         	throw new Exception("EMAIL ALREADY IN USE");
-        }
-		return ResponseEntity.ok(userDetailsService.save(user));
+		}
+		Role role = roleRepo.findByRoleName("rookie");
+		user.setRole(role);
+		CustomUser savedUser = userDetailsService.save(user);
+		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
+		final String token = jwtTokenUtil.generateToken(userDetails);
+		resUser.setAuthToken(token);
+		return ResponseEntity.ok(resUser);
 	}
 
 }

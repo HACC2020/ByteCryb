@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.model.CustomUser;
+import bytecryb.clio.model.Role;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -30,7 +31,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 		
 		CustomUser user = userRepo.findByUsername(username);
 		if (user != null) {
-			roles = Arrays.asList(new SimpleGrantedAuthority("ADMIN"));
+			Role role = user.getRole();
+			roles = Arrays.asList(new SimpleGrantedAuthority(role.getName()));
 			return new User(user.getUsername(), user.getPassword(), roles);
 		}
 		throw new UsernameNotFoundException("User not found with the name " + username);
@@ -41,6 +43,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		newUser.setUsername(user.getUsername());
 		newUser.setEmail(user.getEmail());
 		newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+		newUser.setRole(user.getRole());
 		return userRepo.save(newUser);
 	}
 
