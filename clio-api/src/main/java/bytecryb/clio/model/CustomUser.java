@@ -16,7 +16,7 @@ public class CustomUser {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")
-	@SequenceGenerator(name = "user_id_generator", sequenceName = "user_req", initialValue = 5)
+	@SequenceGenerator(name = "user_id_generator", sequenceName = "user_seq", initialValue = 5)
 	@Column(name = "id", updatable = false, nullable = false)
 	private long userId;
 
