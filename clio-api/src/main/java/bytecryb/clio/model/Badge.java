@@ -14,7 +14,7 @@ public class Badge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "badge_id_generator")
-    @SequenceGenerator(name="badge_id_generator", sequenceName = "badge_req")
+    @SequenceGenerator(name="badge_id_generator", sequenceName = "badge_seq")
     @Column(name = "id", updatable = false, nullable = false)
     private long id;
 
