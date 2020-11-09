@@ -59,7 +59,7 @@ function xmlToJSON(xml) {
       // console.log(key)
       // console.log(validations[key])
       if ('pattern' in validations[key]) {
-        pattern = validations[key].pattern._text;
+        // pattern = validations[key].pattern._text;
       }
 
       if ('min' in validations[key]) {

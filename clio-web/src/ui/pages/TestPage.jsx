@@ -48,16 +48,23 @@ class TestPage extends React.Component {
     };
 
     const renderFields = (field, key) => {
+      let required = '';
+      for (let i = 0; i < this.state.xmlJSON.required.length; i++) {
+        if (this.state.xmlJSON.required[i] === key) {
+          required = '*Required Field';
+        }
+      }
+
       if (field.enum) {
         return (
             <SelectField name={key}
-                       help={'Only A-Z characters allowed'}/>
+                       help={`${required}`}/>
         )
       }
       if (field.type === 'string') {
         return (
             <TextField name={key}
-                       help={'Only A-Z characters allowed'}/>
+                       help={`${required}`}/>
         )
       }
     };
@@ -69,7 +76,6 @@ class TestPage extends React.Component {
               <h4>XML Validation Test</h4>
               {/*<AutoFields/>*/}
               {_.map(this.state.xmlJSON.properties, (field, index) => renderFields(field, index))}
-              {/*{renderFields()}*/}
               <ErrorsField/>
               <SubmitField/>
             </AutoForm>
