@@ -1,13 +1,19 @@
 package bytecryb.clio.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "pdf")
@@ -26,14 +32,20 @@ public class PDF {
 	@Column(name = "data")
 	private byte[] data;
 
+	@Getter
+	@Setter
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "pdf")
+	private Record record;
+
 	public PDF() {
 		super();
 	}
 
-	public PDF(String name, byte[] data) {
+	public PDF(String name, byte[] data, Record record) {
 		super();
 		this.name = name;
 		this.data = data;
+		this.record = record;
 	}
 
 	public Long getId() {
