@@ -17,6 +17,7 @@
     "react-pdf": "^5.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
+    "sweetalert2": "^10.9.1",
     "uniforms": "^3.0.0-rc.6",
     "uniforms-bootstrap4": "^3.0.0-rc.6",
     "uniforms-bridge-json-schema": "^3.0.0-rc.6",

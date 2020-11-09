@@ -11,6 +11,7 @@ import {
   DateField, AutoFields, ErrorsField,
 } from "uniforms-bootstrap4";
 import _ from 'lodash';
+import Swal from 'sweetalert2';
 
 // import { bridge as schema } from "../../api/RookieTraining";
 import { xmlToJSON } from '../../xmlParser';
@@ -23,6 +24,7 @@ class TestPage extends React.Component {
     this.state = {
       text: '',
       xmlJSON: '',
+      error: ''
     }
   }
 
@@ -33,16 +35,27 @@ class TestPage extends React.Component {
       if ('files' in input && input.files.length > 0) {
         readFileContent(input.files[0]).then(content => {
           setState(content)
-        }).catch(error => console.log(error))
+        }).catch(error => setError(error))
       }
     }
+
+    const setError = (error) => {
+      this.setState({ error: error });
+      this.setState({ xmlJSON: '' });
+      Swal.fire({
+        icon: 'error',
+        title: 'XML Format Invalid',
+        text: error,
+        footer: ''
+      })
+    };
 
     const setState = (content) => {
       this.setState({ text: content });
       // console.log(this.state.text)
       var obj = xmlToJSON(content);
       obj.title = 'Chinese Index Cards';
-      console.log(obj);
+      this.setState({ error: '' });
       this.setState({ xmlJSON: obj });
       // console.log(obj);
     };
@@ -58,7 +71,7 @@ class TestPage extends React.Component {
       if (field.enum) {
         return (
             <SelectField name={key}
-                       help={`${required}`}/>
+                         help={`${required}`}/>
         )
       }
       if (field.type === 'string') {
@@ -71,16 +84,28 @@ class TestPage extends React.Component {
 
     const hasFile = () => {
       if (this.state.xmlJSON.length !== 0) {
-        return (
-            <AutoForm schema={JSONBridge(this.state.xmlJSON)} onSubmit={console.log}>
-              <h4>XML Validation Test</h4>
-              {/*<AutoFields/>*/}
-              {_.map(this.state.xmlJSON.properties, (field, index) => renderFields(field, index))}
-              <ErrorsField/>
-              <SubmitField/>
-            </AutoForm>
-        )
+        let schema = JSONBridge(this.state.xmlJSON);
+        if (schema[0] === false) {
+          Swal.fire({
+            icon: 'error',
+            title: 'XML Format Invalid',
+            text: schema[1],
+            footer: ''
+          })
+        }
+        if (this.state.error.length === 0 && schema[0] !== false) {
+          return (
+              <AutoForm schema={schema} onSubmit={console.log}>
+                <h4>XML Validation Test</h4>
+                {/*<AutoFields/>*/}
+                {_.map(this.state.xmlJSON.properties, (field, index, key) => renderFields(field, index, key))}
+                <ErrorsField/>
+                <SubmitField/>
+              </AutoForm>
+          )
+        }
       }
+
     };
 
     function readFileContent(file) {

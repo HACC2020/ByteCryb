@@ -59,7 +59,7 @@ function xmlToJSON(xml) {
       // console.log(key)
       // console.log(validations[key])
       if ('pattern' in validations[key]) {
-        // pattern = validations[key].pattern._text;
+        pattern = validations[key].pattern._text;
       }
 
       if ('min' in validations[key]) {
@@ -91,7 +91,7 @@ function xmlToJSON(xml) {
     }
     if (pattern.length !== 0) {
       data.properties[name].pattern = '^(' + pattern + ')+$';
-      //data.properties[name].pattern = pattern;
+      data.properties[name].pattern = pattern;
     }
     if (min.length !== 0) {
       data.properties[name].minimum = parseInt(min);

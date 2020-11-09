@@ -4,7 +4,14 @@ import { JSONSchemaBridge } from 'uniforms-bridge-json-schema';
 const ajv = new Ajv({ allErrors: true, useDefaults: true });
 
 function createValidator(schema: object) {
-  const validator = ajv.compile(schema);
+
+  let validator = '';
+
+  try {
+    validator = ajv.compile(schema);
+  } catch (e) {
+    return [false, e];
+  }
 
   return (model: object) => {
     validator(model);
@@ -14,6 +21,9 @@ function createValidator(schema: object) {
 
 function JSONBridge(schema) {
   const schemaValidator = createValidator(schema);
+  if (schemaValidator[0] === false) {
+    return schemaValidator;
+  }
   return new JSONSchemaBridge(schema, schemaValidator);
 }
 
