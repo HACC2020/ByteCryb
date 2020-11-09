@@ -88,7 +88,7 @@ class RookieTraining extends React.Component {
               <AutoField name="name" />
               <AutoField name="age" />
               <SelectField name="gender" allowedValues={["Male", "Female"]} />
-              <TextField name={"residence"} />
+              <TextField name={"residence"} help={'Only A-Z characters allowed'}/>
               <TextField name="dateOfArrival" placeholder={"01/23/1832"} />
               {/*<DateField*/}
               {/*    showInlineError*/}

@@ -10,6 +10,7 @@ import {
   SubmitField,
   DateField, AutoFields, ErrorsField,
 } from "uniforms-bootstrap4";
+import _ from 'lodash';
 
 // import { bridge as schema } from "../../api/RookieTraining";
 import { xmlToJSON } from '../../xmlParser';
@@ -27,117 +28,6 @@ class TestPage extends React.Component {
 
   render() {
 
-//     var xmlString = `<indexFile>
-//   <columns>
-//     <!-- Name -->
-//     <column>
-//       <index>0</index>
-//       <type>string</type>
-//       <required>true</required>
-//       <validations>
-//         <validation>
-//           <type>regex</type>
-//           <configuration>
-//             <pattern>[a-zA-Z ]+</pattern>
-//           </configuration>
-//         </validation>
-//       </validations>
-//     </column>
-//     <!-- Age -->
-//     <column>
-//       <index>1</index>
-//       <type>string</type>
-//       <required>true</required>
-//       <validations>
-//         <validation>
-//           <type>regex</type>
-//           <configuration>
-//             <pattern>([1-9][0-9]*|none|none given)</pattern>
-//           </configuration>
-//         </validation>
-//       </validations>
-//     </column>
-//     <!-- Gender -->
-//     <column>
-//       <index>2</index>
-//       <type>string</type>
-//       <required>true</required>
-//       <validations>
-//         <validation>
-//           <type>restricted-value</type>
-//           <configuration>
-//             <allowedValues>
-//               <value>Male</value>
-//               <value>Female</value>
-//             </allowedValues>
-//           </configuration>
-//         </validation>
-//       </validations>
-//     </column>
-//     <!-- Residence -->
-//     <column>
-//       <index>3</index>
-//       <type>string</type>
-//       <required>true</required>
-//       <validations>
-//         <validation>
-//           <type>regex</type>
-//           <configuration>
-//             <pattern>[a-zA-Z ]+</pattern>
-//           </configuration>
-//         </validation>
-//       </validations>
-//     </column>
-//     <!-- Date of Arrival -->
-//     <column>
-//       <index>4</index>
-//       <type>date</type>
-//       <required>true</required>
-//       <parsing>
-//         <format>MM/dd/yyyy</format>
-//       </parsing>
-//       <validations>
-//         <validation>
-//           <type>date-range</type>
-//           <configuration>
-//             <min>1847-01-01</min>
-//             <max>1870-12-31</max>
-//           </configuration>
-//         </validation>
-//       </validations>
-//     </column>
-//     <!-- Name of Ship -->
-//     <column>
-//       <index>5</index>
-//       <type>string</type>
-//       <required>true</required>
-//       <validations>
-//         <validation>
-//           <type>regex</type>
-//           <configuration>
-//             <pattern>[a-zA-Z"“” ]+</pattern>
-//           </configuration>
-//         </validation>
-//       </validations>
-//     </column>
-//     <!-- From -->
-//     <column>
-//       <index>6</index>
-//       <type>string</type>
-//       <required>true</required>
-//       <validations>
-//         <validation>
-//           <type>regex</type>
-//           <configuration>
-//             <pattern>[a-zA-Z ]+</pattern>
-//           </configuration>
-//         </validation>
-//       </validations>
-//     </column>
-//   </columns>
-// </indexFile>`;
-
-
     function getFile(event) {
       const input = event.target;
       if ('files' in input && input.files.length > 0) {
@@ -148,12 +38,28 @@ class TestPage extends React.Component {
     }
 
     const setState = (content) => {
-      this.setState({text: content});
-      console.log(this.state.text)
+      this.setState({ text: content });
+      // console.log(this.state.text)
       var obj = xmlToJSON(content);
       obj.title = 'Chinese Index Cards';
-      this.setState({xmlJSON: obj});
       console.log(obj);
+      this.setState({ xmlJSON: obj });
+      // console.log(obj);
+    };
+
+    const renderFields = (field, key) => {
+      if (field.enum) {
+        return (
+            <SelectField name={key}
+                       help={'Only A-Z characters allowed'}/>
+        )
+      }
+      if (field.type === 'string') {
+        return (
+            <TextField name={key}
+                       help={'Only A-Z characters allowed'}/>
+        )
+      }
     };
 
     const hasFile = () => {
@@ -161,14 +67,15 @@ class TestPage extends React.Component {
         return (
             <AutoForm schema={JSONBridge(this.state.xmlJSON)} onSubmit={console.log}>
               <h4>XML Validation Test</h4>
-              <AutoFields/>
+              {/*<AutoFields/>*/}
+              {_.map(this.state.xmlJSON.properties, (field, index) => renderFields(field, index))}
+              {/*{renderFields()}*/}
               <ErrorsField/>
               <SubmitField/>
             </AutoForm>
         )
       }
     };
-
 
     function readFileContent(file) {
       const reader = new FileReader();
@@ -199,13 +106,13 @@ class TestPage extends React.Component {
             </Card>
           </Accordion>
           <Row>
-            <Col>
+            <Col xs={6}>
               {this.state.text}
             </Col>
             <Col xs={5}>
               <Form>
                 <Form.Group>
-                  <Form.File id="exampleFormControlFile1" label="Example file input"
+                  <Form.File id="exampleFormControlFile1" label="XML Validation Check"
                              onChange={(e) => getFile(e)}/>
                 </Form.Group>
               </Form>

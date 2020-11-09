@@ -2,21 +2,6 @@
 import xmljs from 'xml-js'
 import _ from 'lodash';
 
-function logRecursive(object) {
-  for (let key in object) {
-    var value = object[key];
-    if (typeof value === 'object') {
-      // console.log('{');
-      console.log(key)
-      logRecursive(value);
-      // console.log('}');
-    } else {
-      console.log(value)
-      // console.log(value);
-    }
-  }
-}
-
 function xmlToJSON(xml) {
   var options = { compact: true, spaces: 4 };
   let result = xmljs.xml2js(xml, options);
@@ -97,22 +82,29 @@ function xmlToJSON(xml) {
     }
 
     data.properties[name] = {};
-    data.properties[name].type = 'string';
+    data.properties[name].type = type;
+    // data.properties[name].type = 'string';
+    if (data.properties[name].type === 'date') {
+      data.properties[name].type = 'string';
+    } else {
+      data.properties[name].type = type;
+    }
     if (pattern.length !== 0) {
       data.properties[name].pattern = '^(' + pattern + ')+$';
+      //data.properties[name].pattern = pattern;
     }
     if (min.length !== 0) {
-      // data.properties[name].minimum = parseInt(min);
+      data.properties[name].minimum = parseInt(min);
     }
     if (max.length !== 0) {
-      // data.properties[name].maximum = parseInt(max);
+      data.properties[name].maximum = parseInt(max);
     }
     if (allowedValues.length !== 0) {
       data.properties[name].enum = allowedValues;
     }
   }
 
-  console.log(data)
+  console.log(data);
 
   return data;
 }
