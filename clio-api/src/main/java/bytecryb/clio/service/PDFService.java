@@ -1,6 +1,15 @@
 package bytecryb.clio.service;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,13 +26,13 @@ public class PDFService {
     @Autowired
     private PDFRepository pdfRepo;
 
-    public PDF save(MultipartFile input) throws FileException, UnsupportedFileException {
+    public PDF get(Long id) throws ResourceNotFoundException {
+        return pdfRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("File not found with id " + id));
+    }
 
-        String fileName = StringUtils.cleanPath(input.getOriginalFilename());
-
-        String fileType = input.getContentType();
-
-        PDF pdf = null;
+    public PDF uploadToLocal(MultipartFile file, UUID folder) throws Exception {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileType = file.getContentType();
 
         if (fileName.contains("..")) {
             throw new FileException("");
@@ -37,19 +46,50 @@ public class PDFService {
             throw new UnsupportedFileException("File provided must be a PDF. Received Content-Type: " + fileType);
         }
 
-        try {
-            pdf = new PDF(fileName, input.getBytes());
+        Path dest = Paths.get((System.getProperty("user.dir") + "/data/pdf/" + folder.toString()));
 
-            pdfRepo.save(pdf);
-        } catch (Exception e) {
-            throw new FileException("Could not store " + fileName);
+        if (!Files.exists(dest)) {
+            Files.createDirectories(dest);
         }
 
-        return pdf;
+        Path path = Paths.get(dest.toString() + "/" + fileName);
+        PDF result = null;
+        InputStream is = file.getInputStream();
+
+        try {
+            Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
+            result = this.pdfRepo.save(new PDF(fileName, path.toString()));
+        } catch (Exception e) {
+            is.close();
+            try {
+                // Try to delete if possible
+                Files.delete(path);
+            } catch (Exception ie) {
+                // Do nothing
+            }
+            throw new FileException("Could Not Save File: " + fileName);
+        }
+
+        is.close();
+
+        return result;
     }
 
-    public PDF get(Long id) throws ResourceNotFoundException {
-        return pdfRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("File not found with id " + id));
+    public Resource downloadFileFromLocal(Long id) throws ResourceNotFoundException {
+        PDF result = this.pdfRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("PDF not found for ID: " + id));
+        Path path = Paths.get(result.getPath());
+        Resource resource = null;
+        try {
+            resource = new UrlResource(path.toUri());
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Could not find file locally for ID: " + id);
+        }
+        return resource;
+    }
+
+    public void createDir(Path folderPath) throws Exception {
+        Files.createDirectories(folderPath);
     }
 
 }
