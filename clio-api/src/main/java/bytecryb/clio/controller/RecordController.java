@@ -20,7 +20,6 @@ import bytecryb.clio.model.Record;
 @RestController
 @RequestMapping("/api/v1")
 public class RecordController {
-
     @Autowired
     private RecordRepository recordRepo;
 

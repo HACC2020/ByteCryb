@@ -17,17 +17,16 @@ import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.model.Role;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1")
 public class UserController {
-	
 	@Value("${welcome.message}")
 	private String welcomeMessage;
 
-    @Autowired
-    private UserRepository userRepo;
+	@Autowired
+	private UserRepository userRepo;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<ResultUser>> getUsers() {
+	@GetMapping("/users")
+	public ResponseEntity<List<ResultUser>> getUsers() {
 		List<CustomUser> query = this.userRepo.findAll();
 
 		List<ResultUser> result = new ArrayList<ResultUser>();
@@ -38,34 +37,36 @@ public class UserController {
 			CustomUser tmp = userIterator.next();
 			Role currRole = tmp.getRole();
 			String roleName = currRole.getName();
-			result.add(new ResultUser(tmp.getUserId(), tmp.getUsername(), tmp.getFirstName(), tmp.getLastName(), tmp.getEmail(), roleName));
+			result.add(new ResultUser(tmp.getUserId(), tmp.getUsername(), tmp.getFirstName(), tmp.getLastName(),
+					tmp.getEmail(), roleName));
 		}
 
 		return ResponseEntity.ok().body(result);
 	}
 
-    @GetMapping("/restricted")
-    public String restricted() {
-    	return welcomeMessage;
+	@GetMapping("/users/restricted")
+	public String restricted() {
+		return welcomeMessage;
 	}
-	
-	@GetMapping("/rookie")
+
+	@GetMapping("/users/rookie")
 	public String rookie() {
 		return "Welcome rookie";
 	}
 
-	@GetMapping("/indexer")
+	@GetMapping("/users/indexer")
 	public String indexer() {
 		return "Welcome indexer";
 	}
 
-	@GetMapping("/proofer")
+	@GetMapping("/users/proofer")
 	public String proofer() {
 		return "Welcome proofer";
 	}
 
-	@GetMapping("/archivist")
+	@GetMapping("users/archivist")
 	public String archivist() {
 		return "Welcome archivist";
 	}
+
 }

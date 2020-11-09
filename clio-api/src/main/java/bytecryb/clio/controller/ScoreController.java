@@ -17,7 +17,6 @@ import bytecryb.clio.repository.ScoreRepository;
 @RestController
 @RequestMapping("/api/scores")
 public class ScoreController {
-
 	@Autowired
 	private ScoreRepository scoreRepo;
 
