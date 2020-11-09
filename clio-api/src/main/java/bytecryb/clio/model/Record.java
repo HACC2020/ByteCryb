@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -32,8 +34,9 @@ public class Record {
 
     @Getter
     @Setter
-    @Column(name = "job_id", nullable = false)
-    private long jobId;
+    @ManyToOne()
+    @JoinColumn(name = "job_id")
+    private Job job;
 
     @Getter
     @Setter
@@ -60,7 +63,7 @@ public class Record {
 
     public Record() {
         super();
-        this.jobId = -1;
+        //this.jobId = -1;
         this.pdfId = -1;
         this.checkedOut = false;
         this.submitted = false;
@@ -70,7 +73,7 @@ public class Record {
 
     public Record(long jobId, long pdfId, boolean checkedOut, boolean submitted, boolean approved, String json) {
         super();
-        this.jobId = jobId;
+        //this.jobId = jobId;
         this.pdfId = pdfId;
         this.checkedOut = checkedOut;
         this.submitted = submitted;
