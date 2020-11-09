@@ -7,5 +7,5 @@ import bytecryb.clio.model.Score;
 
 @Repository
 public interface ScoreRepository extends JpaRepository<Score, Long> {
-
+    Score findByUserId(Long userId);
 }

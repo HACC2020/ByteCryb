@@ -57,7 +57,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
 		.antMatchers("/api/users/indexer").hasAuthority("indexer")
 		.antMatchers("/api/users/proofer").hasAuthority("proofer")
 		.antMatchers("/api/users/archivist").hasAuthority("archivist")
-		.antMatchers("/auth/login", "/auth/signup", "/api/users/all")
+		.antMatchers("/**", "/auth/login", "/auth/signup", "/api/users/all")
 		.permitAll()
 		.anyRequest()
 		.authenticated()
