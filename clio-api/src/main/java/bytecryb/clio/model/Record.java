@@ -1,12 +1,15 @@
 package bytecryb.clio.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -34,14 +37,15 @@ public class Record {
 
     @Getter
     @Setter
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     private Job job;
 
     @Getter
     @Setter
-    @Column(name = "pdf_id", nullable = false)
-    private long pdfId;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "pdf_id", referencedColumnName = "id")
+    private PDF pdf;
 
     @Setter
     @Column(name = "checked_out", nullable = false)
@@ -64,17 +68,17 @@ public class Record {
     public Record() {
         super();
         //this.jobId = -1;
-        this.pdfId = -1;
+        this.pdf = new PDF();
         this.checkedOut = false;
         this.submitted = false;
         this.approved = false;
         this.json = "";
     }
 
-    public Record(long jobId, long pdfId, boolean checkedOut, boolean submitted, boolean approved, String json) {
+    public Record(Job job, PDF pdf, boolean checkedOut, boolean submitted, boolean approved, String json) {
         super();
-        //this.jobId = jobId;
-        this.pdfId = pdfId;
+        this.job = job;
+        this.pdf = pdf;
         this.checkedOut = checkedOut;
         this.submitted = submitted;
         this.approved = approved;

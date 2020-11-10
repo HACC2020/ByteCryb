@@ -1,12 +1,17 @@
 package bytecryb.clio.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+
 
 @Entity
 @Table(name = "badges")
@@ -14,7 +19,7 @@ public class Badge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "badge_id_generator")
-    @SequenceGenerator(name="badge_id_generator", sequenceName = "badge_req")
+    @SequenceGenerator(name="badge_id_generator", sequenceName = "badge_seq")
     @Column(name = "id", updatable = false, nullable = false)
     private long id;
 
@@ -23,6 +28,9 @@ public class Badge {
 
     @Column(name = "score")
     private int score;
+
+    @OneToMany(mappedBy = "badge")
+    Set<Award> awards;
 
     public Badge() {
         super();

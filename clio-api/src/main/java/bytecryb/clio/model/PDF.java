@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Entity
 @NoArgsConstructor
 @EqualsAndHashCode
@@ -35,6 +36,15 @@ public class PDF {
 	@Setter
 	@Column(name = "path", nullable = false)
 	private String path;
+
+	@Lob
+	@Column(name = "data")
+	private byte[] data;
+
+
+	public PDF() {
+		super();
+	}
 
 	public PDF(String name, String path) {
 		super();
