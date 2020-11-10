@@ -7,23 +7,11 @@ public class ResultUser {
     private String lastName;
     private String email;
 	private String roleName;
-	private String authToken;
 
     public ResultUser() {
         super();
     }
     
-	public ResultUser(long id, String username, String firstName, String lastName, String email, String roleName, String authToken) {
-		super();
-        this.id = id;
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-		this.roleName = roleName;
-		this.authToken = authToken;		
-	}
-
 	public ResultUser(long id, String username, String firstName, String lastName, String email, String roleName) {
 		super();
         this.id = id;
@@ -85,13 +73,4 @@ public class ResultUser {
 	public String getRoleName() {
 		return roleName;
 	}
-
-	public String getAuthToken() {
-		return authToken;
-	}
-
-	public void setAuthToken(String authToken) {
-		this.authToken = authToken;
-	}
-
 }

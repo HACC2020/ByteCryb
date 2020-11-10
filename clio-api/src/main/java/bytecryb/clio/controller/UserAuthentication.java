@@ -15,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 
 import bytecryb.clio.model.AuthenticationRequest;
-import bytecryb.clio.model.AuthenticationResponse;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
@@ -59,7 +58,9 @@ public class UserAuthentication {
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
-		return ResponseEntity.ok(new AuthenticationResponse(token));
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Authorization", "Bearer " + token);
+		return new ResponseEntity<String>("User authenticated!", responseHeaders, HttpStatus.OK);
 	}
 	
 	// {username, email, password}
@@ -79,7 +80,6 @@ public class UserAuthentication {
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Authorization", "Bearer " + token);
-		resUser.setAuthToken(token);
 		return new ResponseEntity<ResultUser>(resUser, responseHeaders, HttpStatus.OK);
 	}
 
