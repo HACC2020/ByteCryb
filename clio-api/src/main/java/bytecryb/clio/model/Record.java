@@ -37,7 +37,7 @@ public class Record {
 
     @Getter
     @Setter
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     private Job job;
 
@@ -75,9 +75,10 @@ public class Record {
         this.json = "";
     }
 
-    public Record(Job job, boolean checkedOut, boolean submitted, boolean approved, String json) {
+    public Record(Job job, PDF pdf, boolean checkedOut, boolean submitted, boolean approved, String json) {
         super();
         this.job = job;
+        this.pdf = pdf;
         this.checkedOut = checkedOut;
         this.submitted = submitted;
         this.approved = approved;
