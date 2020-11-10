@@ -36,6 +36,7 @@ public class UserController {
 	@Value("${welcome.message}")
 	private String welcomeMessage;
 
+	@Autowired
 	private AwardRepository awardRepo;
 
 	@Autowired
@@ -57,8 +58,8 @@ public class UserController {
 		return username;
 	}
 
-	@GetMapping("/users")
-	public ResponseEntity<List<ResultUser>> getUsers() {
+    @GetMapping("/users/all")
+    public ResponseEntity<List<ResultUser>> getUsers() {
 		List<CustomUser> query = this.userRepo.findAll();
 
 		List<ResultUser> result = new ArrayList<ResultUser>();
@@ -69,8 +70,7 @@ public class UserController {
 			CustomUser tmp = userIterator.next();
 			Role currRole = tmp.getRole();
 			String roleName = currRole.getName();
-			result.add(new ResultUser(tmp.getUserId(), tmp.getUsername(), tmp.getFirstName(), tmp.getLastName(),
-					tmp.getEmail(), roleName));
+			result.add(new ResultUser(tmp.getUserId(), tmp.getUsername(), tmp.getFirstName(), tmp.getLastName(), tmp.getEmail(), roleName));
 		}
 
 		return ResponseEntity.ok().body(result);
@@ -112,8 +112,33 @@ public class UserController {
 
 		return ResponseEntity.ok().body(result);
 	}
+
+
+    @GetMapping("/restricted")
+    public String restricted() {
+    	return welcomeMessage;
+	}
 	
-  // gets jwt from http servlet request (not a endpoint)
+	@GetMapping("/rookie")
+	public String rookie() {
+		return "Welcome rookie";
+	}
+
+	@GetMapping("/indexer")
+	public String indexer() {
+		return "Welcome indexer";
+	}
+
+	@GetMapping("/proofer")
+	public String proofer() {
+		return "Welcome proofer";
+	}
+
+	@GetMapping("/archivist")
+	public String archivist() {
+		return "Welcome archivist";
+	}
+
 	private String extractJwtFromRequest(HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
@@ -121,4 +146,5 @@ public class UserController {
 		}
 		return null;
 	}
+
 }
