@@ -51,17 +51,17 @@ public class UserController {
 
 	@GetMapping("/users/rookie")
 	public String rookie() {
-		return "Welcome rookie";
+		return "Welcome Rookie!";
 	}
 
 	@GetMapping("/users/indexer")
 	public String indexer() {
-		return "Welcome indexer";
+		return "Welcome Indexer!";
 	}
 
 	@GetMapping("/users/proofer")
 	public String proofer() {
-		return "Welcome proofer";
+		return "Welcome Proofer!";
 	}
 
 	@GetMapping("users/archivist")
