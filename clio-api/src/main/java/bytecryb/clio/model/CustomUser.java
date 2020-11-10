@@ -1,5 +1,7 @@
 package bytecryb.clio.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -38,6 +41,9 @@ public class CustomUser {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @OneToMany(mappedBy = "user")
+    Set<Award> awards;
 
 	public CustomUser() {
 		super();
@@ -115,4 +121,5 @@ public class CustomUser {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
 }
