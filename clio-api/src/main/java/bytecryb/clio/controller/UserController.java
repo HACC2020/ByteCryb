@@ -36,10 +36,6 @@ public class UserController {
 	@Value("${welcome.message}")
 	private String welcomeMessage;
 
-	@Autowired
-
-	private UserRepository userRepo;
-
 	private AwardRepository awardRepo;
 
 	@Autowired
