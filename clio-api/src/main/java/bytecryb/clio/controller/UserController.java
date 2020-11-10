@@ -4,27 +4,49 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.util.ObjectBuffer;
+
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
 
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.model.Role;
+import bytecryb.clio.util.JwtUtil;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-	
+
 	@Value("${welcome.message}")
 	private String welcomeMessage;
 
-    @Autowired
-    private UserRepository userRepo;
+	@Autowired
+	private UserRepository userRepo;
+
+	@Autowired
+	private JwtUtil jwtUtil;
+
+	@Autowired
+	private ObjectMapper mapper;
+	
+	//Get username from token
+	public String getUser(HttpServletRequest request) {
+		String jwtToken = extractJwtFromRequest(request);
+		String username = jwtUtil.getUsernameFromToken(jwtToken);
+		return username;
+	}
 
     @GetMapping("/all")
     public ResponseEntity<List<ResultUser>> getUsers() {
@@ -43,6 +65,15 @@ public class UserController {
 
 		return ResponseEntity.ok().body(result);
 	}
+
+	@GetMapping("/userInfo")
+	public ResponseEntity<ObjectNode> userInfo() {
+		//json return object
+		ObjectNode result = mapper.createObjectNode();
+
+		return ResponseEntity.ok().body(result);
+	}
+
 
     @GetMapping("/restricted")
     public String restricted() {
@@ -68,4 +99,13 @@ public class UserController {
 	public String archivist() {
 		return "Welcome archivist";
 	}
+
+	private String extractJwtFromRequest(HttpServletRequest request) {
+		String bearerToken = request.getHeader("Authorization");
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+			return bearerToken.substring(7, bearerToken.length());
+		}
+		return null;
+	}
+
 }
