@@ -75,10 +75,10 @@ public class Record {
         this.json = "";
     }
 
-    public Record(Job job, long pdfId, boolean checkedOut, boolean submitted, boolean approved, String json) {
+    public Record(Job job, PDF pdf, boolean checkedOut, boolean submitted, boolean approved, String json) {
         super();
         this.job = job;
-        this.pdfId = pdfId;
+        this.pdf = pdf;
         this.checkedOut = checkedOut;
         this.submitted = submitted;
         this.approved = approved;
