@@ -14,7 +14,6 @@ import bytecryb.clio.model.Role;
 @RestController
 @RequestMapping("/api/v1")
 public class RoleController {
-
     @Autowired
     private RoleRepository roleRepo;
 

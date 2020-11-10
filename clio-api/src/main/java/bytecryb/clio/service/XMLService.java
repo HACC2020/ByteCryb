@@ -17,20 +17,20 @@ import org.springframework.web.multipart.MultipartFile;
 import bytecryb.clio.exception.FileException;
 import bytecryb.clio.exception.ResourceNotFoundException;
 import bytecryb.clio.exception.UnsupportedFileException;
-import bytecryb.clio.model.PDF;
-import bytecryb.clio.repository.PDFRepository;
+import bytecryb.clio.model.XML;
+import bytecryb.clio.repository.XMLRepository;
 
 @Service
-public class PDFService {
+public class XMLService {
 
     @Autowired
-    private PDFRepository pdfRepo;
+    private XMLRepository xmlRepo;
 
-    public PDF get(Long id) throws ResourceNotFoundException {
-        return pdfRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("File not found with id " + id));
+    public XML get(Long id) throws ResourceNotFoundException {
+        return xmlRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("File not found with id " + id));
     }
 
-    public PDF uploadToLocal(MultipartFile file, UUID folder) throws Exception {
+    public XML uploadToLocal(MultipartFile file, UUID folder) throws Exception {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         String fileType = file.getContentType();
 
@@ -42,23 +42,23 @@ public class PDFService {
             throw new FileException("Could not find file type");
         }
 
-        if (!fileType.equals("application/pdf")) {
+        if (!fileType.equals("application/xml") || !fileType.equals("text/xml")) {
             throw new UnsupportedFileException("File provided must be a PDF. Received Content-Type: " + fileType);
         }
 
-        Path dest = Paths.get((System.getProperty("user.dir") + "/data/pdf/" + folder.toString()));
+        Path dest = Paths.get((System.getProperty("user.dir") + "/data/xml/" + folder.toString()));
 
         if (!Files.exists(dest)) {
             Files.createDirectories(dest);
         }
 
         Path path = Paths.get(dest.toString() + "/" + fileName);
-        PDF result = null;
+        XML result = null;
         InputStream is = file.getInputStream();
 
         try {
             Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
-            result = this.pdfRepo.save(new PDF(fileName, path.toString()));
+            result = this.xmlRepo.save(new XML(fileName, path.toString()));
         } catch (Exception e) {
             is.close();
             try {
@@ -76,7 +76,7 @@ public class PDFService {
     }
 
     public Resource downloadFileFromLocal(Long id) throws ResourceNotFoundException {
-        PDF result = this.pdfRepo.findById(id)
+        XML result = this.xmlRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("PDF not found for ID: " + id));
         Path path = Paths.get(result.getPath());
         Resource resource = null;

@@ -22,9 +22,8 @@ import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.util.JwtUtil;
 
 @RestController
-@RequestMapping("/api/scores")
+@RequestMapping("/api/api")
 public class ScoreController {
-
 	@Autowired
 	private ScoreRepository scoreRepo;
 
@@ -48,7 +47,7 @@ public class ScoreController {
 		result.add(new ResultScore(0, username, userScore.getDay()));
 
 		Iterator<Score> scoreIterator = query.iterator();
-
+    
 		int i = 1;
 		while (scoreIterator.hasNext() && i < 10) {
 			Score tmp = scoreIterator.next();
@@ -59,6 +58,7 @@ public class ScoreController {
 		}
 		return ResponseEntity.ok().body(result);
 	}
+
 
 	// GET MONTHLY
 	@GetMapping("/month")

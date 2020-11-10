@@ -11,13 +11,12 @@ import bytecryb.clio.model.Category;
 import bytecryb.clio.repository.CategoryRepository;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/v1")
 public class CategoryController {
-	
 	@Autowired
 	private CategoryRepository catRepo;
-	
-	@GetMapping("/all")
+
+	@GetMapping("/categories")
 	public List<Category> getAll() {
 		return this.catRepo.findAll();
 	}
