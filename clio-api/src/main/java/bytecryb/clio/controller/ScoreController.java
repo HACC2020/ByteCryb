@@ -22,7 +22,7 @@ import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.util.JwtUtil;
 
 @RestController
-@RequestMapping("/api/scores")
+@RequestMapping("/api/v1")
 public class ScoreController {
 
 	@Autowired
@@ -35,7 +35,7 @@ public class ScoreController {
 	private JwtUtil jwtUtil;
 
 	// GET DAILY
-	@GetMapping("/daily")
+	@GetMapping("/scores/daily")
 	public ResponseEntity<List<ResultScore>> getDailyTopScores(HttpServletRequest request) {
 		
 		List<Score> query = this.scoreRepo.findAll(Sort.by("day").descending());
@@ -61,7 +61,7 @@ public class ScoreController {
 	}
 
 	// GET MONTHLY
-	@GetMapping("/month")
+	@GetMapping("/scores/month")
 	public ResponseEntity<List<ResultScore>> getMonthlyTopScores(HttpServletRequest request) {
 		
 		List<Score> query = this.scoreRepo.findAll(Sort.by("month").descending());
@@ -87,7 +87,7 @@ public class ScoreController {
 	}
 
 	// GET ALL TIME
-	@GetMapping("/alltime")
+	@GetMapping("/scores/alltime")
 	public ResponseEntity<List<ResultScore>> getAllTimeTopScores(HttpServletRequest request) {
 		
 		List<Score> query = this.scoreRepo.findAll(Sort.by("score").descending());

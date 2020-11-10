@@ -30,7 +30,7 @@ import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.util.JwtUtil;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1")
 public class UserController {
 
 	@Value("${welcome.message}")
@@ -58,7 +58,7 @@ public class UserController {
 		return username;
 	}
 
-    @GetMapping("/all")
+    @GetMapping("/users/all")
     public ResponseEntity<List<ResultUser>> getUsers() {
 		List<CustomUser> query = this.userRepo.findAll();
 
@@ -77,7 +77,7 @@ public class UserController {
 	}
 
 	// GET BASIC PROFILE INFO OF USER (username, role, score, badges)
-	@GetMapping("/profile")
+	@GetMapping("/users/profile")
 	public ResponseEntity<ObjectNode> userInfo(HttpServletRequest request) {
 		//json return object, utilize objectnode and objectmapper
 		ObjectNode result = mapper.createObjectNode();

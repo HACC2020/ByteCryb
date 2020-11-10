@@ -11,13 +11,13 @@ import bytecryb.clio.repository.AwardRepository;
 import bytecryb.clio.model.Award;
 
 @RestController
-@RequestMapping("/api/awards")
+@RequestMapping("/api/v1")
 public class AwardController {
 
     @Autowired
     private AwardRepository awardRepo;
     //get all awards
-    @GetMapping("/all") 
+    @GetMapping("/awards") 
     public List<Award> getAllAward() {
         return this.awardRepo.findAll();
     }

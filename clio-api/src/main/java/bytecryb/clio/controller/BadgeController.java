@@ -12,25 +12,15 @@ import bytecryb.clio.model.Badge;
 
 
 @RestController
-@RequestMapping("/api/badges")
+@RequestMapping("/api/v1/")
 public class BadgeController {
 
     @Autowired
     private BadgeRepository badgeRepo;
     //get badges
-    @GetMapping("/all") 
+    @GetMapping("/badges") 
     public List<Badge> getAllBadge() {
         return this.badgeRepo.findAll();
     }
-
-    /*//get badge by score
-    @GetMapping("/{score}")
-    public ResponseEntity<Badge> getBadgeByScore(@PathVariable(value = "score") Integer score)
-        throws ResourceNotFoundException {
-            Badge badge = badgeRepo.findByScore(score)
-                .orElseThrow(() -> new ResourceNotFoundException("Badge not found for this score: " + badge));       
-        
-        return ResponseEntity.ok().body(badge);
-        }*/
 
 }
