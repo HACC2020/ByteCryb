@@ -18,27 +18,31 @@ import bytecryb.clio.model.AuthenticationRequest;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
+import bytecryb.clio.model.Score;
 import bytecryb.clio.repository.RoleRepository;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.service.CustomUserDetailsService;
+import bytecryb.clio.service.ScoreService;
 import bytecryb.clio.util.JwtUtil;
 
 
 @RestController
 @RequestMapping("/auth")
 public class UserAuthentication {
-
     @Autowired
 	private UserRepository userRepo;
 	
 	@Autowired
 	private RoleRepository roleRepo;
-    
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
 	private CustomUserDetailsService userDetailsService;
+
+	@Autowired
+	private ScoreService scoreService;
 
 	@Autowired
 	private JwtUtil jwtTokenUtil;
@@ -75,6 +79,13 @@ public class UserAuthentication {
 		Role role = roleRepo.findByRoleName("rookie");
 		user.setRole(role);
 		CustomUser savedUser = userDetailsService.save(user);
+		Score defaultScore = new Score();
+		defaultScore.setUserId(savedUser.getUserId());
+		defaultScore.setDay(0);
+		defaultScore.setMonth(0);
+		defaultScore.setYear(0);
+		defaultScore.setScore(0);
+		scoreService.save(defaultScore);
 		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);

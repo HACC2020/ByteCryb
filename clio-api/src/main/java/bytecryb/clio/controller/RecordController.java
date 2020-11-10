@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.transaction.annotation.Transactional;
 
 import bytecryb.clio.repository.RecordRepository;
@@ -20,27 +21,26 @@ import bytecryb.clio.model.Record;
 @RestController
 @RequestMapping("/api/v1")
 public class RecordController {
-
     @Autowired
     private RecordRepository recordRepo;
 
     // get all records
-    @GetMapping("/records")
+    @GetMapping("/records/all")
     public List<Record> getAll() {
         return this.recordRepo.findAll();
     }
 
     @GetMapping("/records/{id}")
-    public ResponseEntity<Record> getById(@PathVariable(name = "id") Long id) throws ResourceNotFoundException {
+    public ResponseEntity<Record> getById(@PathVariable Long id) throws ResourceNotFoundException {
         Record result = this.recordRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Record" + id + "was not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Record " + id + " was not found"));
         return ResponseEntity.ok().body(result);
     }
 
     // get first incomplete record pdf link
-    @GetMapping("/records/{job_id}")
+    @GetMapping("/records/pop")
     @Transactional
-    public ResponseEntity<Record> popByJobId(@PathVariable(name = "job_id") Long jobId) {
+    public ResponseEntity<Record> popByJobId(@RequestParam(name = "job_id") Long jobId) {
         // get a list of records with matching job id
         List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
 
@@ -66,7 +66,7 @@ public class RecordController {
         return ResponseEntity.ok().body(new String("Successfully Created Record: " + result.getId()));
     }
 
-    @PutMapping("/records/{id}")
+    @PutMapping("/records")
     @Transactional
     public ResponseEntity<Record> update(@RequestBody Record input) throws ResourceNotFoundException {
         Record result = this.recordRepo.findById(input.getId())

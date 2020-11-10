@@ -13,17 +13,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
 @NoArgsConstructor
 @EqualsAndHashCode
-@Table(name = "pdf")
-public class PDF {
+@Table(name = "xml")
+public class XML {
 
 	@Id
 	@Getter
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pdf_id_generator")
-	@SequenceGenerator(name = "pdf_id_generator", sequenceName = "pdf_id_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "xml_id_generator")
+	@SequenceGenerator(name = "xml_id_generator", sequenceName = "xml_id_seq")
 	@Column(name = "id", updatable = false, nullable = false)
 	private long id;
 
@@ -37,16 +36,7 @@ public class PDF {
 	@Column(name = "path", nullable = false)
 	private String path;
 
-	@Lob
-	@Column(name = "data")
-	private byte[] data;
-
-
-	public PDF() {
-		super();
-	}
-
-	public PDF(String name, String path) {
+	public XML(String name, String path) {
 		super();
 		this.name = name;
 		this.path = path;

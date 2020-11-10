@@ -48,8 +48,8 @@ public class Job {
 
 	@Getter
 	@Setter
-	@Column(name = "xml")
-	private String xml;
+	@Column(name = "xml_id")
+	private Long xmlId;
 
 	@Getter
 	@Setter
@@ -65,7 +65,7 @@ public class Job {
 		super();
 		this.name = name;
 		this.status = status;
-		this.xml = xml;
+		this.xmlId = xmlId;
 		this.indexed = indexed;
 		this.size = size;
 	}
