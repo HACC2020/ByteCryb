@@ -40,6 +40,7 @@ public class ScoreController {
 	// GET DAILY
 	@GetMapping("/daily")
 	public ResponseEntity<List<ResultScore>> getDailyTopScores(@RequestParam(name = "day") int day, @RequestParam(name = "month") int month, @RequestParam(name = "year") int year, HttpServletRequest request) {
+
 		
 		List<Score> query = this.scoreRepo.findAll(Sort.by("day").descending());
 		List<ResultScore> result = new ArrayList<ResultScore>();
@@ -104,7 +105,7 @@ public class ScoreController {
 	}
 
 	// GET ALL TIME
-	@GetMapping("/alltime")
+	@GetMapping("/scores/alltime")
 	public ResponseEntity<List<ResultScore>> getAllTimeTopScores(HttpServletRequest request) {
 		
 		List<ResultScore> result = new ArrayList<ResultScore>();

@@ -49,8 +49,8 @@ public class UserController {
 
 	@Autowired
 	private ObjectMapper mapper;
-	
-	//Get username from token
+
+	// Get username from token
 	public String getUser(HttpServletRequest request) {
 		String jwtToken = extractJwtFromRequest(request);
 		String username = jwtUtil.getUsernameFromToken(jwtToken);
@@ -77,43 +77,50 @@ public class UserController {
 	}
 
 	// GET BASIC PROFILE INFO OF USER (username, role, score, badges)
-	@GetMapping("/profile")
+	@GetMapping("/users/profile")
 	public ResponseEntity<ObjectNode> userInfo(HttpServletRequest request) {
-		//json return object, utilize objectnode and objectmapper
+		// json return object, utilize objectnode and objectmapper
 		ObjectNode result = mapper.createObjectNode();
 
-		//get username
+		// get username
 		String jwtToken = extractJwtFromRequest(request);
 		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
 		result.put("username", currUsername);
 
-		//create CustomUser object to find role, scores, and badges
+		System.out.println(jwtToken);
+		System.out.println(result);
+
+		// create CustomUser object to find role, scores, and badges
 		CustomUser currUser = this.userRepo.findByUsername(currUsername);
 
-		//get role
+		result.put("user", currUser.toString());
+
+		// get role
 		String currRoleName = currUser.getRole().getName();
 		result.put("role", currRoleName);
 
-		//get total score
+		// get total score
 		Long userId = currUser.getUserId();
 		Score score = this.scoreRepo.findByUserId(userId);
 		result.put("score", score.getScore());
-		
-		//get badges
-		List<Award> awards = this.awardRepo.findByUserId(userId);
-		List<String> badgeNames = new ArrayList<>();
-		if (awards.size() > 0) {
-			for (Award award : awards) {
-				String currBadgeName = award.getBadge().getName();
-				badgeNames.add(currBadgeName);
-			}
-		}
-		result.putPOJO("badges", badgeNames);
+
+		// get badges
+		// List<Award> awards = this.awardRepo.findByUserId(userId);
+		// List<String> badgeNames = new ArrayList<>();
+		// if (awards.size() > 0) {
+		// for (Award award : awards) {
+		// String currBadgeName = award.getBadge().getName();
+		// badgeNames.add(currBadgeName);
+		// }
+		// }
+		// result.putPOJO("badges", badgeNames);
+
+		System.out.println(result);
 
 		return ResponseEntity.ok().body(result);
 	}
 
-  // gets jwt from http servlet request (not a endpoint)
+	// gets jwt from http servlet request (not a endpoint)
 	private String extractJwtFromRequest(HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
