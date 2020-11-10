@@ -13,14 +13,14 @@ import bytecryb.clio.model.Award;
 @RestController
 @RequestMapping("/api/v1")
 public class AwardController {
-
     @Autowired
     private AwardRepository awardRepo;
-    //get all awards
-    @GetMapping("/awards") 
+
+    // get all awards
+    @GetMapping("/awards")
     public List<Award> getAllAward() {
         return this.awardRepo.findAll();
     }
 
-    //get award by username
+    // get award by username
 }

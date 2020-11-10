@@ -37,15 +37,13 @@ public class Record {
 
     @Getter
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "job_id")
-    private Job job;
+    @Column(name = "job_id")
+    private Long jobId;
 
     @Getter
     @Setter
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "pdf_id", referencedColumnName = "id")
-    private PDF pdf;
+    @Column(name = "pdf_id")
+    private Long pdfId;
 
     @Setter
     @Column(name = "checked_out", nullable = false)
@@ -67,18 +65,18 @@ public class Record {
 
     public Record() {
         super();
-        //this.jobId = -1;
-        this.pdf = new PDF();
+        this.jobId = -1l;
+        this.pdfId = -1l;
         this.checkedOut = false;
         this.submitted = false;
         this.approved = false;
         this.json = "";
     }
 
-    public Record(Job job, PDF pdf, boolean checkedOut, boolean submitted, boolean approved, String json) {
+    public Record(long jobId, long pdfId, boolean checkedOut, boolean submitted, boolean approved, String json) {
         super();
-        this.job = job;
-        this.pdf = pdf;
+        this.jobId = jobId;
+        this.pdfId = pdfId;
         this.checkedOut = checkedOut;
         this.submitted = submitted;
         this.approved = approved;

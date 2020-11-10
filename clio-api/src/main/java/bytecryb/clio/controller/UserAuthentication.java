@@ -28,7 +28,6 @@ import bytecryb.clio.util.JwtUtil;
 @RestController
 @RequestMapping("/auth")
 public class UserAuthentication {
-
     @Autowired
 	private UserRepository userRepo;
 	

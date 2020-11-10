@@ -10,17 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import bytecryb.clio.repository.BadgeRepository;
 import bytecryb.clio.model.Badge;
 
-
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 public class BadgeController {
-
     @Autowired
     private BadgeRepository badgeRepo;
-    //get badges
-    @GetMapping("/badges") 
+
+    // get badges
+    @GetMapping("/badges")
     public List<Badge> getAllBadge() {
         return this.badgeRepo.findAll();
     }
-
 }
