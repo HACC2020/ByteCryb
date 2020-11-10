@@ -1,14 +1,10 @@
 package bytecryb.clio.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -37,9 +33,8 @@ public class Job {
 
 	@Getter
 	@Setter
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "category_id", referencedColumnName = "id")
-	private Category category;
+	@Column(name = "category_id")
+	private Long categoryId;
 
 	@Getter
 	@Setter
@@ -61,9 +56,10 @@ public class Job {
 	@Column(name = "size", nullable = false)
 	private int size;
 
-	public Job(String name, int status, String xml, int indexed, int size) {
+	public Job(String name, long categoryId, int status, long xmlId, int indexed, int size) {
 		super();
 		this.name = name;
+		this.categoryId = categoryId;
 		this.status = status;
 		this.xmlId = xmlId;
 		this.indexed = indexed;

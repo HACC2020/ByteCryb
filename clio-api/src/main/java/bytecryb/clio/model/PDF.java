@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -37,15 +36,6 @@ public class PDF {
 	@Setter
 	@Column(name = "path", nullable = false)
 	private String path;
-
-	@Lob
-	@Column(name = "data")
-	private byte[] data;
-
-
-	public PDF() {
-		super();
-	}
 
 	public PDF(String name, String path) {
 		super();
