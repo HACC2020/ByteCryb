@@ -113,32 +113,6 @@ public class UserController {
 		return ResponseEntity.ok().body(result);
 	}
 
-
-    @GetMapping("/restricted")
-    public String restricted() {
-    	return welcomeMessage;
-	}
-	
-	@GetMapping("/rookie")
-	public String rookie() {
-		return "Welcome rookie";
-	}
-
-	@GetMapping("/indexer")
-	public String indexer() {
-		return "Welcome indexer";
-	}
-
-	@GetMapping("/proofer")
-	public String proofer() {
-		return "Welcome proofer";
-	}
-
-	@GetMapping("/archivist")
-	public String archivist() {
-		return "Welcome archivist";
-	}
-
 	private String extractJwtFromRequest(HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
