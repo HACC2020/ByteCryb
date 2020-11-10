@@ -94,9 +94,9 @@ public class ScoreController {
 
 	// GET TOP MONTHLY
 	@GetMapping("/scores/month")
-	public ResponseEntity<List<Score>> getMonthlyTopScores() {
+	public ResponseEntity<List<Object[]>> getMonthlyTopScores() {
 
-		List<Score> result = new ArrayList<>();
+		List<Object[]> result = new ArrayList<>();
 		result = this.scoreRepo.findAllMonthlyScores();
 
 

@@ -50,8 +50,6 @@ public class UserController {
 	@Autowired
 	private ObjectMapper mapper;
 	
-	/*
-	
 	//Get username from token
 	public String getUser(HttpServletRequest request) {
 		String jwtToken = extractJwtFromRequest(request);
@@ -123,6 +121,4 @@ public class UserController {
 		}
 		return null;
 	}
-
-	*/
 }
