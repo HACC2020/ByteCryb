@@ -77,7 +77,7 @@ public class UserController {
 	}
 
 	// GET BASIC PROFILE INFO OF USER (username, role, score, badges)
-	@GetMapping("/userInfo")
+	@GetMapping("/profile")
 	public ResponseEntity<ObjectNode> userInfo(HttpServletRequest request) {
 		//json return object, utilize objectnode and objectmapper
 		ObjectNode result = mapper.createObjectNode();
