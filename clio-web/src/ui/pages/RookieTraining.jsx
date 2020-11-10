@@ -11,7 +11,6 @@ import {
   DateField,
 } from "uniforms-bootstrap4";
 import { bridge as schema } from "../../api/RookieTraining";
-import NavigationBlocker from "../components/NavigationBlocker";
 import { Prompt } from "react-router";
 import { useEffect, isPrompt, shouldBlockNavigation } from "react";
 
