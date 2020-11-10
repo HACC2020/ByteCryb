@@ -1,12 +1,14 @@
 package bytecryb.clio.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.apache.catalina.connector.Response;
@@ -18,13 +20,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.util.StringUtils;
 
+import bytecryb.clio.model.Award;
+import bytecryb.clio.model.Badge;
 import bytecryb.clio.model.CustomUser;
-import bytecryb.clio.util.JwtUtil;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
 import bytecryb.clio.model.Score;
+
+import bytecryb.clio.repository.AwardRepository;
 import bytecryb.clio.repository.ScoreRepository;
 import bytecryb.clio.repository.UserRepository;
+
+import bytecryb.clio.util.JwtUtil;
 
 @RestController
 @RequestMapping("/api/users")
@@ -32,6 +39,9 @@ public class UserController {
 
 	@Value("${welcome.message}")
 	private String welcomeMessage;
+
+	@Autowired
+	private AwardRepository awardRepo;
 
 	@Autowired
 	private UserRepository userRepo;
@@ -72,28 +82,44 @@ public class UserController {
 
 	// GET BASIC PROFILE INFO OF USER (username, role, score, badges)
 	@GetMapping("/userInfo")
-	public ResponseEntity<ObjectNode> userInfo(HttpServletRequest request) {
+	public ResponseEntity<ArrayNode> userInfo(HttpServletRequest request) {
 		//json return object, utilize objectnode and objectmapper
-		ObjectNode result = mapper.createObjectNode();
+		ArrayNode result = mapper.createArrayNode();
+		ObjectNode data = mapper.createObjectNode();
 
 		//get username
 		String jwtToken = extractJwtFromRequest(request);
 		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
-		result.put("username", currUsername);
+		data.put("username", currUsername);
 
 		//create CustomUser object to find role, scores, and badges
 		CustomUser currUser = this.userRepo.findByUsername(currUsername);
 
 		//get role
 		String currRoleName = currUser.getRole().getName();
-		result.put("role", currRoleName);
+		data.put("role", currRoleName);
 
 		//get total score
 		Long userId = currUser.getUserId();
 		Score score = this.scoreRepo.findByUserId(userId);
-		result.put("score", score.getScore());
+		data.put("score", score.getScore());
 		
 		//get badges
+		/*List<Award> awards = this.awardRepo.findByUserId(userId);
+		List<String> badgeNames = new ArrayList<>();
+		if (awards.size() > 0) {
+			for (Award award : awards) {
+				String currBadgeName = award.getBadge().getName();
+				badgeNames.add(currBadgeName);
+			}
+
+			for (String name : badgeNames) {
+				returnList.add(name);
+			}
+
+		}*/
+		result.addAll(Arrays.asList(data));
+
 		return ResponseEntity.ok().body(result);
 	}
 
