@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.util.StringUtils;
 
-import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.CustomUser;
-import bytecryb.clio.repository.UserRepository;
-import bytecryb.clio.model.Role;
 import bytecryb.clio.util.JwtUtil;
+import bytecryb.clio.model.ResultUser;
+import bytecryb.clio.model.Role;
+import bytecryb.clio.model.Score;
+import bytecryb.clio.repository.ScoreRepository;
+import bytecryb.clio.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/users")
@@ -33,6 +35,9 @@ public class UserController {
 
 	@Autowired
 	private UserRepository userRepo;
+
+	@Autowired
+	private ScoreRepository scoreRepo;
 
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -65,17 +70,29 @@ public class UserController {
 		return ResponseEntity.ok().body(result);
 	}
 
+	// GET BASIC PROFILE INFO OF USER (username, role, score, badges)
 	@GetMapping("/userInfo")
 	public ResponseEntity<ObjectNode> userInfo(HttpServletRequest request) {
 		//json return object, utilize objectnode and objectmapper
 		ObjectNode result = mapper.createObjectNode();
+
 		//get username
 		String jwtToken = extractJwtFromRequest(request);
-		String username = jwtUtil.getUsernameFromToken(jwtToken);
-		result.put("username", username);
+		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
+		result.put("username", currUsername);
+
+		//create CustomUser object to find role, scores, and badges
+		CustomUser currUser = this.userRepo.findByUsername(currUsername);
+
 		//get role
-		
+		String currRoleName = currUser.getRole().getName();
+		result.put("role", currRoleName);
+
 		//get total score
+		Long userId = currUser.getUserId();
+		Score score = this.scoreRepo.findByUserId(userId);
+		result.put("score", score.getScore());
+		
 		//get badges
 		return ResponseEntity.ok().body(result);
 	}
