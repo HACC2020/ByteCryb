@@ -9,5 +9,5 @@ import bytecryb.clio.model.Award;
 
 @Repository
 public interface AwardRepository extends JpaRepository<Award, Long> {
-    List<Award> findByUserId(Long userId);
+    List<Award> findByUser(Long userId);
 }

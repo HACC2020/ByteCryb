@@ -103,21 +103,21 @@ public class UserController {
 		Score score = this.scoreRepo.findByUserId(userId);
 		result.put("score", score.getScore());
 		
+		/*List<String> dummy = new ArrayList<>();
+		dummy.add("hello");
+		dummy.add("hi");
+
+		result.putPOJO("badges", dummy);*/
 		//get badges
-		/*List<Award> awards = this.awardRepo.findByUserId(userId);
+		List<Award> awards = this.awardRepo.findByUser(currUser);
 		List<String> badgeNames = new ArrayList<>();
 		if (awards.size() > 0) {
 			for (Award award : awards) {
 				String currBadgeName = award.getBadge().getName();
 				badgeNames.add(currBadgeName);
 			}
-
-			for (String name : badgeNames) {
-				returnList.add(name);
-			}
-
-		}*/
-		ArrayNode data = mapper.createArrayNode();
+		}
+		result.putPOJO("badges", badgeNames);
 
 		return ResponseEntity.ok().body(result);
 	}
