@@ -1,12 +1,20 @@
 package bytecryb.clio.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+
 
 @Entity
 @Table(name = "badges")
@@ -23,6 +31,9 @@ public class Badge {
 
     @Column(name = "score")
     private int score;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "badges")
+    private List<CustomUser> users = new ArrayList<>();
 
     public Badge() {
         super();
@@ -55,6 +66,14 @@ public class Badge {
 
     public int getScore() {
         return score;
+    }
+
+    public List<CustomUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<CustomUser> users) {
+        this.users = users;
     }
 
 }

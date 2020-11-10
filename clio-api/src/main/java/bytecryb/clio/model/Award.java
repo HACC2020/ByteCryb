@@ -11,7 +11,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="awards")
+@Table(name="award")
 public class Award {
 
     @Id
@@ -27,17 +27,16 @@ public class Award {
     private long badgeId;
 
     @Column(name = "date")
-    private Date date;
+    private Date date = new Date();
 
     public Award() {
         super();
     }
 
-    public Award(long userId, long badgeId, Date date) {
+    public Award(long userId, long badgeId) {
         super();
         this.userId = userId;
         this.badgeId = badgeId;
-        this.date = date;
     }
 
     public long getId() {
