@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Image, Form, Button, NavLink } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
+import AuthService from '../../api/AuthService';
 
 class Login extends React.Component {
 
@@ -10,8 +11,11 @@ class Login extends React.Component {
       username: '',
       password: '',
       response: '',
+      token: '',
     };
+    this.Auth = new AuthService();
   }
+
 
   async componentDidMount() {
     const response = await fetch('/api/v1/users');
@@ -52,11 +56,32 @@ class Login extends React.Component {
           password: this.state.password,
         }),
       });
-      console.log(response)
-      this.setState({response: response.status});
-
+      console.log(response);
       const body = await response.json();
-      console.log(body);
+      this.setState({response: response.status});
+      if (response.status === 200) {
+        let profile = await this.Auth.fetch('/api/v1/users/profile', '');
+        console.log(profile)
+        // this.setToken(body.token);
+        // const headers = {
+        //   Accept: 'application/json',
+        //   'Content-Type': 'application/json',
+        // };
+        //
+        // headers['Authorization'] = 'Bearer ' + this.getToken();
+        //
+        // console.log(headers);
+        // const profileResponse = await fetch('/api/v1/users/profile', {
+        //   method: 'GET',
+        //   headers: {headers},
+        // });
+        //
+        // console.log(profileResponse);
+        // console.log(profileResponse.headers);
+        // const profileResponseBody = await profileResponse.json();
+        // console.log(profileResponseBody)
+
+      }
 
     };
 
