@@ -2,6 +2,7 @@ package bytecryb.clio.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -46,13 +48,8 @@ public class CustomUser {
     @Column(name = "last_name")
     private String lastName;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "awards", //name of table
-        joinColumns = { @JoinColumn(name = "user_id") }, //owner column
-        inverseJoinColumns = { @JoinColumn(name = "badge_id") } 
-    )
-    private List<Badge> badges = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    Set<Award> awards;
 
 	public CustomUser() {
 		super();
@@ -131,11 +128,4 @@ public class CustomUser {
         this.lastName = lastName;
     }
 
-    public List<Badge> getBadges() {
-        return badges;
-    }
-
-    public void setBadges(List<Badge> badges) {
-        this.badges = badges;
-    }
 }

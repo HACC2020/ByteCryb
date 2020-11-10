@@ -7,25 +7,39 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
-@Table(name="award")
+@Table(name="awards")
 public class Award {
 
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "award_id_generator")
     @SequenceGenerator(name = "award_id_generator", sequenceName = "award_req")
     @Column(name = "id", updatable = false, nullable = false)
     private long id;
 
-    @Column(name = "user_id")
-    private long userId;
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private CustomUser user;
 
-    @Column(name = "badge_id")
-    private long badgeId;
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "badge_id")
+    private Badge badge;
 
+    @Getter
+    @Setter
     @Column(name = "date")
     private Date date = new Date();
 
@@ -33,41 +47,9 @@ public class Award {
         super();
     }
 
-    public Award(long userId, long badgeId) {
+    public Award(CustomUser user, Badge badge) {
         super();
-        this.userId = userId;
-        this.badgeId = badgeId;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public long getBadgeId() {
-        return badgeId;
-    }
-
-    public void setBadgeId(long badgeId) {
-        this.badgeId = badgeId;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+        this.user = user;
+        this.badge = badge;
     }
 }
