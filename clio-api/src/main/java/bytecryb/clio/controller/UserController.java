@@ -82,27 +82,26 @@ public class UserController {
 
 	// GET BASIC PROFILE INFO OF USER (username, role, score, badges)
 	@GetMapping("/userInfo")
-	public ResponseEntity<ArrayNode> userInfo(HttpServletRequest request) {
+	public ResponseEntity<ObjectNode> userInfo(HttpServletRequest request) {
 		//json return object, utilize objectnode and objectmapper
-		ArrayNode result = mapper.createArrayNode();
-		ObjectNode data = mapper.createObjectNode();
+		ObjectNode result = mapper.createObjectNode();
 
 		//get username
 		String jwtToken = extractJwtFromRequest(request);
 		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
-		data.put("username", currUsername);
+		result.put("username", currUsername);
 
 		//create CustomUser object to find role, scores, and badges
 		CustomUser currUser = this.userRepo.findByUsername(currUsername);
 
 		//get role
 		String currRoleName = currUser.getRole().getName();
-		data.put("role", currRoleName);
+		result.put("role", currRoleName);
 
 		//get total score
 		Long userId = currUser.getUserId();
 		Score score = this.scoreRepo.findByUserId(userId);
-		data.put("score", score.getScore());
+		result.put("score", score.getScore());
 		
 		//get badges
 		/*List<Award> awards = this.awardRepo.findByUserId(userId);
@@ -118,7 +117,7 @@ public class UserController {
 			}
 
 		}*/
-		result.addAll(Arrays.asList(data));
+		ArrayNode data = mapper.createArrayNode();
 
 		return ResponseEntity.ok().body(result);
 	}
