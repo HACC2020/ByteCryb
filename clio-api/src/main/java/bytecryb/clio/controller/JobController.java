@@ -50,7 +50,7 @@ public class JobController {
     }
 
     @GetMapping("/jobs/{id}")
-    public ResponseEntity<Job> getJobById(@PathVariable(name = "id") Long id) throws ResourceNotFoundException {
+    public ResponseEntity<Job> getJobById(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
         Job result = this.jobRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Job" + id + " was not found!"));
         return ResponseEntity.ok().body(result);
@@ -58,7 +58,7 @@ public class JobController {
 
     @PostMapping("/jobs")
     @Transactional
-    public ResponseEntity<Job> createJob(@RequestParam(name = "files") MultipartFile[] files,
+    public ResponseEntity<Job> createJob(@RequestParam(value = "files") MultipartFile[] files,
             @RequestParam(name = "xml") MultipartFile xml, @RequestParam(name = "name") String name,
             @RequestParam(name = "catId") Long catId) throws Exception {
         List<PDF> filesUploaded = new ArrayList<>();

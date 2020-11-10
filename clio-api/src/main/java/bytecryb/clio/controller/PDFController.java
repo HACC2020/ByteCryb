@@ -2,7 +2,6 @@ package bytecryb.clio.controller;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,38 +46,14 @@ public class PDFController {
                 .body(resource);
     }
 
-    @GetMapping("/download/{id}")
-    public ResponseEntity<Resource> downloadFileFromLocal(@PathVariable(value = "id") Long id)
-            throws ResourceNotFoundException {
-        PDF result = this.pdfService.get(id);
-        Path path = Paths.get(result.getPath());
-        Resource resource = null;
-        try {
-            resource = new UrlResource(path.toUri());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
-    }
-
-    // @PostMapping("/pdf")
-    // public ResponseEntity<String> uploadPDF(@RequestParam("file") MultipartFile
-    // input) throws Exception {
-    // List<Long> result = pdfService.saveZIP(input);
-
-    // return ResponseEntity.ok().body(new String(result.toString()));
-    // }
-
-    @PostMapping("/pdf")
+    @PostMapping("/pdf/upload")
     public ResponseEntity<PDF> upload(@RequestParam("file") MultipartFile file) throws Exception {
         UUID folder = UUID.randomUUID();
         PDF result = this.pdfService.uploadToLocal(file, folder);
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/pdf/multi")
+    @PostMapping("/pdf/multi-upload")
     public ResponseEntity<List<PDF>> multiUpload(@RequestParam("files") MultipartFile[] files) throws Exception {
         UUID folder = UUID.randomUUID();
         List<PDF> fileDownloadUrls = new ArrayList<>();

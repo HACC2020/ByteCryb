@@ -15,7 +15,7 @@ import bytecryb.clio.model.Score;
 import bytecryb.clio.repository.ScoreRepository;
 
 @RestController
-@RequestMapping("/api/scores")
+@RequestMapping("/api/api")
 public class ScoreController {
 	@Autowired
 	private ScoreRepository scoreRepo;
@@ -27,7 +27,7 @@ public class ScoreController {
 	// GET yearly top scores
 
 	// temp endpoint
-	@GetMapping("weekly")
+	@GetMapping("/scores/weekly")
 	public ResponseEntity<List<ResultScore>> getWeeklyTopScores() {
 		List<Score> query = this.scoreRepo.findAll();
 
