@@ -9,6 +9,7 @@ class Login extends React.Component {
     this.state = {
       username: '',
       password: '',
+      response: '',
     };
   }
 
@@ -52,12 +53,24 @@ class Login extends React.Component {
         }),
       });
       console.log(response)
+      this.setState({response: response.status});
+
       const body = await response.json();
       console.log(body);
 
-      // const response = await fetch('/api/auth/signup');
-      // const body = await response.json();
-      // console.log(body);
+    };
+
+    const renderInvalid = () => {
+      if (this.state.response === 400) {
+        return (
+            <div>
+              <span style={{color: '#fe4040', fontSize: '12px'}}>
+                Invalid username and/or password. Please try again.
+              </span>
+            </div>
+
+        )
+      }
     };
 
     return (
@@ -89,6 +102,7 @@ class Login extends React.Component {
                             onChange={(e) => onChangePW(e.target.value)}>
                   <Form.Label>Password</Form.Label>
                   <Form.Control type="password" placeholder="Password"/>
+                  {renderInvalid()}
                   <Form.Text className="text-muted">
                     <NavLink href="/signup">Not registered yet? Sign up here!
                     </NavLink>
