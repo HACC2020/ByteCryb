@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.util.ObjectBuffer;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,10 +66,17 @@ public class UserController {
 	}
 
 	@GetMapping("/userInfo")
-	public ResponseEntity<ObjectNode> userInfo() {
-		//json return object
+	public ResponseEntity<ObjectNode> userInfo(HttpServletRequest request) {
+		//json return object, utilize objectnode and objectmapper
 		ObjectNode result = mapper.createObjectNode();
-
+		//get username
+		String jwtToken = extractJwtFromRequest(request);
+		String username = jwtUtil.getUsernameFromToken(jwtToken);
+		result.put("username", username);
+		//get role
+		
+		//get total score
+		//get badges
 		return ResponseEntity.ok().body(result);
 	}
 
