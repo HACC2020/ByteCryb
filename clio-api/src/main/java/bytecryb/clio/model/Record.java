@@ -1,5 +1,6 @@
 package bytecryb.clio.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -41,8 +43,9 @@ public class Record {
 
     @Getter
     @Setter
-    @Column(name = "pdf_id", nullable = false)
-    private long pdfId;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "pdf_id", referencedColumnName = "id")
+    private PDF pdf;
 
     @Setter
     @Column(name = "checked_out", nullable = false)
@@ -65,7 +68,7 @@ public class Record {
     public Record() {
         super();
         //this.jobId = -1;
-        this.pdfId = -1;
+        this.pdf = new PDF();
         this.checkedOut = false;
         this.submitted = false;
         this.approved = false;

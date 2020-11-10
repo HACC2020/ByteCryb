@@ -9,6 +9,7 @@ import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name = "pdf")
 public class PDF {
@@ -25,6 +26,7 @@ public class PDF {
 	@Lob
 	@Column(name = "data")
 	private byte[] data;
+
 
 	public PDF() {
 		super();
