@@ -37,15 +37,6 @@ public class PDF {
 	@Column(name = "path", nullable = false)
 	private String path;
 
-	@Lob
-	@Column(name = "data")
-	private byte[] data;
-
-
-	public PDF() {
-		super();
-	}
-
 	public PDF(String name, String path) {
 		super();
 		this.name = name;
