@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.naming.spi.DirStateFactory.Result;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.util.JwtUtil;
 
 @RestController
-@RequestMapping("/api/api")
+@RequestMapping("/api/v1")
 public class ScoreController {
 	@Autowired
 	private ScoreRepository scoreRepo;
@@ -90,6 +91,17 @@ public class ScoreController {
 	}
 
 	*/
+
+	// GET TOP MONTHLY
+	@GetMapping("/scores/month")
+	public ResponseEntity<List<Score>> getMonthlyTopScores() {
+
+		List<Score> result = new ArrayList<>();
+		result = this.scoreRepo.findAllMonthlyScores();
+
+
+		return ResponseEntity.ok().body(result);
+	}
 
 	// GET ALL TIME
 	@GetMapping("/alltime")
