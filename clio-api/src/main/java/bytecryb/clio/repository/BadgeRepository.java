@@ -7,5 +7,5 @@ import bytecryb.clio.model.Badge;
 
 @Repository
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
-
+    Badge findByName(String name);
 }
