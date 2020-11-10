@@ -14,7 +14,7 @@ public class Score {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "score_id_generator")
-	@SequenceGenerator(name = "score_id_generator", sequenceName = "score_req")
+	@SequenceGenerator(name = "score_id_generator", sequenceName = "score_req", initialValue = 5)
 	@Column(name = "id", updatable = false, nullable = false)
 	private long id;
 
