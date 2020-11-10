@@ -4,6 +4,24 @@ import { withRouter } from 'react-router-dom';
 
 class Login extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      password: '',
+    };
+  }
+
+  async componentDidMount() {
+    const response = await fetch('/api/v1/users');
+    const body = await response.json();
+    console.log(body);
+    // client({method: 'GET', path: '/api/employees'}).done(response => {
+    //   this.setState({employees: response.entity._embedded.employees});
+    // });
+  }
+
+
   render() {
 
     const imgStyle = {
@@ -11,11 +29,42 @@ class Login extends React.Component {
       width: 'auto',
     };
 
+    const onChangePW = (value) => {
+      this.setState({ password: value })
+    };
+
+    const onChangeUsername = (value) => {
+      this.setState({ username: value })
+    };
+
+
+    const handleSubmit = async () => {
+
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.state.username,
+          password: this.state.password,
+        }),
+      });
+      console.log(response)
+      const body = await response.json();
+      console.log(body);
+
+      // const response = await fetch('/api/auth/signup');
+      // const body = await response.json();
+      // console.log(body);
+    };
+
     return (
         <Container>
           <Row>
             <Col xs={6}>
-              <Image src={'./hsa-logo.png'} style={imgStyle} />
+              <Image src={'./hsa-logo.png'} style={imgStyle}/>
               <p style={{ paddingTop: '1rem' }}>
                 We need your help! The Public Archives of Hawai'i is the keeper of public memory.
                 As such, we have millions of records that protect your rights, identity, property
@@ -29,20 +78,23 @@ class Login extends React.Component {
             <Col xs={6}>
               <h2 align={'center'}>Login</h2>
               <Form>
-                <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control type="email" placeholder="Enter email" />
+
+                <Form.Group controlId="username"
+                            onChange={(e) => onChangeUsername(e.target.value)}>
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control placeholder="Enter username"/>
                 </Form.Group>
 
-                <Form.Group controlId="formBasicPassword">
+                <Form.Group controlId="formBasicPassword"
+                            onChange={(e) => onChangePW(e.target.value)}>
                   <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Password" />
+                  <Form.Control type="password" placeholder="Password"/>
                   <Form.Text className="text-muted">
                     <NavLink href="/signup">Not registered yet? Sign up here!
                     </NavLink>
                   </Form.Text>
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button variant="primary" onClick={handleSubmit}>
                   Login
                 </Button>
               </Form>
