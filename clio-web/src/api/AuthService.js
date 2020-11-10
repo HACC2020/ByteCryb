@@ -10,13 +10,19 @@ export default class AuthService {
 
   login(username, password) {
     // Get a token from api server using the fetch api
-    return this.fetch(`${this.domain}/login`, {
+    return this.fetch('/auth/login', {
       method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         username,
         password,
       }),
     }).then(res => {
+      console.log(res);
       this.setToken(res.token); // Setting the token in localStorage
       return Promise.resolve(res);
     });
@@ -69,18 +75,22 @@ export default class AuthService {
 
     // Setting Authorization header
     // Authorization: Bearer xxxxxxx.xxxxxxxx.xxxxxx
+
+
     if (this.loggedIn()) {
       headers['Authorization'] = 'Bearer ' + this.getToken();
     }
 
+    console.log(headers);
 
     const response = await fetch(url, {
       headers,
       ...options,
     });
+    console.log(response);
         // .then(this._checkStatus)
-    const body = await response.json();
-    return body;
+    //const body = await response.json();
+    return '';
   }
 
   _checkStatus(response) {

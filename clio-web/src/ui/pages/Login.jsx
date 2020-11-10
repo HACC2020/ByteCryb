@@ -18,9 +18,24 @@ class Login extends React.Component {
 
 
   async componentDidMount() {
-    const response = await fetch('/api/v1/users');
+
+    const response = await fetch('/api/v1/users', {
+      method: 'GET',
+      mode: 'no-cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    console.log(response);
     const body = await response.json();
-    console.log(body);
+    console.log(body)
+
+    // const response = await fetch('http://localhost:8080/api/v1/users', {
+    //     mode: 'no-cors',
+    // });
+    // const body = await response.json();
+    // console.log(body);
     // client({method: 'GET', path: '/api/employees'}).done(response => {
     //   this.setState({employees: response.entity._embedded.employees});
     // });
@@ -45,23 +60,30 @@ class Login extends React.Component {
 
     const handleSubmit = async () => {
 
-      const response = await fetch('/auth/login', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: this.state.username,
-          password: this.state.password,
-        }),
-      });
-      console.log(response);
-      const body = await response.json();
-      this.setState({response: response.status});
-      if (response.status === 200) {
-        let profile = await this.Auth.fetch('/api/v1/users/profile', '');
-        console.log(profile)
+      const loginResponse = this.Auth.login(this.state.username, this.state.password);
+      const loginBody = await loginResponse;
+      // console.log(loginBody);
+
+      // const response = await fetch('/auth/login', {
+      //   method: 'POST',
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     username: this.state.username,
+      //     password: this.state.password,
+      //   }),
+      // });
+      // console.log(response);
+      // const body = await response.json();
+      // this.setState({response: response.status});
+      if (!loginBody.message) {
+        const options = {
+          mode: 'no-cors',
+        };
+        // let profile = await this.Auth.fetch('http://localhost:8080/api/v1/profile', options);
+        // console.log(profile)
         // this.setToken(body.token);
         // const headers = {
         //   Accept: 'application/json',
