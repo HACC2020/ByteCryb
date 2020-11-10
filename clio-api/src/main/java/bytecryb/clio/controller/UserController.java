@@ -1,17 +1,14 @@
 package bytecryb.clio.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.util.StringUtils;
 
 import bytecryb.clio.model.Award;
-import bytecryb.clio.model.Badge;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
@@ -103,13 +99,8 @@ public class UserController {
 		Score score = this.scoreRepo.findByUserId(userId);
 		result.put("score", score.getScore());
 		
-		/*List<String> dummy = new ArrayList<>();
-		dummy.add("hello");
-		dummy.add("hi");
-
-		result.putPOJO("badges", dummy);*/
 		//get badges
-		List<Award> awards = this.awardRepo.findByUser(currUser);
+		List<Award> awards = this.awardRepo.findByUserId(userId);
 		List<String> badgeNames = new ArrayList<>();
 		if (awards.size() > 0) {
 			for (Award award : awards) {
