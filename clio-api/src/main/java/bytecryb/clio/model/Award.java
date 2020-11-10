@@ -22,7 +22,7 @@ public class Award {
     @Id
     @Getter
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "award_id_generator")
-    @SequenceGenerator(name = "award_id_generator", sequenceName = "award_req")
+    @SequenceGenerator(name = "award_id_generator", sequenceName = "award_seq")
     @Column(name = "id", updatable = false, nullable = false)
     private long id;
 
