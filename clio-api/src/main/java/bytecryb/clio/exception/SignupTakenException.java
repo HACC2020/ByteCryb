@@ -11,5 +11,4 @@ public class SignupTakenException extends Exception {
     public SignupTakenException(String message) {
         super(message);
     }
-
 }
