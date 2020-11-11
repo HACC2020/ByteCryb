@@ -1,8 +1,24 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
+import AuthService from '../../api/AuthService';
 
 class Categories extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      token: "",
+      role: "",
+    };
+    this.Auth = new AuthService();
+  }
+
+  async componentDidMount() {
+    const options = {
+      method: 'GET'
+    };
+    let categories = await this.Auth.fetch('/api/v1/categories', options);
+  }
 
   render() {
 
