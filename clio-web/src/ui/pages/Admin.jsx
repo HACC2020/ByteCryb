@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { AutoForm, ErrorsField, SelectField, SubmitField, TextField } from 'uniforms-bootstrap4';
 import _ from 'lodash';
 import { xmlToJSON } from '../../xmlParser';
+import AuthService from '../../api/AuthService';
 
 class Admin extends React.Component {
   constructor(props) {
@@ -14,21 +15,51 @@ class Admin extends React.Component {
       text: '',
       xmlJSON: '',
       error: '',
+      jobName: '',
+      catID: '',
+      xmlFile: '',
+      pdfFiles: [],
       XMLHeader: 'XML Field Preview',
       XMLSpan: 'A preview of the job fields will be shown below once a XML file is uploaded.',
     }
+    this.Auth = new AuthService();
   }
 
   render() {
 
-    function getFile(event) {
+    function getXML(event) {
       const input = event.target;
       if ('files' in input && input.files.length > 0) {
         readFileContent(input.files[0]).then(content => {
-          setState(content)
+          setXML(content, input.files[0])
         }).catch(error => setError(error))
       }
     }
+
+    const setXML = (content, input) => {
+      this.setState({ xmlFile: input });
+      this.setState({ text: content });
+      // console.log(this.state.text)
+      var obj = xmlToJSON(content);
+      obj.title = '';
+      this.setState({ error: '' });
+      this.setState({ xmlJSON: obj });
+      this.setState({ XMLHeader: '' });
+      this.setState({ XMLSpan: '' });
+    };
+
+    function getPDFs(event) {
+      const input = event.target.files;
+      const files = [];
+      for (let i = 0; i < input.length; i++) {
+        files.push(input[i]);
+      }
+      setPDF(files);
+    }
+
+    const setPDF = (files) => {
+      this.setState({ pdfFiles: files });
+    };
 
     const setError = (error) => {
       this.setState({ error: error });
@@ -41,17 +72,6 @@ class Admin extends React.Component {
       })
     };
 
-    const setState = (content) => {
-      this.setState({ text: content });
-      // console.log(this.state.text)
-      var obj = xmlToJSON(content);
-      obj.title = 'Chinese Index Cards';
-      this.setState({ error: '' });
-      this.setState({ xmlJSON: obj });
-      this.setState({ XMLHeader: '' });
-      this.setState({ XMLSpan: '' });
-      // console.log(obj);
-    };
 
     const renderFields = (field, key) => {
       let required = '';
@@ -96,7 +116,6 @@ class Admin extends React.Component {
           )
         }
       }
-
     };
 
     function readFileContent(file) {
@@ -107,6 +126,35 @@ class Admin extends React.Component {
         reader.readAsText(file)
       })
     }
+
+    const getJobName = (value) => {
+      this.setState({ jobName: value });
+    };
+
+    const onCreateJob = async () => {
+
+      const optionCategory = {
+        method: 'POST',
+        body: JSON.stringify({
+          name: this.state.jobName,
+        }),
+      };
+
+      let category = await this.Auth.fetch('/api/v1/categories', optionCategory);
+      console.log(category);
+
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({
+          name: this.state.jobName,
+          catid: 1,
+          files: this.state.pdfFiles,
+          xml: this.state.xmlFile,
+        }),
+      };
+      let job = await this.Auth.fetch('/api/v1/jobs', options);
+      console.log(job)
+    };
 
     return (
         <Container>
@@ -179,29 +227,25 @@ class Admin extends React.Component {
                     <Row>
                       <Col sm={6}>
                         <Form>
-                          <Form.Group>
+                          <Form.Group onChange={(e) => getJobName(e.target.value)}>
                             <Form.Label>Job Name</Form.Label>
                             <Form.Control placeholder="Chinese Arrivals"/>
                           </Form.Group>
                           <Form.Group>
-                            <Form.Label>Category ID</Form.Label>
-                            <Form.Control placeholder="1"/>
-                          </Form.Group>
-                          <Form.Group>
                             <Form.File id="exampleFormControlFile1" label="Upload XML File"
-                                       onChange={(e) => getFile(e)}/>
+                                       onChange={(e) => getXML(e)}/>
                           </Form.Group>
                           <Form.Group>
                             <Form.File id="exampleFormControlFile1" label="Upload PDF Files"
                                        multiple
-                                       onChange={(e) => getFile(e)}/>
+                                       onChange={(e) => getPDFs(e)}/>
                           </Form.Group>
-                          <Button variant="primary" type="submit">
+                          <Button variant="primary" onClick={onCreateJob}>
                             Submit
                           </Button>
                         </Form>
                       </Col>
-                      <Col sm={6}>
+                      <Col sm={6} style={{backgroundColor: '#f1eded', borderRadius: '1rem'}}>
                         <h4>{this.state.XMLHeader}</h4>
                         <span style={{fontSize: '12px'}}>
                           {this.state.XMLSpan}

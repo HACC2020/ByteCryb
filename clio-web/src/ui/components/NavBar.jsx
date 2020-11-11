@@ -159,7 +159,7 @@ class NavBar extends React.Component {
               style={{ marginBottom: "5rem" }}
               sticky={"top"}
             >
-              <Navbar.Brand href="/">
+              <Navbar.Brand href="/landing">
                 <Image src={"./hsa-logo.png"} style={imgStyle} />
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
