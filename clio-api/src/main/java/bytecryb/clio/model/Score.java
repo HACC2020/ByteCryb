@@ -8,7 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+
 @Entity
+@AllArgsConstructor
 @Table(name = "scores")
 public class Score {
 

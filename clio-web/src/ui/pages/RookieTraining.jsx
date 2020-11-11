@@ -10,8 +10,9 @@ import {
   SubmitField,
   DateField,
 } from "uniforms-bootstrap4";
-
 import { bridge as schema } from "../../api/RookieTraining";
+import { Prompt } from "react-router";
+import { useEffect, isPrompt, shouldBlockNavigation } from "react";
 
 class RookieTraining extends React.Component {
   constructor() {
@@ -22,6 +23,12 @@ class RookieTraining extends React.Component {
   }
 
   render() {
+    window.addEventListener("beforeunload", (ev) => {
+      ev.preventDefault();
+      //put exit logic here
+      return (ev.returnValue = "Are you sure you want to close?");
+    });
+
     const onClickNext = () => {
       let num = this.state.pageNum;
       num++;
