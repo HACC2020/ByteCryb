@@ -26,7 +26,12 @@ public class CategoryController {
 
 	@PostMapping("/categories")
     public ResponseEntity<String> push(@RequestBody Category input) {
-        Category result = this.catRepo.save(input);
+		boolean exists = this.catRepo.existsByName(input.getName());
+		if (exists) {
+			throw new IllegalArgumentException("Category " + input.getName() + " already exists");
+		}
+		Category result = this.catRepo.save(input);
+	
         return ResponseEntity.ok().body(new String("Successfully Created Category: " + result.getId()));
     }
 }
