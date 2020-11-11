@@ -84,10 +84,10 @@ public class UserAuthentication {
 		Score defaultScore = new Score();
 		defaultScore.setUserId(savedUser.getUserId());
 
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		//DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date today = new Date();
 		
-		defaultScore.setDate(formatter.format(today));
+		defaultScore.setDate(today);//formatter.format(today)
 		defaultScore.setScore(0);
 		scoreService.save(defaultScore);
 		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");

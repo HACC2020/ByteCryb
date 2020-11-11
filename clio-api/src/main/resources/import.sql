@@ -12,3 +12,4 @@ INSERT INTO scores (id, user_id, date, score) VALUES (1, 1, CURRENT_DATE, 5);
 INSERT INTO scores (id, user_id, date, score) VALUES (2, 2, CURRENT_DATE, 15);
 INSERT INTO scores (id, user_id, date, score) VALUES (3, 3, CURRENT_DATE, 25);
 INSERT INTO scores (id, user_id, date, score) VALUES (4, 4, CURRENT_DATE, 35);
+INSERT INTO scores (id, user_id, date, score) VALUES (5, 1, CURRENT_DATE + 1, 55);

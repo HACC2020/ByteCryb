@@ -17,11 +17,14 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
 
     List<Score> findByUserId(long userId);
 
-    @Query(value = "SELECT s.user_id, SUM(s.day) FROM Scores s GROUP BY s.user_id ORDER BY SUM(s.day) DESC", nativeQuery = true)
+    @Query(value = "SELECT s.user_id, SUM(s.score) FROM Scores s WHERE s.date = CURRENT_DATE GROUP BY s.user_id ORDER BY SUM(s.score) DESC", nativeQuery = true)
     List<Object[]> findAllDailyScores();
 
-    @Query(value = "SELECT s.user_id, SUM(s.month) FROM Scores s GROUP BY s.user_id ORDER BY SUM(s.month) DESC", nativeQuery = true)
+    @Query(value = "SELECT s.user_id, SUM(s.score) FROM Scores s WHERE EXTRACT(MONTH FROM s.date) = EXTRACT(MONTH FROM CURRENT_DATE) GROUP BY s.user_id ORDER BY SUM(s.score) DESC", nativeQuery = true)
     List<Object[]> findAllMonthlyScores();
+
+    @Query(value = "SELECT s.user_id, SUM(s.score) FROM Scores s WHERE CAST(EXTRACT(YEAR FROM s.date) AS INT) = ?1 GROUP BY s.user_id ORDER BY SUM(s.score) DESC", nativeQuery = true)
+    List<Object[]> findAllYearlyScores(int year);
 
 }
 

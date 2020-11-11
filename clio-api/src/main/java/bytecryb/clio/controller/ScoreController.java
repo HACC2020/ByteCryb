@@ -17,10 +17,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import bytecryb.clio.exception.ResourceNotFoundException;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultScore;
 import bytecryb.clio.model.Score;
@@ -150,6 +152,38 @@ public class ScoreController {
 		//List of array of BigIntegers that contain userId and month score
 		List<Object[]> orderedScores = new ArrayList<>();
 		orderedScores = this.scoreRepo.findAllMonthlyScores();
+
+		for (int i = 0; i < 10 && i < orderedScores.size(); i++) {
+			//current userId and month score
+			Object[] currScore = orderedScores.get(i);
+			//One JSON object
+			ObjectNode score = mapper.createObjectNode();
+			//Convert BigInteger to long and int
+			long userId = ((Number) currScore[0]).longValue();
+			int monthScore = ((Number) currScore[1]).intValue();
+			CustomUser user = this.userRepo.findById(userId);
+			String username = user.getUsername();
+
+			score.put("rank", i+1);
+			score.put("username", username);
+			score.put("user", userId);
+			score.put("score", monthScore);
+			//add to result array of JSON objects
+			result.add(score);
+		}
+
+		return ResponseEntity.ok().body(result);
+	}
+
+	// GET TOP 10 YEARLY
+	@GetMapping("/scores/year/{year}")
+	public ResponseEntity<ArrayNode> getYearlyTopScores(@PathVariable int year) {
+		//List of JSON objects
+		ArrayNode result = mapper.createArrayNode();
+
+		//List of array of BigIntegers that contain userId and month score
+		List<Object[]> orderedScores = new ArrayList<>();
+		orderedScores = this.scoreRepo.findAllYearlyScores(year);
 
 		for (int i = 0; i < 10 && i < orderedScores.size(); i++) {
 			//current userId and month score
