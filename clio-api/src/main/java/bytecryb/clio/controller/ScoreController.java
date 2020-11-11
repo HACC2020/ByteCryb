@@ -120,8 +120,11 @@ public class ScoreController {
 			//Convert BigInteger to long and int
 			long userId = ((Number) currScore[0]).longValue();
 			int dayScore = ((Number) currScore[1]).intValue();
+			CustomUser user = this.userRepo.findById(userId);
+			String username = user.getUsername();
 
 			score.put("rank", i+1);
+			score.put("username", username);
 			score.put("user", userId);
 			score.put("score", dayScore);
 			//add to result array of JSON objects
@@ -150,8 +153,11 @@ public class ScoreController {
 			//Convert BigInteger to long and int
 			long userId = ((Number) currScore[0]).longValue();
 			int monthScore = ((Number) currScore[1]).intValue();
+			CustomUser user = this.userRepo.findById(userId);
+			String username = user.getUsername();
 
 			score.put("rank", i+1);
+			score.put("username", username);
 			score.put("user", userId);
 			score.put("score", monthScore);
 			//add to result array of JSON objects
