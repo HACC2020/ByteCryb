@@ -16,12 +16,11 @@ class Admin extends React.Component {
       xmlJSON: '',
       error: '',
       jobName: '',
-      catID: '',
       xmlFile: '',
       pdfFiles: [],
       XMLHeader: 'XML Field Preview',
       XMLSpan: 'A preview of the job fields will be shown below once a XML file is uploaded.',
-    }
+    };
     this.Auth = new AuthService();
   }
 
@@ -38,6 +37,7 @@ class Admin extends React.Component {
 
     const setXML = (content, input) => {
       this.setState({ xmlFile: input });
+
       this.setState({ text: content });
       // console.log(this.state.text)
       var obj = xmlToJSON(content);
@@ -71,7 +71,6 @@ class Admin extends React.Component {
         footer: ''
       })
     };
-
 
     const renderFields = (field, key) => {
       let required = '';
@@ -133,24 +132,34 @@ class Admin extends React.Component {
 
     const onCreateJob = async () => {
 
-      const optionCategory = {
-        method: 'POST',
-        body: JSON.stringify({
-          name: this.state.jobName,
-        }),
-      };
+      // const optionCategory = {
+      //   method: 'POST',
+      //   body: JSON.stringify({
+      //     name: this.state.jobName,
+      //   }),
+      // };
+      //
+      // let category = await this.Auth.fetch('/api/v1/categories', optionCategory);
+      // console.log(category);
+      // let catID = '';
 
-      let category = await this.Auth.fetch('/api/v1/categories', optionCategory);
-      console.log(category);
+      const formData = new FormData();
+
+      for (let i = 0; i < this.state.pdfFiles.length; i++) {
+        formData.append("files", this.state.pdfFiles[i]);
+      }
+
+      formData.append("xml", this.state.xmlFile);
+      formData.append("name", this.state.jobName);
+      formData.append("catId", 1);
+
+      // console.log(formData.getAll("files"));
+      // console.log(formData.getAll("xml"));
 
       const options = {
         method: 'POST',
-        body: JSON.stringify({
-          name: this.state.jobName,
-          catid: 1,
-          files: this.state.pdfFiles,
-          xml: this.state.xmlFile,
-        }),
+        body: formData,
+        redirect: 'follow',
       };
       let job = await this.Auth.fetch('/api/v1/jobs', options);
       console.log(job)
