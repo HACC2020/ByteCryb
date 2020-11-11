@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +37,7 @@ public class ScoreController {
 	// GET DAILY
 	@GetMapping("/scores/daily")
 	public ResponseEntity<List<ResultScore>> getDailyTopScores(HttpServletRequest request) {
-		
+
 		List<Score> query = this.scoreRepo.findAll(Sort.by("day").descending());
 		List<ResultScore> result = new ArrayList<ResultScore>();
 
@@ -47,7 +48,7 @@ public class ScoreController {
 		result.add(new ResultScore(0, username, userScore.getDay()));
 
 		Iterator<Score> scoreIterator = query.iterator();
-    
+
 		int i = 1;
 		while (scoreIterator.hasNext() && i < 10) {
 			Score tmp = scoreIterator.next();
@@ -59,11 +60,10 @@ public class ScoreController {
 		return ResponseEntity.ok().body(result);
 	}
 
-
 	// GET MONTHLY
 	@GetMapping("/scores/month")
 	public ResponseEntity<List<ResultScore>> getMonthlyTopScores(HttpServletRequest request) {
-		
+
 		List<Score> query = this.scoreRepo.findAll(Sort.by("month").descending());
 		List<ResultScore> result = new ArrayList<ResultScore>();
 
@@ -89,7 +89,7 @@ public class ScoreController {
 	// GET ALL TIME
 	@GetMapping("/scores/alltime")
 	public ResponseEntity<List<ResultScore>> getAllTimeTopScores(HttpServletRequest request) {
-		
+
 		List<Score> query = this.scoreRepo.findAll(Sort.by("score").descending());
 		List<ResultScore> result = new ArrayList<ResultScore>();
 
@@ -118,5 +118,12 @@ public class ScoreController {
 			return bearerToken.substring(7, bearerToken.length());
 		}
 		return null;
+	}
+
+	@GetMapping("/scores/user/{id}")
+	private ResponseEntity<Object> getScoreOfUserById(@PathVariable(value = "id") Long id) {
+		Object result = this.scoreRepo.getTotalScoreByUserId(id);
+
+		return ResponseEntity.ok(result);
 	}
 }

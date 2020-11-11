@@ -2,7 +2,9 @@ package bytecryb.clio.controller;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,21 +14,18 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.util.StringUtils;
 
-import bytecryb.clio.model.Award;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
 import bytecryb.clio.model.Score;
-
-import bytecryb.clio.repository.AwardRepository;
+// import bytecryb.clio.repository.AwardRepository;
 import bytecryb.clio.repository.ScoreRepository;
 import bytecryb.clio.repository.UserRepository;
-
 import bytecryb.clio.util.JwtUtil;
 
 @RestController
@@ -36,7 +35,8 @@ public class UserController {
 	@Value("${welcome.message}")
 	private String welcomeMessage;
 
-	private AwardRepository awardRepo;
+	// @Autowired
+	// private AwardRepository awardRepo;
 
 	@Autowired
 	private UserRepository userRepo;
@@ -116,6 +116,28 @@ public class UserController {
 		// result.putPOJO("badges", badgeNames);
 
 		System.out.println(result);
+
+		return ResponseEntity.ok().body(result);
+	}
+
+	// GET BASIC PROFILE INFO OF USER (username, role, score, badges)
+	@GetMapping("/users/profile/v2")
+	public ResponseEntity<Map<String, Object>> userInfoV2(HttpServletRequest request) {
+		// get username
+		String jwtToken = extractJwtFromRequest(request);
+		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
+
+		// create CustomUser object to find role, scores, and badges
+		CustomUser currUser = this.userRepo.findByUsername(currUsername);
+
+		Map<String, Object> result = new LinkedHashMap<>();
+
+		result.put("userId", currUser.getUserId());
+		result.put("username", currUser.getUsername());
+		result.put("firstName", currUser.getFirstName());
+		result.put("lastName", currUser.getLastName());
+		result.put("email", currUser.getEmail());
+		result.put("role", currUser.getRole());
 
 		return ResponseEntity.ok().body(result);
 	}
