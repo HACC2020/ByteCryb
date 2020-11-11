@@ -1,10 +1,112 @@
 import React from 'react';
 import { Container, Nav, Form, Tab, Row, Col, Table, Button } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
+import { JSONBridge } from '../../api/XMLValidation';
+import Swal from "sweetalert2";
+import { AutoForm, ErrorsField, SelectField, SubmitField, TextField } from 'uniforms-bootstrap4';
+import _ from 'lodash';
+import { xmlToJSON } from '../../xmlParser';
 
 class Admin extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: '',
+      xmlJSON: '',
+      error: '',
+      XMLHeader: 'XML Field Preview',
+      XMLSpan: 'A preview of the job fields will be shown below once a XML file is uploaded.',
+    }
+  }
 
   render() {
+
+    function getFile(event) {
+      const input = event.target;
+      if ('files' in input && input.files.length > 0) {
+        readFileContent(input.files[0]).then(content => {
+          setState(content)
+        }).catch(error => setError(error))
+      }
+    }
+
+    const setError = (error) => {
+      this.setState({ error: error });
+      this.setState({ xmlJSON: '' });
+      Swal.fire({
+        icon: 'error',
+        title: 'XML Format Invalid',
+        text: error,
+        footer: ''
+      })
+    };
+
+    const setState = (content) => {
+      this.setState({ text: content });
+      // console.log(this.state.text)
+      var obj = xmlToJSON(content);
+      obj.title = 'Chinese Index Cards';
+      this.setState({ error: '' });
+      this.setState({ xmlJSON: obj });
+      this.setState({ XMLHeader: '' });
+      this.setState({ XMLSpan: '' });
+      // console.log(obj);
+    };
+
+    const renderFields = (field, key) => {
+      let required = '';
+      for (let i = 0; i < this.state.xmlJSON.required.length; i++) {
+        if (this.state.xmlJSON.required[i] === key) {
+          required = '*Required Field';
+        }
+      }
+
+      if (field.enum) {
+        return (
+            <SelectField name={key}
+                         help={`${required}`}/>
+        )
+      }
+      if (field.type === 'string') {
+        return (
+            <TextField name={key}
+                       help={`${required}`}/>
+        )
+      }
+    };
+
+    const hasFile = () => {
+      if (this.state.xmlJSON.length !== 0) {
+        let schema = JSONBridge(this.state.xmlJSON);
+        if (schema[0] === false) {
+          Swal.fire({
+            icon: 'error',
+            title: 'XML Format Invalid',
+            text: schema[1],
+            footer: ''
+          })
+        }
+        if (this.state.error.length === 0 && schema[0] !== false) {
+          return (
+              <AutoForm schema={schema} onSubmit={console.log}>
+                {_.map(this.state.xmlJSON.properties, (field, index, key) => renderFields(field, index, key))}
+                <ErrorsField/>
+                <SubmitField/>
+              </AutoForm>
+          )
+        }
+      }
+
+    };
+
+    function readFileContent(file) {
+      const reader = new FileReader();
+      return new Promise((resolve, reject) => {
+        reader.onload = event => resolve(event.target.result);
+        reader.onerror = error => reject(error);
+        reader.readAsText(file)
+      })
+    }
 
     return (
         <Container>
@@ -16,7 +118,7 @@ class Admin extends React.Component {
                     <Nav.Link eventKey="first">All Records</Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
-                    <Nav.Link eventKey="second">Add New Table</Nav.Link>
+                    <Nav.Link eventKey="second">Add New Job</Nav.Link>
                   </Nav.Item>
                 </Nav>
               </Col>
@@ -74,57 +176,39 @@ class Admin extends React.Component {
                     </Table>
                   </Tab.Pane>
                   <Tab.Pane eventKey="second">
-                    <Form>
-                      <Form.Row>
-                        <Form.Group as={Col} controlId="formGridEmail">
-                          <Form.Label>Email</Form.Label>
-                          <Form.Control type="email" placeholder="Enter email"/>
-                        </Form.Group>
-
-                        <Form.Group as={Col} controlId="formGridPassword">
-                          <Form.Label>Password</Form.Label>
-                          <Form.Control type="password" placeholder="Password"/>
-                        </Form.Group>
-                      </Form.Row>
-
-                      <Form.Group controlId="formGridAddress1">
-                        <Form.Label>Address</Form.Label>
-                        <Form.Control placeholder="1234 Main St"/>
-                      </Form.Group>
-
-                      <Form.Group controlId="formGridAddress2">
-                        <Form.Label>Address 2</Form.Label>
-                        <Form.Control placeholder="Apartment, studio, or floor"/>
-                      </Form.Group>
-
-                      <Form.Row>
-                        <Form.Group as={Col} controlId="formGridCity">
-                          <Form.Label>City</Form.Label>
-                          <Form.Control/>
-                        </Form.Group>
-
-                        <Form.Group as={Col} controlId="formGridState">
-                          <Form.Label>State</Form.Label>
-                          <Form.Control as="select" defaultValue="Choose...">
-                            <option>Choose...</option>
-                            <option>...</option>
-                          </Form.Control>
-                        </Form.Group>
-
-                        <Form.Group as={Col} controlId="formGridZip">
-                          <Form.Label>Zip</Form.Label>
-                          <Form.Control/>
-                        </Form.Group>
-                      </Form.Row>
-
-                      <Form.Group id="formGridCheckbox">
-                        <Form.Check type="checkbox" label="Check me out"/>
-                      </Form.Group>
-
-                      <Button variant="primary" type="submit">
-                        Submit
-                      </Button>
-                    </Form>
+                    <Row>
+                      <Col sm={6}>
+                        <Form>
+                          <Form.Group>
+                            <Form.Label>Job Name</Form.Label>
+                            <Form.Control placeholder="Chinese Arrivals"/>
+                          </Form.Group>
+                          <Form.Group>
+                            <Form.Label>Category ID</Form.Label>
+                            <Form.Control placeholder="1"/>
+                          </Form.Group>
+                          <Form.Group>
+                            <Form.File id="exampleFormControlFile1" label="Upload XML File"
+                                       onChange={(e) => getFile(e)}/>
+                          </Form.Group>
+                          <Form.Group>
+                            <Form.File id="exampleFormControlFile1" label="Upload PDF Files"
+                                       multiple
+                                       onChange={(e) => getFile(e)}/>
+                          </Form.Group>
+                          <Button variant="primary" type="submit">
+                            Submit
+                          </Button>
+                        </Form>
+                      </Col>
+                      <Col sm={6}>
+                        <h4>{this.state.XMLHeader}</h4>
+                        <span style={{fontSize: '12px'}}>
+                          {this.state.XMLSpan}
+                        </span>
+                        {hasFile()}
+                      </Col>
+                    </Row>
                   </Tab.Pane>
                 </Tab.Content>
               </Col>
