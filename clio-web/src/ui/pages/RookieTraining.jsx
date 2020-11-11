@@ -18,17 +18,11 @@ class RookieTraining extends React.Component {
   constructor() {
     super();
     this.state = {
-      pageNum: 0,
+      pageNum: 1,
     };
   }
 
   render() {
-    window.addEventListener("beforeunload", (ev) => {
-      ev.preventDefault();
-      //put exit logic here
-      return (ev.returnValue = "Are you sure you want to close?");
-    });
-
     const onClickNext = () => {
       let num = this.state.pageNum;
       num++;
@@ -94,7 +88,10 @@ class RookieTraining extends React.Component {
               <AutoField name="name" />
               <AutoField name="age" />
               <SelectField name="gender" allowedValues={["Male", "Female"]} />
-              <TextField name={"residence"} />
+              <TextField
+                name={"residence"}
+                help={"Only A-Z characters allowed"}
+              />
               <TextField name="dateOfArrival" placeholder={"01/23/1832"} />
               {/*<DateField*/}
               {/*    showInlineError*/}

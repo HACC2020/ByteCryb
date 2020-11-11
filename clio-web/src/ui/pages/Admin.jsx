@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Nav, Form, Image, Tab, Row, Col, Table, Button } from 'react-bootstrap';
+import { Container, Nav, Form, Tab, Row, Col, Table, Button } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 
 class Admin extends React.Component {

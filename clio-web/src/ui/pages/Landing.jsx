@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, ListGroup } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { faFileAlt, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { xmlToJSON } from '../../xmlParser';
 
 class Landing extends React.Component {
   constructor(props) {
@@ -59,7 +60,8 @@ class Landing extends React.Component {
                   </Row>
                   <Card.Text>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur
-                    corporis delectus dignissimos error ex fuga inventore maxime modi molestiae nulla
+                    corporis delectus dignissimos error ex fuga inventore maxime modi molestiae
+                    nulla
                     numquam provident recusandae repellat repudiandae similique, suscipit totam vel,
                     voluptatum!
                   </Card.Text>
@@ -85,7 +87,8 @@ class Landing extends React.Component {
                   </Row>
                   <Card.Text>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur
-                    corporis delectus dignissimos error ex fuga inventore maxime modi molestiae nulla
+                    corporis delectus dignissimos error ex fuga inventore maxime modi molestiae
+                    nulla
                     numquam provident recusandae repellat repudiandae similique, suscipit totam vel,
                     voluptatum!
                   </Card.Text>
