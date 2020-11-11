@@ -1,4 +1,5 @@
 import decode from 'jwt-decode';
+
 export default class AuthService {
   // Initializing important variables
   constructor(domain) {
@@ -75,7 +76,6 @@ export default class AuthService {
     // Setting Authorization header
     // Authorization: Bearer xxxxxxx.xxxxxxxx.xxxxxx
 
-
     if (this.loggedIn()) {
       headers['Authorization'] = 'Bearer ' + this.getToken();
     }
@@ -86,15 +86,13 @@ export default class AuthService {
       headers,
       ...options,
     });
-    console.log(response);
-        // .then(this._checkStatus)
-    let body = '';
-    try {
-       body = await response.json();
-    } catch (e) {
-      body = response;
-    }
-    console.log(body);
+    // .then(this._checkStatus)
+    let body = await response.json();
+    // try {
+    //   body = await response.json();
+    // } catch (e) {
+    //   body = response;
+    // }
     return body;
   }
 
