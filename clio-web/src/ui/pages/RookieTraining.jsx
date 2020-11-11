@@ -18,7 +18,7 @@ class RookieTraining extends React.Component {
   constructor() {
     super();
     this.state = {
-      pageNum: 1,
+      pageNum: 0,
     };
   }
 
