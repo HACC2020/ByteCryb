@@ -60,6 +60,7 @@ class Login extends React.Component {
         let profile = await this.Auth.fetch('/api/v1/users/profile', options);
         sessionStorage.setItem('role', profile.role);
         this.props.history.push('/landing');
+        this.props.history.go();
 
       } else {
         this.setState({response: 400})
