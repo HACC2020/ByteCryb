@@ -6,7 +6,12 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.json.CDL;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -98,4 +103,15 @@ public class JobController {
         return ResponseEntity.ok(this.jobRepo.save(result));
     }
 
+    @GetMapping("/jobs/csv")
+    public ResponseEntity<String> getCsvByJobId(@RequestParam(value = "id") Long id) {
+        List<Record> results = this.recordRepo.findByJobId(id);
+        JSONArray jsonArray = new JSONArray();
+        for (Record result : results) {
+            jsonArray.put(new JSONObject(result.getJson()));
+        }
+        String csv = CDL.toString(jsonArray);
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/csv"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"output_job_" + id + ".csv\"").body(csv);
+    }
 }
