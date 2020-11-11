@@ -63,7 +63,7 @@ public class JwtUtil {
 				.setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs)).signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
 	
-	public boolean validateToken(String authToken) {
+	public boolean validateToken(String authToken) throws BadCredentialsException {
 		try {
 			// Jwt token has not been tampered with
 			Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
