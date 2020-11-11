@@ -129,4 +129,10 @@ public class ScoreController {
 		}
 		return null;
 	}
+
+	/*
+	Select EmployeeID, SUM(InvoiceAmount) 
+	From Calls
+	Group by EmployeeID
+	*/
 }
