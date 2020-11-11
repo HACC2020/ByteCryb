@@ -141,18 +141,16 @@ class Admin extends React.Component {
 
     const onCreateJob = async () => {
 
-      const optionCategory = {
+      const formdata = new FormData();
+      formdata.append("name", this.state.jobName);
+
+      var requestOptions = {
         method: 'POST',
-        body: {
-          name: this.state.jobName,
-          id: -1,
-        }
-        // body: JSON.stringify({
-        //   name: this.state.jobName,
-        // }),
+        body: formdata,
+        redirect: 'follow'
       };
 
-      let category = await this.Auth.fetch('/api/v1/categories', optionCategory);
+      let category = await this.Auth.fetch('/api/v1/categories', requestOptions);
       console.log(category);
 
       // const formData = new FormData();

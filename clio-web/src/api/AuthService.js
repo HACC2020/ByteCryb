@@ -88,8 +88,13 @@ export default class AuthService {
     });
     console.log(response);
         // .then(this._checkStatus)
-    const body = await response.json();
-    // console.log(body);
+    let body = '';
+    try {
+       body = await response.json();
+    } catch (e) {
+      body = response;
+    }
+    console.log(body);
     return body;
   }
 
