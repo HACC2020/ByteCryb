@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Image, Form, Button, NavLink } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
 
 class Login extends React.Component {
@@ -11,35 +11,25 @@ class Login extends React.Component {
       username: '',
       password: '',
       response: '',
-      token: '',
     };
     this.Auth = new AuthService();
   }
 
-
-  async componentDidMount() {
-
-    const response = await fetch('/api/v1/users', {
-      method: 'GET',
-      mode: 'no-cors',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-    console.log(response);
-    const body = await response.json();
-    console.log(body)
-
-    // const response = await fetch('http://localhost:8080/api/v1/users', {
-    //     mode: 'no-cors',
-    // });
-    // const body = await response.json();
-    // console.log(body);
-    // client({method: 'GET', path: '/api/employees'}).done(response => {
-    //   this.setState({employees: response.entity._embedded.employees});
-    // });
-  }
+  // async componentDidMount() {
+  //
+  //   const response = await fetch('/api/v1/users', {
+  //     method: 'GET',
+  //     mode: 'no-cors',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //   });
+  //   console.log(response);
+  //   const body = await response.json();
+  //   console.log(body)
+  //
+  // }
 
 
   render() {
@@ -64,45 +54,15 @@ class Login extends React.Component {
       const loginBody = await loginResponse;
       // console.log(loginBody);
 
-      // const response = await fetch('/auth/login', {
-      //   method: 'POST',
-      //   headers: {
-      //     Accept: 'application/json',
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     username: this.state.username,
-      //     password: this.state.password,
-      //   }),
-      // });
-      // console.log(response);
-      // const body = await response.json();
-      // this.setState({response: response.status});
       if (!loginBody.message) {
         const options = {
-          mode: 'no-cors',
-        };
-        // let profile = await this.Auth.fetch('http://localhost:8080/api/v1/profile', options);
-        // console.log(profile)
-        // this.setToken(body.token);
-        // const headers = {
-        //   Accept: 'application/json',
-        //   'Content-Type': 'application/json',
-        // };
-        //
-        // headers['Authorization'] = 'Bearer ' + this.getToken();
-        //
-        // console.log(headers);
-        // const profileResponse = await fetch('/api/v1/users/profile', {
-        //   method: 'GET',
-        //   headers: {headers},
-        // });
-        //
-        // console.log(profileResponse);
-        // console.log(profileResponse.headers);
-        // const profileResponseBody = await profileResponse.json();
-        // console.log(profileResponseBody)
+          };
+        let profile = await this.Auth.fetch('/api/v1/users/profile', options);
+        sessionStorage.setItem('role', profile.role);
+        this.props.history.push('/landing');
 
+      } else {
+        this.setState({response: 400})
       }
 
     };

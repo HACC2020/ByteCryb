@@ -12,7 +12,6 @@ export default class AuthService {
     // Get a token from api server using the fetch api
     return this.fetch('/auth/login', {
       method: 'POST',
-      mode: 'no-cors',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -22,7 +21,6 @@ export default class AuthService {
         password,
       }),
     }).then(res => {
-      console.log(res);
       this.setToken(res.token); // Setting the token in localStorage
       return Promise.resolve(res);
     });
@@ -48,17 +46,21 @@ export default class AuthService {
 
   setToken(idToken) {
     // Saves user token to localStorage
-    localStorage.setItem('id_token', idToken);
+    sessionStorage.setItem('id_token', idToken)
+    //localStorage.setItem('id_token', idToken);
   }
 
   getToken() {
     // Retrieves the user token from localStorage
-    return localStorage.getItem('id_token');
+    // return localStorage.getItem('id_token');
+    return sessionStorage.getItem('id_token')
+
   }
 
   logout() {
     // Clear user token and profile data from localStorage
-    localStorage.removeItem('id_token');
+    sessionStorage.removeItem('id_token');
+    // localStorage.removeItem('id_token');
   }
 
   getProfile() {
@@ -89,8 +91,9 @@ export default class AuthService {
     });
     console.log(response);
         // .then(this._checkStatus)
-    //const body = await response.json();
-    return '';
+    const body = await response.json();
+    // console.log(body);
+    return body;
   }
 
   _checkStatus(response) {
