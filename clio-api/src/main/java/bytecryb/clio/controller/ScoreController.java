@@ -1,11 +1,16 @@
 package bytecryb.clio.controller;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.naming.spi.DirStateFactory.Result;
 import javax.servlet.http.HttpServletRequest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -34,6 +39,9 @@ public class ScoreController {
 
 	@Autowired
 	private JwtUtil jwtUtil;
+
+	@Autowired
+	private ObjectMapper mapper;
 
 	/*
 	
@@ -93,13 +101,62 @@ public class ScoreController {
 
 	*/
 
-	// GET TOP MONTHLY
+
+	// GET TOP 10 DAILY
+	@GetMapping("/scores/daily")
+	public ResponseEntity<ArrayNode> getDailyTopScores() {
+		//List of JSON objects
+		ArrayNode result = mapper.createArrayNode();
+
+		//List of array of BigIntegers that contain userId and month score
+		List<Object[]> orderedScores = new ArrayList<>();
+		orderedScores = this.scoreRepo.findAllDailyScores();
+
+		for (int i = 0; i < 10 && i < orderedScores.size(); i++) {
+			//current userId and month score
+			Object[] score = orderedScores.get(i);
+			//One JSON object
+			ObjectNode currScore = mapper.createObjectNode();
+			//Convert BigInteger to long and int
+			long userId = ((Number) score[0]).longValue();
+			int dayScore = ((Number) score[1]).intValue();
+
+			currScore.put("rank", i+1);
+			currScore.put("user", userId);
+			currScore.put("score", dayScore);
+			//add to result array of JSON objects
+			result.add(currScore);
+		}
+
+		return ResponseEntity.ok().body(result);
+	}
+	
+
+	// GET TOP 10 MONTHLY
 	@GetMapping("/scores/month")
-	public ResponseEntity<List<Object[]>> getMonthlyTopScores() {
+	public ResponseEntity<ArrayNode> getMonthlyTopScores() {
+		//List of JSON objects
+		ArrayNode result = mapper.createArrayNode();
 
-		List<Object[]> result = new ArrayList<>();
-		result = this.scoreRepo.findAllMonthlyScores();
+		//List of array of BigIntegers that contain userId and month score
+		List<Object[]> orderedScores = new ArrayList<>();
+		orderedScores = this.scoreRepo.findAllMonthlyScores();
 
+		for (int i = 0; i < 10 && i < orderedScores.size(); i++) {
+			//current userId and month score
+			Object[] score = orderedScores.get(i);
+			//One JSON object
+			ObjectNode currScore = mapper.createObjectNode();
+			//Convert BigInteger to long and int
+			long userId = ((Number) score[0]).longValue();
+			int monthScore = ((Number) score[1]).intValue();
+
+			currScore.put("rank", i+1);
+			currScore.put("user", userId);
+			currScore.put("score", monthScore);
+			//add to result array of JSON objects
+			result.add(currScore);
+		}
 
 		return ResponseEntity.ok().body(result);
 	}
@@ -119,7 +176,8 @@ public class ScoreController {
 		for (Score s : userScores) {
 			total += s.getScore();
 		}
-		result.add(new ResultScore(0, username, total));
+		//remove userId from resultscore
+		result.add(new ResultScore(0, curUser.getUserId(), username, total));
 
 		List<Score> query = this.scoreRepo.findAll(Sort.by("score").descending());
 		Iterator<Score> scoreIterator = query.iterator();
@@ -129,7 +187,8 @@ public class ScoreController {
 			Score tmp = scoreIterator.next();
 			long tmpUserId = tmp.getUserId();
 			CustomUser user = this.userRepo.findById(tmpUserId);
-			result.add(new ResultScore(i, user.getUsername(), tmp.getScore()));
+			//remove userId from resultscore
+			result.add(new ResultScore(i, user.getUserId() ,user.getUsername(), tmp.getScore()));
 			i++;
 		}
 		return ResponseEntity.ok().body(result);

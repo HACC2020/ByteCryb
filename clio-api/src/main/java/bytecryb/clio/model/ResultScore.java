@@ -4,6 +4,8 @@ public class ResultScore {
 
 	private int rank;
 
+	private long userId;
+
 	private String username;
 	
 	public int score;
@@ -12,9 +14,10 @@ public class ResultScore {
 		super();
 	}
 
-	public ResultScore(int rank, String username, int score) {
+	public ResultScore(int rank, long userId, String username, int score) {
 		super();
 		this.rank = rank;
+		this.userId = userId;
 		this.username = username;
 		this.score = score;
 	}
@@ -25,6 +28,14 @@ public class ResultScore {
 
 	public void setRank(int rank) {
 		this.rank = rank;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	public String getUsername() {

@@ -101,8 +101,8 @@ public class UserController {
 
 		// get total score
 		Long userId = currUser.getUserId();
-		Score score = this.scoreRepo.findByUserId(userId);
-		result.put("score", score.getScore());
+		List<Score> score = this.scoreRepo.findByUserId(userId);
+		result.put("score", score.get(0).getScore());
 
 		// get badges
 		// List<Award> awards = this.awardRepo.findByUserId(userId);

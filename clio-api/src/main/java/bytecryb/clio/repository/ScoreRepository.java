@@ -15,10 +15,14 @@ import bytecryb.clio.model.Score;
 @Repository
 public interface ScoreRepository extends JpaRepository<Score, Long> {
 
-    Score findByUserId(long userId);
+    List<Score> findByUserId(long userId);
 
-    @Query(value = "select s.user_id, sum(s.month) from Scores s group by s.user_id", nativeQuery = true)
+    @Query(value = "SELECT s.user_id, SUM(s.day) FROM Scores s GROUP BY s.user_id ORDER BY SUM(s.day) DESC", nativeQuery = true)
+    List<Object[]> findAllDailyScores();
+
+    @Query(value = "SELECT s.user_id, SUM(s.month) FROM Scores s GROUP BY s.user_id ORDER BY SUM(s.month) DESC", nativeQuery = true)
     List<Object[]> findAllMonthlyScores();
+
 }
 
 	/*
