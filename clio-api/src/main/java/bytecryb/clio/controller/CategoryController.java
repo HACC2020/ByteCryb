@@ -27,6 +27,6 @@ public class CategoryController {
 	@PostMapping("/categories")
     public ResponseEntity<String> push(@RequestBody Category input) {
         Category result = this.catRepo.save(input);
-        return ResponseEntity.ok().body(new String("Successfully Created Record: " + result.getId()));
+        return ResponseEntity.ok().body(new String("Successfully Created Category: " + result.getId()));
     }
 }
