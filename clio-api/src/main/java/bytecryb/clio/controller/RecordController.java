@@ -72,9 +72,9 @@ public class RecordController {
         Record result = this.recordRepo.findById(input.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Record not found for id: " + input.getId()));
 
-        result.setCheckedOut(result.isCheckedOut());
-        result.setSubmitted(result.isSubmitted());
-        result.setApproved(result.isApproved());
+        result.setCheckedOut(input.isCheckedOut());
+        result.setSubmitted(input.isSubmitted());
+        result.setApproved(input.isApproved());
         result.setJson(input.getJson());
         final Record update = this.recordRepo.save(result);
         return ResponseEntity.ok().body(update);
