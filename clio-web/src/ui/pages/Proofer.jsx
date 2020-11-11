@@ -1,14 +1,11 @@
 import React from "react";
-import { Container, Row, Col, Button, Accordion, Card } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import {
   AutoForm,
   AutoField,
-  ErrorField,
   TextField,
   SelectField,
-  SubmitField,
-  DateField,
 } from "uniforms-bootstrap4";
 
 import { bridge as schema } from "../../api/RookieTraining";

@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import NavBar from './ui/components/NavBar';
 import Login from './ui/pages/Login';
 import Landing from './ui/pages/Landing';
-
 import Admin from './ui/pages/Admin';
 import ViewProfile from './ui/pages/ViewProfile';
 import Categories from './ui/pages/Categories';
@@ -15,6 +14,7 @@ import SignUp from './ui/pages/SignUp';
 import Footer from './ui/components/Footer';
 import MyJob from './ui/pages/MyJob';
 import Proofer from './ui/pages/Proofer';
+import TestPage from './ui/pages/TestPage';
 
 class App extends React.Component {
   render () {
@@ -22,6 +22,7 @@ class App extends React.Component {
         <Router>
           <NavBar/>
           <Switch>
+            <Route exact path='/testPage' component={TestPage}/>
             <Route exact path='/' component={Login}/>
             <Route exact path='/signup' component={SignUp}/>
             <Route exact path='/my-job' component={MyJob}/>
