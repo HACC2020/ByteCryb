@@ -1,9 +1,7 @@
 package bytecryb.clio.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +9,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import bytecryb.clio.model.AuthenticationRequest;
 import bytecryb.clio.model.AuthenticationResponse;
@@ -78,9 +80,11 @@ public class UserAuthentication {
 		CustomUser savedUser = userDetailsService.save(user);
 		Score defaultScore = new Score();
 		defaultScore.setUserId(savedUser.getUserId());
-		defaultScore.setDay(0);
-		defaultScore.setMonth(0);
-		defaultScore.setYear(0);
+
+		//DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date today = new Date();
+		
+		defaultScore.setDate(today);//formatter.format(today)
 		defaultScore.setScore(0);
 		scoreService.save(defaultScore);
 		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
