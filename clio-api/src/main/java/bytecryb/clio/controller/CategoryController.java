@@ -3,7 +3,10 @@ package bytecryb.clio.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,4 +23,10 @@ public class CategoryController {
 	public List<Category> getAll() {
 		return this.catRepo.findAll();
 	}
+
+	@PostMapping("/categories")
+    public ResponseEntity<String> push(@RequestBody Category input) {
+        Category result = this.catRepo.save(input);
+        return ResponseEntity.ok().body(new String("Successfully Created Record: " + result.getId()));
+    }
 }
