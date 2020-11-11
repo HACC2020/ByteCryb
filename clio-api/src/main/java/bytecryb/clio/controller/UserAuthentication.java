@@ -12,16 +12,15 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import bytecryb.clio.exception.SignupTakenException;
 import bytecryb.clio.model.AuthenticationRequest;
 import bytecryb.clio.model.AuthenticationResponse;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
-import bytecryb.clio.model.Score;
 import bytecryb.clio.repository.RoleRepository;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.service.CustomUserDetailsService;
-import bytecryb.clio.service.ScoreService;
 import bytecryb.clio.util.JwtUtil;
 
 
@@ -39,9 +38,6 @@ public class UserAuthentication {
 
 	@Autowired
 	private CustomUserDetailsService userDetailsService;
-
-	@Autowired
-	private ScoreService scoreService;
 
 	@Autowired
 	private JwtUtil jwtTokenUtil;
@@ -66,23 +62,18 @@ public class UserAuthentication {
 	
 	// {username, email, password}
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody CustomUser user) throws Exception {
+	public ResponseEntity<?> saveUser(@RequestBody CustomUser user) throws SignupTakenException {
+
         if(userRepo.existsByUsername(user.getUsername())) {
-            throw new Exception("USERNAME TAKEN");
+            throw new SignupTakenException("Username taken.");
         }
         if(userRepo.existsByEmail(user.getEmail())) {
-        	throw new Exception("EMAIL ALREADY IN USE");
+        	throw new SignupTakenException("Email is already in use.");
 		}
+
 		Role role = roleRepo.findByRoleName("rookie");
 		user.setRole(role);
 		CustomUser savedUser = userDetailsService.save(user);
-		Score defaultScore = new Score();
-		defaultScore.setUserId(savedUser.getUserId());
-		defaultScore.setDay(0);
-		defaultScore.setMonth(0);
-		defaultScore.setYear(0);
-		defaultScore.setScore(0);
-		scoreService.save(defaultScore);
 		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
