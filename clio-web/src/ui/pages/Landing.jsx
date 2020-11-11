@@ -4,23 +4,39 @@ import { withRouter } from 'react-router-dom';
 import { faFileAlt, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { xmlToJSON } from '../../xmlParser';
+import AuthService from '../../api/AuthService';
 
 class Landing extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      month: 0
-    }
+      month: 0,
+      loading: true,
+      current: [],
+    };
+    this.Auth = new AuthService();
+  }
+
+  async componentDidMount() {
+    const options = {};
+    const data = [];
+    const daily = await this.Auth.fetch('/api/v1/scores/daily', options);
+    const month = await this.Auth.fetch('/api/v1/scores/month', options);
+    const allTime = await this.Auth.fetch('/api/v1/scores/alltime', options);
+    data.push(daily);
+    data.push(month);
+    data.push(allTime);
+    this.setState({ current: data });
+    this.setState({ loading: false });
   }
 
   render() {
 
-    const months = ['All Time', 'Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept',
-      'Oct', 'Nov', 'Dec'];
+    const months = ['Daily', 'Monthly', 'All Time'];
 
     const onNextMonth = () => {
-      if (this.state.month >= 12 || this.state.month < 0) {
-        this.setState({ month: 0 })
+      if (this.state.month >= 2 || this.state.month < 0) {
+        this.setState({ month: 0 });
       } else {
         const number = this.state.month + 1;
         this.setState({ month: number })
@@ -28,16 +44,26 @@ class Landing extends React.Component {
     };
 
     const onPrevMonth = () => {
-      if (this.state.month > 12) {
+      if (this.state.month > 2) {
         this.setState({ month: 0 })
       } else
         if (this.state.month <= 0) {
-          this.setState({ month: 12 })
+          this.setState({ month: 2 })
         } else {
           const number = this.state.month - 1;
           this.setState({ month: number })
         }
     };
+
+    if (this.state.loading === true) {
+      return (
+          <Container>
+            <h2 align={'center'}>
+              Loading Dashboard...
+            </h2>
+          </Container>
+      )
+    }
 
     return (
         <Container>
@@ -113,12 +139,11 @@ class Landing extends React.Component {
                 </Card.Header>
                 <Card.Body>
                   <ListGroup variant="flush">
-                    <ListGroup.Item>John Foo - 423
-                      <FontAwesomeIcon icon={faFileAlt} style={{ marginLeft: '0.5rem' }}/>
-                    </ListGroup.Item>
-                    <ListGroup.Item>Jane Foo - 325 records</ListGroup.Item>
-                    <ListGroup.Item>Admin Hello - 210 records </ListGroup.Item>
-                    <ListGroup.Item>Jake Smith - 100 records </ListGroup.Item>
+                    {this.state.current[this.state.month].map((user, key) => {
+                      return (
+                          <ListGroup.Item>{user.username} - {user.score}</ListGroup.Item>
+                      )
+                    })}
                   </ListGroup>
                 </Card.Body>
               </Card>
