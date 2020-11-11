@@ -101,6 +101,12 @@ public class ScoreController {
 
 	*/
 
+	//DUMMY FUNCTION FOR DATE
+	@GetMapping("/scores")
+	public ResponseEntity<List<Score>> allScores() {
+		List<Score> result = this.scoreRepo.findAll();
+		return ResponseEntity.ok().body(result);
+	}
 
 	// GET TOP 10 DAILY
 	@GetMapping("/scores/daily")
