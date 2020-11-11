@@ -108,7 +108,9 @@ public class JobController {
         List<Record> results = this.recordRepo.findByJobId(id);
         JSONArray jsonArray = new JSONArray();
         for (Record result : results) {
-            jsonArray.put(new JSONObject(result.getJson()));
+            if (result.isApproved()) {
+                jsonArray.put(new JSONObject(result.getJson()));
+            }
         }
         String csv = CDL.toString(jsonArray);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/csv"))
