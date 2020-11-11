@@ -141,46 +141,49 @@ class Admin extends React.Component {
 
     const onCreateJob = async () => {
 
-      // const optionCategory = {
-      //   method: 'POST',
-      //   body: JSON.stringify({
-      //     name: this.state.jobName,
-      //   }),
-      // };
-      //
-      // let category = await this.Auth.fetch('/api/v1/categories', optionCategory);
-      // console.log(category);
-      // let catID = '';
-
-      const formData = new FormData();
-
-      for (let i = 0; i < this.state.pdfFiles.length; i++) {
-        formData.append("files", this.state.pdfFiles[i]);
-      }
-
-      formData.append("xml", this.state.xmlFile);
-      formData.append("name", this.state.jobName);
-      formData.append("catId", 1);
-
-      const options = {
+      const optionCategory = {
         method: 'POST',
-        body: formData,
-        redirect: 'follow',
+        body: {
+          name: this.state.jobName,
+          id: -1,
+        }
+        // body: JSON.stringify({
+        //   name: this.state.jobName,
+        // }),
       };
-      let job = await this.Auth.fetch('/api/v1/jobs', options);
-      // console.log(job);
-      if (!job.message) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Job successfully created',
-        })
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Job creation failed',
-          text: job.message,
-        })
-      }
+
+      let category = await this.Auth.fetch('/api/v1/categories', optionCategory);
+      console.log(category);
+
+      // const formData = new FormData();
+      //
+      // for (let i = 0; i < this.state.pdfFiles.length; i++) {
+      //   formData.append("files", this.state.pdfFiles[i]);
+      // }
+      //
+      // formData.append("xml", this.state.xmlFile);
+      // formData.append("name", this.state.jobName);
+      // formData.append("catId", 1);
+      //
+      // const options = {
+      //   method: 'POST',
+      //   body: formData,
+      //   redirect: 'follow',
+      // };
+      // let job = await this.Auth.fetch('/api/v1/jobs', options);
+      // // console.log(job);
+      // if (!job.message) {
+      //   Swal.fire({
+      //     icon: 'success',
+      //     title: 'Job successfully created',
+      //   })
+      // } else {
+      //   Swal.fire({
+      //     icon: 'error',
+      //     title: 'Job creation failed',
+      //     text: job.message,
+      //   })
+      // }
     };
 
     return (
