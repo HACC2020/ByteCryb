@@ -114,18 +114,18 @@ public class ScoreController {
 
 		for (int i = 0; i < 10 && i < orderedScores.size(); i++) {
 			//current userId and month score
-			Object[] score = orderedScores.get(i);
+			Object[] currScore = orderedScores.get(i);
 			//One JSON object
-			ObjectNode currScore = mapper.createObjectNode();
+			ObjectNode score = mapper.createObjectNode();
 			//Convert BigInteger to long and int
-			long userId = ((Number) score[0]).longValue();
-			int dayScore = ((Number) score[1]).intValue();
+			long userId = ((Number) currScore[0]).longValue();
+			int dayScore = ((Number) currScore[1]).intValue();
 
-			currScore.put("rank", i+1);
-			currScore.put("user", userId);
-			currScore.put("score", dayScore);
+			score.put("rank", i+1);
+			score.put("user", userId);
+			score.put("score", dayScore);
 			//add to result array of JSON objects
-			result.add(currScore);
+			result.add(score);
 		}
 
 		return ResponseEntity.ok().body(result);
@@ -144,18 +144,18 @@ public class ScoreController {
 
 		for (int i = 0; i < 10 && i < orderedScores.size(); i++) {
 			//current userId and month score
-			Object[] score = orderedScores.get(i);
+			Object[] currScore = orderedScores.get(i);
 			//One JSON object
-			ObjectNode currScore = mapper.createObjectNode();
+			ObjectNode score = mapper.createObjectNode();
 			//Convert BigInteger to long and int
-			long userId = ((Number) score[0]).longValue();
-			int monthScore = ((Number) score[1]).intValue();
+			long userId = ((Number) currScore[0]).longValue();
+			int monthScore = ((Number) currScore[1]).intValue();
 
-			currScore.put("rank", i+1);
-			currScore.put("user", userId);
-			currScore.put("score", monthScore);
+			score.put("rank", i+1);
+			score.put("user", userId);
+			score.put("score", monthScore);
 			//add to result array of JSON objects
-			result.add(currScore);
+			result.add(score);
 		}
 
 		return ResponseEntity.ok().body(result);
