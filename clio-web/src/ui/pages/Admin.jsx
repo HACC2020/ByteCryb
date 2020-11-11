@@ -130,6 +130,15 @@ class Admin extends React.Component {
       this.setState({ jobName: value });
     };
 
+    const exportCSV = async () => {
+      const options = {
+        method: 'GET',
+      };
+
+      let CSV = await this.Auth.fetch(' /api/v1/jobs/csv?id=1', options);
+      console.log(CSV);
+    };
+
     const onCreateJob = async () => {
 
       // const optionCategory = {
@@ -153,16 +162,25 @@ class Admin extends React.Component {
       formData.append("name", this.state.jobName);
       formData.append("catId", 1);
 
-      // console.log(formData.getAll("files"));
-      // console.log(formData.getAll("xml"));
-
       const options = {
         method: 'POST',
         body: formData,
         redirect: 'follow',
       };
       let job = await this.Auth.fetch('/api/v1/jobs', options);
-      console.log(job)
+      // console.log(job);
+      if (!job.message) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Job successfully created',
+        })
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Job creation failed',
+          text: job.message,
+        })
+      }
     };
 
     return (
@@ -172,7 +190,7 @@ class Admin extends React.Component {
               <Col sm={2}>
                 <Nav variant="pills" className="flex-column">
                   <Nav.Item>
-                    <Nav.Link eventKey="first">All Records</Nav.Link>
+                    <Nav.Link eventKey="first">All Jobs</Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
                     <Nav.Link eventKey="second">Add New Job</Nav.Link>
@@ -186,10 +204,11 @@ class Admin extends React.Component {
                       <thead>
                       <tr>
                         <th>#</th>
-                        <th>Record</th>
+                        <th>Job</th>
                         <th>Last Updated</th>
                         <th>Percentage Completed</th>
                         <th>Export as CSV</th>
+                        <th>View Job</th>
                       </tr>
                       </thead>
                       <tbody>
@@ -199,7 +218,10 @@ class Admin extends React.Component {
                         <td>Nov 11 2020 at 2:57pm</td>
                         <td>22%</td>
                         <td>
-                          <Button variant="primary">Export</Button>
+                          <Button variant="primary" onClick={exportCSV}>Export</Button>
+                        </td>
+                        <td>
+                          <Button variant="primary">View</Button>
                         </td>
                       </tr>
                       <tr>
@@ -210,6 +232,9 @@ class Admin extends React.Component {
                         <td>
                           <Button variant="primary">Export</Button>
                         </td>
+                        <td>
+                          <Button variant="primary">View</Button>
+                        </td>
                       </tr>
                       <tr>
                         <td>3</td>
@@ -219,6 +244,9 @@ class Admin extends React.Component {
                         <td>
                           <Button variant="primary">Export</Button>
                         </td>
+                        <td>
+                          <Button variant="primary">View</Button>
+                        </td>
                       </tr>
                       <tr>
                         <td>4</td>
@@ -227,6 +255,9 @@ class Admin extends React.Component {
                         <td>2%</td>
                         <td>
                           <Button variant="primary">Export</Button>
+                        </td>
+                        <td>
+                          <Button variant="primary">View</Button>
                         </td>
                       </tr>
                       </tbody>
@@ -238,14 +269,14 @@ class Admin extends React.Component {
                         <Form>
                           <Form.Group onChange={(e) => getJobName(e.target.value)}>
                             <Form.Label>Job Name</Form.Label>
-                            <Form.Control placeholder="Chinese Arrivals"/>
+                            <Form.Control placeholder="Eg. Chinese Arrivals"/>
                           </Form.Group>
                           <Form.Group>
                             <Form.File id="exampleFormControlFile1" label="Upload XML File"
                                        onChange={(e) => getXML(e)}/>
                           </Form.Group>
                           <Form.Group>
-                            <Form.File id="exampleFormControlFile1" label="Upload PDF Files"
+                            <Form.File id="exampleFormControlFile1" label="Upload PDF File(s)"
                                        multiple
                                        onChange={(e) => getPDFs(e)}/>
                           </Form.Group>
