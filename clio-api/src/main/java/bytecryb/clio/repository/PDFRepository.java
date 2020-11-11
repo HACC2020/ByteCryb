@@ -7,5 +7,4 @@ import bytecryb.clio.model.PDF;
 
 @Repository
 public interface PDFRepository extends JpaRepository<PDF, Long> {
-
 }

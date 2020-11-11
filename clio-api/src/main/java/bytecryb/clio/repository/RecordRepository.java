@@ -10,4 +10,6 @@ import bytecryb.clio.model.Record;
 @Repository
 public interface RecordRepository extends JpaRepository<Record, Long> {
     List<Record> findByJobId(Long jobId);
+
+    Record findFirstByJobId(Long id);
 }

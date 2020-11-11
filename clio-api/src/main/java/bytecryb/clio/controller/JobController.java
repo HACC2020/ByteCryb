@@ -1,5 +1,6 @@
 package bytecryb.clio.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -61,6 +62,20 @@ public class JobController {
         return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping("/jobs/csv")
+    public ResponseEntity<String> getCsvByJobId(@RequestParam(value = "id") Long id) {
+        List<Record> results = this.recordRepo.findByJobId(id);
+        JSONArray jsonArray = new JSONArray();
+        for (Record result : results) {
+            if (result.isApproved()) {
+                jsonArray.put(new JSONObject(result.getJson()));
+            }
+        }
+        String csv = CDL.toString(jsonArray);
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/csv"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"output_job_" + id + ".csv\"").body(csv);
+    }
+
     @PostMapping("/jobs")
     @Transactional
     public ResponseEntity<Job> createJob(@RequestParam(value = "files") MultipartFile[] files,
@@ -70,11 +85,25 @@ public class JobController {
         List<Record> records = new ArrayList<>();
         Job newJob = new Job();
 
+        UUID pdfFolder = UUID.randomUUID();
+
+        UUID xmlFolder = UUID.randomUUID();
+
         for (MultipartFile file : files) {
-            filesUploaded.add(this.pdfService.uploadToLocal(file, UUID.randomUUID()));
+            try {
+                filesUploaded.add(this.pdfService.uploadToLocal(file, pdfFolder));
+            } catch (Exception e) {
+                this.pdfService.remove(new File(System.getProperty("user.dir") + "/data/pdf/" + pdfFolder.toString()));
+            }
         }
 
-        XML newXml = this.xmlService.uploadToLocal(xml, UUID.randomUUID());
+        XML newXml = null;
+        try {
+            newXml = this.xmlService.uploadToLocal(xml, xmlFolder);
+        } catch (Exception e) {
+            this.pdfService.remove(new File(System.getProperty("user.dir") + "/data/pdf/" + pdfFolder.toString()));
+            this.pdfService.remove(new File(System.getProperty("user.dir") + "/data/pdf/" + xmlFolder.toString()));
+        }
 
         newJob.setName(name);
         newJob.setCategoryId(catId);
@@ -103,17 +132,4 @@ public class JobController {
         return ResponseEntity.ok(this.jobRepo.save(result));
     }
 
-    @GetMapping("/jobs/csv")
-    public ResponseEntity<String> getCsvByJobId(@RequestParam(value = "id") Long id) {
-        List<Record> results = this.recordRepo.findByJobId(id);
-        JSONArray jsonArray = new JSONArray();
-        for (Record result : results) {
-            if (result.isApproved()) {
-                jsonArray.put(new JSONObject(result.getJson()));
-            }
-        }
-        String csv = CDL.toString(jsonArray);
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/csv"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"output_job_" + id + ".csv\"").body(csv);
-    }
 }
