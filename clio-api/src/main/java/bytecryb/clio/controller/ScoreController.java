@@ -104,7 +104,6 @@ public class ScoreController {
 		List<Score> userScores = this.scoreRepo.findByUserId(curUser.getUserId());
 		int total = 0;
 		for (Score s : userScores) {
-			System.out.println("here");
 			total += s.getScore();
 		}
 		result.add(new ResultScore(0, username, total));
