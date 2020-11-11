@@ -50,13 +50,14 @@ public class UserController {
 	@Autowired
 	private ObjectMapper mapper;
 	
+	/*
+	
 	//Get username from token
 	public String getUser(HttpServletRequest request) {
 		String jwtToken = extractJwtFromRequest(request);
 		String username = jwtUtil.getUsernameFromToken(jwtToken);
 		return username;
 	}
-
 
 	@GetMapping("/users")
 	public ResponseEntity<List<ResultUser>> getUsers() {
@@ -122,4 +123,6 @@ public class UserController {
 		}
 		return null;
 	}
+
+	*/
 }

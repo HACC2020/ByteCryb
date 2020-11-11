@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultScore;
@@ -33,9 +34,11 @@ public class ScoreController {
 	@Autowired
 	private JwtUtil jwtUtil;
 
+	/*
+	
 	// GET DAILY
 	@GetMapping("/daily")
-	public ResponseEntity<List<ResultScore>> getDailyTopScores(HttpServletRequest request) {
+	public ResponseEntity<List<ResultScore>> getDailyTopScores(@RequestParam(name = "day") int day, @RequestParam(name = "month") int month, @RequestParam(name = "year") int year, HttpServletRequest request) {
 		
 		List<Score> query = this.scoreRepo.findAll(Sort.by("day").descending());
 		List<ResultScore> result = new ArrayList<ResultScore>();
@@ -43,7 +46,7 @@ public class ScoreController {
 		String jwtToken = extractJwtFromRequest(request);
 		String username = jwtUtil.getUsernameFromToken(jwtToken);
 		CustomUser curUser = this.userRepo.findByUsername(username);
-		Score userScore = this.scoreRepo.findByUserId(curUser.getUserId());
+		List<Score> userScore = this.scoreRepo.findByUserId(curUser.getUserId());
 		result.add(new ResultScore(0, username, userScore.getDay()));
 
 		Iterator<Score> scoreIterator = query.iterator();
@@ -62,15 +65,15 @@ public class ScoreController {
 
 	// GET MONTHLY
 	@GetMapping("/month")
-	public ResponseEntity<List<ResultScore>> getMonthlyTopScores(HttpServletRequest request) {
-		
+	public ResponseEntity<List<ResultScore>> getMonthlyTopScores(@RequestParam(name = "month") int month, @RequestParam(name = "year") int year, HttpServletRequest request) {
+		System.out.println(month + year);
 		List<Score> query = this.scoreRepo.findAll(Sort.by("month").descending());
 		List<ResultScore> result = new ArrayList<ResultScore>();
 
 		String jwtToken = extractJwtFromRequest(request);
 		String username = jwtUtil.getUsernameFromToken(jwtToken);
 		CustomUser curUser = this.userRepo.findByUsername(username);
-		Score userScore = this.scoreRepo.findByUserId(curUser.getUserId());
+		List<Score> userScore = this.scoreRepo.findByUserId(curUser.getUserId());
 		result.add(new ResultScore(0, username, userScore.getMonth()));
 
 		Iterator<Score> scoreIterator = query.iterator();
@@ -86,19 +89,27 @@ public class ScoreController {
 		return ResponseEntity.ok().body(result);
 	}
 
+	*/
+
 	// GET ALL TIME
 	@GetMapping("/alltime")
 	public ResponseEntity<List<ResultScore>> getAllTimeTopScores(HttpServletRequest request) {
 		
-		List<Score> query = this.scoreRepo.findAll(Sort.by("score").descending());
 		List<ResultScore> result = new ArrayList<ResultScore>();
 
+		// Getting current user's all time score
 		String jwtToken = extractJwtFromRequest(request);
 		String username = jwtUtil.getUsernameFromToken(jwtToken);
 		CustomUser curUser = this.userRepo.findByUsername(username);
-		Score userScore = this.scoreRepo.findByUserId(curUser.getUserId());
-		result.add(new ResultScore(0, username, userScore.getScore()));
+		List<Score> userScores = this.scoreRepo.findByUserId(curUser.getUserId());
+		int total = 0;
+		for (Score s : userScores) {
+			System.out.println("here");
+			total += s.getScore();
+		}
+		result.add(new ResultScore(0, username, total));
 
+		List<Score> query = this.scoreRepo.findAll(Sort.by("score").descending());
 		Iterator<Score> scoreIterator = query.iterator();
 
 		int i = 1;
