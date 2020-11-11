@@ -33,8 +33,8 @@ public class CategoryController {
 
 		Category newCat = new Category();
 		newCat.setName(name);
-		Category result = this.catRepo.save(newCat);
-
-		return ResponseEntity.ok().body(new String("Successfully Created Category: " + result.getId()));
+		newCat = this.catRepo.save(newCat);
+		String result = new String("Successfully Created Category: " + newCat.getId());
+		return ResponseEntity.ok(result);
 	}
 }
