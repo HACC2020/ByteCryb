@@ -1,34 +1,36 @@
 # Team: ByteCryb
 
+Deployed HERE: https://thearchiveshacc2020.azurewebsites.net/
+
 # Setup
 
 Go to the repo directory
 
-```cd <path>/ByteCryb/```
+`cd <path>/ByteCryb/`
 
 ## Using Docker
 
 Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
-run ```docker-compose up -d``` (-d = run in background) to setup PostgreSQL
+run `docker-compose up -d` (-d = run in background) to setup PostgreSQL
 
-run ```docker-compose down``` to shutdown container
+run `docker-compose down` to shutdown container
 
 ## Running API
 
-```cd clio-api```
+`cd clio-api`
 
-run ```./mvnw spring-boot:run```
+run `./mvnw spring-boot:run`
 
 Crtl + C to shutdown
 
-## Running Site
+## Running the web application
 
 First install the dependencies by running ``npm clean-install``
 
 In the project directory, you can run:
 
-### `npm start`
+`npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -36,12 +38,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
+`npm test`
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+`npm run build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
