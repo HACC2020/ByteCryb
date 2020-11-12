@@ -22,6 +22,9 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
     @Query(value = "SELECT s.user_id, SUM(s.score) FROM Scores s WHERE CAST(EXTRACT(YEAR FROM s.date) AS INT) = ?1 GROUP BY s.user_id ORDER BY SUM(s.score) DESC", nativeQuery = true)
     List<Object[]> findAllYearlyScores(int year);
 
+    @Query(value = "SELECT s.user_id, SUM(s.score) FROM Scores s GROUP BY s.user_id ORDER BY SUM(s.score) DESC", nativeQuery = true)
+    List<Object[]> findAllScores();
+
 }
 
 	/*

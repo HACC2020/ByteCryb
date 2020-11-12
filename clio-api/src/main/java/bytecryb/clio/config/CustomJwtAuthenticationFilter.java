@@ -39,6 +39,8 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
 
+				response.addHeader("Access-Control-Allow-Origin", "*");
+
 		try {
 
 			// JWT Token is in the form "Bearer token". Remove Bearer word and
