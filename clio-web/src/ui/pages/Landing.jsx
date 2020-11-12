@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Card, Button, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, ListGroup, Nav } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { faFileAlt, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -91,9 +91,11 @@ class Landing extends React.Component {
                     numquam provident recusandae repellat repudiandae similique, suscipit totam vel,
                     voluptatum!
                   </Card.Text>
-                  <Button>
-                    Start
-                  </Button>
+                  <Nav.Link href="/record">
+                    <Button>
+                      Start
+                    </Button>
+                  </Nav.Link>
                 </Card.Body>
               </Card>
 

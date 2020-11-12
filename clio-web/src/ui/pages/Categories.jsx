@@ -1,14 +1,12 @@
 import React from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Nav } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
 
 class Categories extends React.Component {
   constructor() {
     super();
-    this.state = {
-
-    };
+    this.state = {};
     this.Auth = new AuthService();
   }
 
@@ -48,9 +46,12 @@ class Categories extends React.Component {
                 numquam provident recusandae repellat repudiandae similique, suscipit totam vel,
                 voluptatum!
               </Card.Text>
-              <Button>
-                Start
-              </Button>
+              <Nav.Link href="/record">
+                <Button>
+                  Start
+                </Button>
+              </Nav.Link>
+
             </Card.Body>
           </Card>
         </Container>

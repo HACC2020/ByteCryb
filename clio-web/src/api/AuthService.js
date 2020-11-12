@@ -4,7 +4,6 @@ export default class AuthService {
   // Initializing important variables
   constructor(domain) {
     this.domain = 'http://164.90.149.100:8080'; // API server domain
-    //this.domain = domain || 'http://164.90.149.100:8080'; // API server domain
     this.fetch = this.fetch.bind(this); // React binding stuff
     this.login = this.login.bind(this);
     this.getProfile = this.getProfile.bind(this);
@@ -74,6 +73,11 @@ export default class AuthService {
     // performs api calls sending the required authentication headers
     const headers = {};
 
+
+    // headers['Access-Control-Allow-Origin'] = '*';
+    // headers['Access-Control-Allow-Headers'] = 'x-requested-with, x-requested-by';
+    // headers['Access-Control-Allow-Methods'] = 'GET, PUT, POST, DELETE, OPTIONS';
+    // headers['Allow-Origin'] = '*';
     // Setting Authorization header
     // Authorization: Bearer xxxxxxx.xxxxxxxx.xxxxxx
 
@@ -81,13 +85,14 @@ export default class AuthService {
       headers['Authorization'] = 'Bearer ' + this.getToken();
     }
 
-    console.log(headers);
+    // console.log(headers);
 
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
     // .then(this._checkStatus)
+    // console.log(response)
     let body = await response.json();
     // try {
     //   body = await response.json();
