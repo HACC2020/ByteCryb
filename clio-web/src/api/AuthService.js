@@ -15,9 +15,13 @@ export default class AuthService {
     return this.fetch('/auth/login', {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: 'text/plain;charset=utf-8',
+        'Content-Type': 'text/plain;charset=utf-8',
       },
+      // headers: {
+      //   Accept: 'application/json',
+      //   'Content-Type': 'application/json',
+      // },
       body: JSON.stringify({
         username,
         password,
