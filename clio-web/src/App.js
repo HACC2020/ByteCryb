@@ -15,6 +15,7 @@ import Footer from './ui/components/Footer';
 import MyJob from './ui/pages/MyJob';
 import Proofer from './ui/pages/Proofer';
 import TestPage from './ui/pages/TestPage';
+import Record from './ui/pages/Record';
 
 class App extends React.Component {
   render () {
@@ -23,6 +24,7 @@ class App extends React.Component {
           <NavBar/>
           <Switch>
             <Route exact path='/testPage' component={TestPage}/>
+            <Route exact path='/record' component={Record}/>
             <Route exact path='/' component={Login}/>
             <Route exact path='/signup' component={SignUp}/>
             <Route exact path='/my-job' component={MyJob}/>

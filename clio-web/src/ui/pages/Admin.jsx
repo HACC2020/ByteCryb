@@ -153,6 +153,14 @@ class Admin extends React.Component {
       let category = await this.Auth.fetch('/api/v1/categories', requestOptions);
       console.log(category);
 
+      if (category.message) {
+        Swal.fire({
+          icon: 'error',
+          title: category.message,
+        });
+        return;
+      }
+
       const formData = new FormData();
 
       for (let i = 0; i < this.state.pdfFiles.length; i++) {
