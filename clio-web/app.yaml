@@ -2,7 +2,7 @@
 
 env: standard
 runtime: nodejs10
-service: GamingTheArchives
+# service: GamingTheArchives
 
 handlers:
   - url: /static
