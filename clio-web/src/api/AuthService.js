@@ -12,7 +12,8 @@ export default class AuthService {
 
   login(username, password) {
     // Get a token from api server using the fetch api
-    return this.fetch('/auth/login', {
+    //return this.fetch('/auth/login', {
+    return this.fetch('http://164.90.149.100:8080/auth/login', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
