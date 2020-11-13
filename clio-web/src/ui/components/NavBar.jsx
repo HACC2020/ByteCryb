@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Nav, NavDropdown, Image } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, Image, Button } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import AuthService from "../../api/AuthService";
 
@@ -20,6 +20,11 @@ class NavBar extends React.Component {
       this.setState({ role: sessionStorage.getItem("role") });
     }
   }
+
+  logOut = () => {
+    console.log("log out fuction");
+    sessionStorage.removeItem("id_token");
+  };
 
   render() {
     const imgStyle = {
@@ -186,8 +191,8 @@ class NavBar extends React.Component {
                     </NavDropdown.Item>
                     <NavDropdown.Item href="/my-job">My Jobs</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="/sign-out">
-                      Sign Out
+                    <NavDropdown.Item href="/" onClick={this.logOut}>
+                      Log out
                     </NavDropdown.Item>
                   </NavDropdown>
                 </Nav>
