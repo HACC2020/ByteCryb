@@ -92,14 +92,16 @@ export default class AuthService {
       ...options,
     });
     // .then(this._checkStatus)
-    // console.log(response)
-    let body = await response.json();
-    // try {
-    //   body = await response.json();
-    // } catch (e) {
-    //   body = response;
-    // }
-    return body;
+    // console.log(response);
+    let text = await response.text();
+    try {
+      const json = JSON.parse(text);
+      // console.log(json);
+      return json;
+    } catch (err) {
+      // console.log(text);
+      return text;
+    }
   }
 
   _checkStatus(response) {

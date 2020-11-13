@@ -151,7 +151,7 @@ class Admin extends React.Component {
       };
 
       let category = await this.Auth.fetch('/api/v1/categories', requestOptions);
-      console.log(category);
+      const catID = category.match(/(\d+)/g);
 
       if (category.message) {
         Swal.fire({
@@ -169,7 +169,7 @@ class Admin extends React.Component {
 
       formData.append("xml", this.state.xmlFile);
       formData.append("name", this.state.jobName);
-      formData.append("catId", 1);
+      formData.append("catId", catID[0]);
 
       const options = {
         method: 'POST',
