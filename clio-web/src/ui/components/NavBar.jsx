@@ -84,7 +84,6 @@ class NavBar extends React.Component {
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                  <Nav.Link href="/categories">Categories</Nav.Link>
                   <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
                 </Nav>
                 <Nav>
@@ -124,7 +123,6 @@ class NavBar extends React.Component {
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                  <Nav.Link href="/categories">Categories</Nav.Link>
                   <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
                   <Nav.Link href="/proofer">Review Submissions</Nav.Link>
                 </Nav>
@@ -165,7 +163,6 @@ class NavBar extends React.Component {
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                  <Nav.Link href="/categories">Categories</Nav.Link>
                   <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
                   <Nav.Link href="/admin">Admin</Nav.Link>
                   <Nav.Link href="/landing">Landing</Nav.Link>

@@ -7,7 +7,6 @@ import Login from './ui/pages/Login';
 import Landing from './ui/pages/Landing';
 import Admin from './ui/pages/Admin';
 import ViewProfile from './ui/pages/ViewProfile';
-import Categories from './ui/pages/Categories';
 import RookieTraining from './ui/pages/RookieTraining';
 import Leaderboard from './ui/pages/Leaderboard';
 import SignUp from './ui/pages/SignUp';
@@ -32,7 +31,6 @@ class App extends React.Component {
             <Route exact path='/leaderboard' component={Leaderboard}/>
             <Route exact path='/admin' component={Admin}/>
             <Route exact path='/view-profile' component={ViewProfile}/>
-            <Route exact path='/categories' component={Categories}/>
             <Route exact path='/training' component={RookieTraining}/>
             <Route exact path='/proofer' component={Proofer}/>
           </Switch>

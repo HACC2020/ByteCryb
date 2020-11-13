@@ -171,25 +171,25 @@ class Admin extends React.Component {
       formData.append("name", this.state.jobName);
       formData.append("catId", 1);
 
-      const options = {
-        method: 'POST',
-        body: formData,
-        redirect: 'follow',
-      };
-      let job = await this.Auth.fetch('/api/v1/jobs', options);
-      // console.log(job);
-      if (!job.message) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Job successfully created',
-        })
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Job creation failed',
-          text: job.message,
-        })
-      }
+      // const options = {
+      //   method: 'POST',
+      //   body: formData,
+      //   redirect: 'follow',
+      // };
+      // let job = await this.Auth.fetch('/api/v1/jobs', options);
+      // // console.log(job);
+      // if (!job.message) {
+      //   Swal.fire({
+      //     icon: 'success',
+      //     title: 'Job successfully created',
+      //   })
+      // } else {
+      //   Swal.fire({
+      //     icon: 'error',
+      //     title: 'Job creation failed',
+      //     text: job.message,
+      //   })
+      // }
     };
 
     return (

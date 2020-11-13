@@ -1,7 +1,8 @@
 import React from 'react';
-import { Container, Row, Col, Card, Button, Nav } from 'react-bootstrap';
+import { Container, Spinner } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
+import CategoriesCard from '../components/CategoriesCard';
 
 class Categories extends React.Component {
   constructor(props) {
@@ -9,59 +10,55 @@ class Categories extends React.Component {
     this.state = {
       token: "",
       role: "",
+      categories: [],
+      loading: true,
     };
     this.Auth = new AuthService();
   }
 
   async componentDidMount() {
 
-    const options = {
+    const options2 = {
       method: 'GET'
     };
-    let categories = await this.Auth.fetch('/api/v1/categories', options);
+    let categories = await this.Auth.fetch('/api/v1/categories', options2);
+    this.setState({ categories: categories });
+    this.setState({ loading: false });
 
-    const formData = new FormData();
-    formData.append('job_id', 1);
-    const options = {
-      method: 'POST',
-      body: formData,
-    };
-    const record = this.Auth.fetch('/records/pop', options);
-    console.log(record);
+    // const formData = new FormData();
+    // formData.append('job_id', 1);
+    // const options = {
+    //   method: 'POST',
+    //   body: formData,
+    // };
+    // const record = this.Auth.fetch('/records/pop', options);
+    // console.log(record);
   }
 
   render() {
 
+    if (this.state.loading === true) {
+      return (
+          <Container align={'center'}>
+            <h2>
+              Loading Categories...
+            </h2>
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </Container>
+      )
+    }
+
+
     return (
         <Container>
-          <Card>
-            <Card.Body>
-              <Row>
-                <Col>
-                  <Card.Title>
-                    Negative Index Cards
-                  </Card.Title>
-                </Col>
-                <Col>
-                  <p align={'right'}>
-                    25% complete
-                  </p>
-                </Col>
-              </Row>
-              <Card.Text>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur
-                corporis delectus dignissimos error ex fuga inventore maxime modi molestiae nulla
-                numquam provident recusandae repellat repudiandae similique, suscipit totam vel,
-                voluptatum!
-              </Card.Text>
-              <Nav.Link href="/record">
-                <Button>
-                  Start
-                </Button>
-              </Nav.Link>
-
-            </Card.Body>
-          </Card>
+          <h3 align={'center'}>
+            Categories
+          </h3>
+          {this.state.categories.map((category, key) => {
+            return <CategoriesCard category={category} key={key}/>
+          })}
         </Container>
     )
   }

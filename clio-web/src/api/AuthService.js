@@ -92,7 +92,7 @@ export default class AuthService {
       ...options,
     });
     // .then(this._checkStatus)
-    // console.log(response)
+    console.log(response)
     let body = await response.json();
     // try {
     //   body = await response.json();

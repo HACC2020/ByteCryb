@@ -17,7 +17,7 @@ class LeaderboardCard extends React.Component {
               <ListGroup variant="flush">
                 {this.props.users.map((user, key) => {
                   return (
-                      <ListGroup.Item>{user.username} - {user.score}</ListGroup.Item>
+                      <ListGroup.Item key={key}>{user.username} - {user.score}</ListGroup.Item>
                   )
                 })}
               </ListGroup>

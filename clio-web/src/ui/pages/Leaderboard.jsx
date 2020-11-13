@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Card, Button, ListGroup } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, ListGroup, Spinner } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import {
   faFileAlt,
@@ -40,10 +40,13 @@ class Leaderboard extends React.Component {
 
     if (this.state.loading === true) {
       return (
-          <Container>
+          <Container align={'center'}>
             <h2 align={'center'}>
               Fetching Leaderboard...
             </h2>
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
           </Container>
       )
     }
