@@ -151,7 +151,7 @@ class Admin extends React.Component {
       };
 
       let category = await this.Auth.fetch('/api/v1/categories', requestOptions);
-      console.log(category);
+      const catID = category.match(/(\d+)/g);
 
       if (category.message) {
         Swal.fire({
@@ -169,27 +169,27 @@ class Admin extends React.Component {
 
       formData.append("xml", this.state.xmlFile);
       formData.append("name", this.state.jobName);
-      formData.append("catId", 1);
+      formData.append("catId", catID[0]);
 
-      // const options = {
-      //   method: 'POST',
-      //   body: formData,
-      //   redirect: 'follow',
-      // };
-      // let job = await this.Auth.fetch('/api/v1/jobs', options);
-      // // console.log(job);
-      // if (!job.message) {
-      //   Swal.fire({
-      //     icon: 'success',
-      //     title: 'Job successfully created',
-      //   })
-      // } else {
-      //   Swal.fire({
-      //     icon: 'error',
-      //     title: 'Job creation failed',
-      //     text: job.message,
-      //   })
-      // }
+      const options = {
+        method: 'POST',
+        body: formData,
+        redirect: 'follow',
+      };
+      let job = await this.Auth.fetch('/api/v1/jobs', options);
+      // console.log(job);
+      if (!job.message) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Job successfully created',
+        })
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Job creation failed',
+          text: job.message,
+        })
+      }
     };
 
     return (

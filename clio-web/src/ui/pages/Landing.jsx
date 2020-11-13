@@ -104,7 +104,7 @@ class Landing extends React.Component {
                   <ListGroup variant="flush">
                     {this.state.current[this.state.month].map((user, key) => {
                       return (
-                          <ListGroup.Item>{user.username} - {user.score}</ListGroup.Item>
+                          <ListGroup.Item key={key}>{user.username} - {user.score}</ListGroup.Item>
                       )
                     })}
                   </ListGroup>
