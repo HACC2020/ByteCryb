@@ -72,6 +72,13 @@ class Landing extends React.Component {
       )
     }
 
+    const sticky = {
+      position: '-webkit-sticky',
+      position: 'sticky',
+      top: '6.5rem',
+      alignSelf: 'flex-start'
+    };
+
     return (
         <Container>
           <Row>
@@ -81,7 +88,7 @@ class Landing extends React.Component {
                 return <CategoriesCard category={category} key={key}/>
               })}
             </Col>
-            <Col xs={4}>
+            <Col xs={4} style={sticky}>
               <Card className="text-center">
                 <Card.Header>
                   <Card.Title>

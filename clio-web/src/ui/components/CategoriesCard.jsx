@@ -4,7 +4,6 @@ import { Row, Col, Card, Button, Nav, ProgressBar } from 'react-bootstrap';
 class CategoriesCard extends React.Component {
 
   render() {
-    console.log(this.props.category.name);
     return (
         <Card style={{ marginBottom: '2rem' }} className='category'>
           <Card.Body>
