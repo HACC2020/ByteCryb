@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Button, Accordion, Card } from "react-bootstrap";
+import { Container, Row, Col, Button, Accordion, Card, Nav } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import {
   AutoForm,
@@ -18,7 +18,7 @@ class RookieTraining extends React.Component {
   constructor() {
     super();
     this.state = {
-      pageNum: 1,
+      pageNum: 0,
     };
   }
 
@@ -100,8 +100,11 @@ class RookieTraining extends React.Component {
               {/*    min={new Date(1847, 1, 1)}/>*/}
               <AutoField name="nameOfShip" />
               <AutoField name="from" />
-
-              <SubmitField />
+              <Nav.Link href="/landing">
+                <Button>
+                  Submit
+                </Button>
+              </Nav.Link>
             </AutoForm>
             {/*<Form>*/}
             {/*  <Form.Row>*/}

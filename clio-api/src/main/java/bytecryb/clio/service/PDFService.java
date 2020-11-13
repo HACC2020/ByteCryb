@@ -1,5 +1,6 @@
 package bytecryb.clio.service;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,6 +57,7 @@ public class PDFService {
         PDF result = null;
         InputStream is = file.getInputStream();
 
+        // Must increment to avoid overriding
         try {
             Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
             result = this.pdfRepo.save(new PDF(fileName, path.toString()));
@@ -90,6 +92,17 @@ public class PDFService {
 
     public void createDir(Path folderPath) throws Exception {
         Files.createDirectories(folderPath);
+    }
+
+    public void remove(File file) {
+        for (File subFile : file.listFiles()) {
+            if (subFile.isDirectory()) {
+                remove(subFile);
+            } else {
+                subFile.delete();
+            }
+        }
+        file.delete();
     }
 
 }

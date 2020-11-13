@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Nav } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
 
@@ -14,10 +14,20 @@ class Categories extends React.Component {
   }
 
   async componentDidMount() {
+
     const options = {
       method: 'GET'
     };
     let categories = await this.Auth.fetch('/api/v1/categories', options);
+
+    const formData = new FormData();
+    formData.append('job_id', 1);
+    const options = {
+      method: 'POST',
+      body: formData,
+    };
+    const record = this.Auth.fetch('/records/pop', options);
+    console.log(record);
   }
 
   render() {
@@ -44,9 +54,12 @@ class Categories extends React.Component {
                 numquam provident recusandae repellat repudiandae similique, suscipit totam vel,
                 voluptatum!
               </Card.Text>
-              <Button>
-                Start
-              </Button>
+              <Nav.Link href="/record">
+                <Button>
+                  Start
+                </Button>
+              </Nav.Link>
+
             </Card.Body>
           </Card>
         </Container>

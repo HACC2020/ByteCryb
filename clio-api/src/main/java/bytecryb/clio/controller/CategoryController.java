@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bytecryb.clio.model.Category;
@@ -25,13 +25,16 @@ public class CategoryController {
 	}
 
 	@PostMapping("/categories")
-    public ResponseEntity<String> push(@RequestBody Category input) {
-		boolean exists = this.catRepo.existsByName(input.getName());
+	public ResponseEntity<String> push(@RequestParam String name) {
+		boolean exists = this.catRepo.existsByName(name);
 		if (exists) {
-			throw new IllegalArgumentException("Category " + input.getName() + " already exists");
+			throw new IllegalArgumentException("Category " + name + " already exists");
 		}
-		Category result = this.catRepo.save(input);
-	
-        return ResponseEntity.ok().body(new String("Successfully Created Category: " + result.getId()));
-    }
+
+		Category newCat = new Category();
+		newCat.setName(name);
+		newCat = this.catRepo.save(newCat);
+		String result = new String("Successfully Created Category: " + newCat.getId());
+		return ResponseEntity.ok(result);
+	}
 }

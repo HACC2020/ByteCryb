@@ -22,7 +22,7 @@ public class Job {
 	@Id
 	@Getter
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "job_id_generator")
-	@SequenceGenerator(name = "job_id_generator", sequenceName = "job_seq")
+	@SequenceGenerator(name = "job_id_generator", sequenceName = "job_seq", initialValue = 3)
 	@Column(name = "id", updatable = false, nullable = false)
 	private long id;
 
