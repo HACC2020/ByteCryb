@@ -1,18 +1,21 @@
 import React from "react";
-import { Container, Row, Col, Button, Accordion, Card, Nav } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Accordion,
+  Card,
+  Nav,
+} from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import {
   AutoForm,
   AutoField,
-  ErrorField,
   TextField,
   SelectField,
-  SubmitField,
-  DateField,
 } from "uniforms-bootstrap4";
 import { bridge as schema } from "../../api/RookieTraining";
-import { Prompt } from "react-router";
-import { useEffect, isPrompt, shouldBlockNavigation } from "react";
 
 class RookieTraining extends React.Component {
   constructor() {
@@ -101,9 +104,7 @@ class RookieTraining extends React.Component {
               <AutoField name="nameOfShip" />
               <AutoField name="from" />
               <Nav.Link href="/landing">
-                <Button>
-                  Submit
-                </Button>
+                <Button>Submit</Button>
               </Nav.Link>
             </AutoForm>
             {/*<Form>*/}
