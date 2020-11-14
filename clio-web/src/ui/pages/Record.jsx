@@ -6,10 +6,14 @@ import {
   AutoField,
   TextField,
   SelectField,
-  SubmitField,
+  SubmitField, ErrorsField,
 } from "uniforms-bootstrap4";
 import { bridge as schema } from "../../api/RookieTraining";
 import AuthService from '../../api/AuthService';
+import { xmlToJSON } from '../../xmlParser';
+import Swal from "sweetalert2";
+import { JSONBridge } from '../../api/XMLValidation';
+import _ from 'lodash';
 
 class Record extends React.Component {
   constructor() {
@@ -23,21 +27,79 @@ class Record extends React.Component {
   }
 
   async componentDidMount() {
+    const urls = window.location.href.split('/');
+    const jobID = urls[urls.length-1];
     let requestOptions = {
       method: 'GET',
       redirect: 'follow'
     };
 
-    const record = await this.Auth.fetch("/api/v1/records/pop?job_id=3", requestOptions);
+    const record = await this.Auth.fetch(`/api/v1/records/pop?job_id=${jobID}`, requestOptions);
     const pdfID = record.pdfId;
-    console.log(record)
-    console.log(pdfID)
+
     const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
-    console.log(pdfFile)
-    this.setState({pdfFile : pdfFile})
+    // console.log(pdfFile)
+    this.setState({pdfFile : pdfFile});
+
+    const XML = await this.Auth.fetchPDF(`/api/v1/xml/${2}`, requestOptions);
+    console.log(XML)
   }
 
   render() {
+
+    const renderFields = (field, key) => {
+      let required = '';
+      for (let i = 0; i < this.state.xmlJSON.required.length; i++) {
+        if (this.state.xmlJSON.required[i] === key) {
+          required = '*Required Field';
+        }
+      }
+
+      if (field.enum) {
+        return (
+            <SelectField name={key}
+                         help={`${required}`}/>
+        )
+      }
+      if (field.type === 'string') {
+        return (
+            <TextField name={key}
+                       help={`${required}`}/>
+        )
+      }
+    };
+
+    const hasFile = () => {
+      if (this.state.xmlJSON.length !== 0) {
+        let schema = JSONBridge(this.state.xmlJSON);
+        if (schema[0] === false) {
+          Swal.fire({
+            icon: 'error',
+            title: 'XML Format Invalid',
+            text: schema[1],
+            footer: ''
+          })
+        }
+        if (this.state.error.length === 0 && schema[0] !== false) {
+          return (
+              <AutoForm schema={schema} onSubmit={console.log}>
+                {_.map(this.state.xmlJSON.properties, (field, index, key) => renderFields(field, index, key))}
+                <ErrorsField/>
+                <SubmitField/>
+              </AutoForm>
+          )
+        }
+      }
+    };
+
+    function readFileContent(file) {
+      const reader = new FileReader();
+      return new Promise((resolve, reject) => {
+        reader.onload = event => resolve(event.target.result);
+        reader.onerror = error => reject(error);
+        reader.readAsText(file)
+      })
+    }
 
     return (
         <Container>
@@ -60,22 +122,16 @@ class Record extends React.Component {
           </Accordion>
           <Row>
             <Col xs={6}>
-              {/*<div style={DocumentWrapper}>*/}
-              {/*  <Document file="/ChineseArrivals_1847-1870_00001.pdf"*/}
-              {/*            renderMode={'canvas'}>*/}
-              {/*    <Page pageNumber={1}  scale={5}/>*/}
-              {/*  </Document>*/}
-              {/*</div>*/}
-              <iframe src={this.state.pdfFile} type="application/pdf" width="500rem" height="550"/>
-              {/*<embed*/}
-              {/*    src={this.state.pdfFile}*/}
-              {/*    width="500rem"*/}
-              {/*    height="550rem"*/}
-              {/*/>*/}
+              <embed
+                  src={this.state.pdfFile}
+                  width="500rem"
+                  height="550rem"
+                  type="application/pdf"
+              />
             </Col>
             <Col xs={5}>
               <AutoForm schema={schema} onSubmit={console.log}>
-                <h4>ChineseArrivals_1847-1870_00001.pdf</h4>
+                {/*<h4>ChineseArrivals_1847-1870_00001.pdf</h4>*/}
                 <AutoField name="name"/>
                 <AutoField name="age"/>
                 <SelectField name="gender" allowedValues={["Male", "Female"]}/>
