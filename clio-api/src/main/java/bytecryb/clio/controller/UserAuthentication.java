@@ -5,9 +5,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +87,7 @@ public class UserAuthentication {
 
 	@RequestMapping(value="/login/google")
 	public ResponseEntity<?> googleLogin(OAuth2Authentication authentication) throws Exception {
+		@SuppressWarnings("unchecked")
 		LinkedHashMap<String, Object> properties = (LinkedHashMap<String, Object>) authentication.getUserAuthentication().getDetails();
 		try {
 			CustomUser user = userRepo.findByEmail(properties.get("email").toString());
@@ -104,6 +102,7 @@ public class UserAuthentication {
 
 	 @RequestMapping(value="/signup/google")
 	 public long googleSignup(OAuth2Authentication authentication) {
+		@SuppressWarnings("unchecked")
 		LinkedHashMap<String, Object> properties = (LinkedHashMap<String, Object>) authentication.getUserAuthentication().getDetails();
 		CustomUser user = new CustomUser();
 		user.setEmail(properties.get("email").toString());

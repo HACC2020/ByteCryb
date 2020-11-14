@@ -1,11 +1,9 @@
 package bytecryb.clio.controller;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.naming.spi.DirStateFactory.Result;
 import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,9 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import bytecryb.clio.exception.ResourceNotFoundException;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultScore;
 import bytecryb.clio.model.Score;
