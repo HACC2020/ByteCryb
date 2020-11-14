@@ -15,23 +15,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bytecryb.clio.exception.ResourceNotFoundException;
-import bytecryb.clio.service.PDFService;
+import bytecryb.clio.service.XMLService;
 
 @RestController
 @RequestMapping("/api/v1")
 public class XMLController {
     @Autowired
-    private PDFService pdfService;
+    private XMLService xmlService;
 
     @GetMapping("/xml/{id}")
-    public ResponseEntity<Resource> getPDF(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
-        Resource resource = pdfService.downloadFileFromLocal(id);
+    public ResponseEntity<Resource> getXML(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+        Resource resource = xmlService.downloadFileFromLocal(id);
         String type;
 
         try {
             type = Files.probeContentType(Paths.get(resource.getFile().getAbsolutePath()));
         } catch (IOException e) {
-            type = "application/pdf";
+            type = "text/xml";
         }
 
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(type))
