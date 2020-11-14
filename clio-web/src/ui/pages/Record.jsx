@@ -20,15 +20,41 @@ class Record extends React.Component {
     super();
     this.state = {
       loading: true,
-      getRecord: false,
+      xmlFile: '',
       pdfFile: '',
+      xmlJSON: '',
     };
     this.Auth = new AuthService();
   }
 
+  blobToFile(theBlob, fileName) {
+    return new File([theBlob], fileName,
+        { lastModified: new Date().getTime(), type: 'text/xml' })
+  }
+
+  readFileContent(file) {
+    const reader = new FileReader();
+    return new Promise((resolve, reject) => {
+      reader.onload = event => resolve(event.target.result);
+      reader.onerror = error => reject(error);
+      reader.readAsText(file)
+      console.log(reader)
+    })
+  }
+
+  setXML = (content, input) => {
+    this.setState({ xmlFile: input });
+    console.log(content);
+    var obj = xmlToJSON(content);
+    obj.title = '';
+    this.setState({ xmlJSON: obj });
+  };
+
   async componentDidMount() {
     const urls = window.location.href.split('/');
-    const jobID = urls[urls.length-1];
+    const lastSec = urls[urls.length - 1].split('-');
+    const jobID = lastSec[0];
+    const xmlID = lastSec[1];
     let requestOptions = {
       method: 'GET',
       redirect: 'follow'
@@ -39,50 +65,22 @@ class Record extends React.Component {
 
     const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
     // console.log(pdfFile)
-    this.setState({pdfFile : pdfFile});
+    this.setState({ pdfFile: pdfFile });
 
-    const XML = await this.Auth.fetchPDF(`/api/v1/xml/${2}`, requestOptions);
-    console.log(XML)
+    const XML = await this.Auth.fetchXML(`/api/v1/xml/${xmlID}`, requestOptions);
+
+    this.setState({xmlJSON: xmlToJSON(XML)});
+
 
     this.setState({ loading: false });
   }
 
   render() {
 
-    const renderFields = (field, key) => {
-      let required = '';
-      for (let i = 0; i < this.state.xmlJSON.required.length; i++) {
-        if (this.state.xmlJSON.required[i] === key) {
-          required = '*Required Field';
-        }
-      }
-
-      if (field.enum) {
-        return (
-            <SelectField name={key}
-                         help={`${required}`}/>
-        )
-      }
-      if (field.type === 'string') {
-        return (
-            <TextField name={key}
-                       help={`${required}`}/>
-        )
-      }
-    };
-
-    const hasFile = () => {
+    const hasXML = () => {
       if (this.state.xmlJSON.length !== 0) {
         let schema = JSONBridge(this.state.xmlJSON);
-        if (schema[0] === false) {
-          Swal.fire({
-            icon: 'error',
-            title: 'XML Format Invalid',
-            text: schema[1],
-            footer: ''
-          })
-        }
-        if (this.state.error.length === 0 && schema[0] !== false) {
+        if (schema[0] !== false) {
           return (
               <AutoForm schema={schema} onSubmit={console.log}>
                 {_.map(this.state.xmlJSON.properties, (field, index, key) => renderFields(field, index, key))}
@@ -94,14 +92,28 @@ class Record extends React.Component {
       }
     };
 
-    function readFileContent(file) {
-      const reader = new FileReader();
-      return new Promise((resolve, reject) => {
-        reader.onload = event => resolve(event.target.result);
-        reader.onerror = error => reject(error);
-        reader.readAsText(file)
-      })
-    }
+    const renderFields = (field, key) => {
+      let required = '';
+      for (let i = 0; i < this.state.xmlJSON.required.length; i++) {
+        if (this.state.xmlJSON.required[i] === key) {
+          required = '*Required Field';
+        }
+      }
+
+      if (field.enum) {
+        return (
+            <SelectField name={key} key={key}
+                         help={`${required}`}/>
+        )
+      }
+      if (field.type === 'string') {
+        return (
+            <TextField name={key} key={key}
+                       help={`${required}`}/>
+        )
+      }
+    };
+
 
     if (this.state.loading === true) {
       return (
@@ -152,24 +164,25 @@ class Record extends React.Component {
               />
             </Col>
             <Col xs={5}>
-              <AutoForm schema={schema} onSubmit={console.log}>
-                {/*<h4>ChineseArrivals_1847-1870_00001.pdf</h4>*/}
-                <AutoField name="name"/>
-                <AutoField name="age"/>
-                <SelectField name="gender" allowedValues={["Male", "Female"]}/>
-                <TextField
-                    name={"residence"}
-                    help={"Only A-Z characters allowed"}
-                />
-                <TextField name="dateOfArrival" placeholder={"01/23/1832"}/>
-                <AutoField
-                    name="nameOfShip"
-                    help={"Only A-Z characters allowed"}
-                />
-                <AutoField name="from" help={"Only A-Z characters allowed"}/>
+              {hasXML()}
+              {/*<AutoForm schema={schema} onSubmit={console.log}>*/}
+              {/*  /!*<h4>ChineseArrivals_1847-1870_00001.pdf</h4>*!/*/}
+              {/*  <AutoField name="name"/>*/}
+              {/*  <AutoField name="age"/>*/}
+              {/*  <SelectField name="gender" allowedValues={["Male", "Female"]}/>*/}
+              {/*  <TextField*/}
+              {/*      name={"residence"}*/}
+              {/*      help={"Only A-Z characters allowed"}*/}
+              {/*  />*/}
+              {/*  <TextField name="dateOfArrival" placeholder={"01/23/1832"}/>*/}
+              {/*  <AutoField*/}
+              {/*      name="nameOfShip"*/}
+              {/*      help={"Only A-Z characters allowed"}*/}
+              {/*  />*/}
+              {/*  <AutoField name="from" help={"Only A-Z characters allowed"}/>*/}
 
-                <SubmitField/>
-              </AutoForm>
+              {/*  <SubmitField/>*/}
+              {/*</AutoForm>*/}
             </Col>
           </Row>
         </Container>

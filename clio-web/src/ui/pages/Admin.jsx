@@ -28,6 +28,7 @@ class Admin extends React.Component {
 
     function getXML(event) {
       const input = event.target;
+      // console.log(input.files)
       if ('files' in input && input.files.length > 0) {
         readFileContent(input.files[0]).then(content => {
           setXML(content, input.files[0])

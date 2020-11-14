@@ -73,14 +73,6 @@ export default class AuthService {
     // performs api calls sending the required authentication headers
     const headers = {};
 
-
-    // headers['Access-Control-Allow-Origin'] = '*';
-    // headers['Access-Control-Allow-Headers'] = 'x-requested-with, x-requested-by';
-    // headers['Access-Control-Allow-Methods'] = 'GET, PUT, POST, DELETE, OPTIONS';
-    // headers['Allow-Origin'] = '*';
-    // Setting Authorization header
-    // Authorization: Bearer xxxxxxx.xxxxxxxx.xxxxxx
-
     if (this.loggedIn()) {
       headers['Authorization'] = 'Bearer ' + this.getToken();
     }
@@ -103,10 +95,36 @@ export default class AuthService {
 
   }
 
-  async fetch(url, options) {
+  async fetchXML(url, options) {
     // performs api calls sending the required authentication headers
     const headers = {};
 
+    if (this.loggedIn()) {
+      headers['Authorization'] = 'Bearer ' + this.getToken();
+    }
+
+    // console.log(headers);
+    // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
+    const response = await fetch(url, {
+      headers,
+      ...options,
+    });
+    // .then(this._checkStatus)
+    console.log(response);
+
+    let text = await response.blob();
+    if (text.type === 'application/json') {
+      return false;
+    }
+
+    var xmlText = await text.text();
+
+    return xmlText;
+  }
+
+  async fetch(url, options) {
+    // performs api calls sending the required authentication headers
+    const headers = {};
 
     // headers['Access-Control-Allow-Origin'] = '*';
     // headers['Access-Control-Allow-Headers'] = 'x-requested-with, x-requested-by';

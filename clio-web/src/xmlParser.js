@@ -6,6 +6,8 @@ function xmlToJSON(xml) {
   var options = { compact: true, spaces: 4 };
   let result = xmljs.xml2js(xml, options);
 
+  console.log(result);
+
   console.log(result.indexFile);
 
   const data = {};
@@ -13,29 +15,29 @@ function xmlToJSON(xml) {
   data.required = [];
   data.type = 'object';
 
-  // const schema = {
-  //   title: 'Rookie',
-  //   type: 'object',
-  //   properties: {
-  //     name: { type: 'string', pattern: "^([a-zA-Z])+$" },
-  //     age: {
-  //       type: 'integer',
-  //       minimum: 0,
-  //       maximum: 100,
-  //     },
-  //     gender: { type: 'string', pattern: "^([a-zA-Z])+$" },
-  //     residence: { type: 'string', pattern: "^([a-zA-Z])+$" },
-  //     dateOfArrival: {
-  //       type: "string",
-  //       pattern: "(\\d{2}\\/\\d{2}\\/\\d{4})",
-  //     },
-  //     nameOfShip: { type: 'string', pattern: "^([a-zA-Z])+$" },
-  //     from: { type: 'string', pattern: "^([a-zA-Z])+$" },
-  //
-  //   },
-  //   // required: ['from'],
-  //   required: ['name', 'age', 'gender', 'residence', 'nameOfShip', 'from', 'dateOfArrival'],
-  // };
+  const schema = {
+    title: 'Rookie',
+    type: 'object',
+    properties: {
+      name: { type: 'string', pattern: "^([a-zA-Z])+$" },
+      age: {
+        type: 'integer',
+        minimum: 0,
+        maximum: 100,
+      },
+      gender: { type: 'string', pattern: "^([a-zA-Z])+$" },
+      residence: { type: 'string', pattern: "^([a-zA-Z])+$" },
+      dateOfArrival: {
+        type: "string",
+        pattern: "(\\d{2}\\/\\d{2}\\/\\d{4})",
+      },
+      nameOfShip: { type: 'string', pattern: "^([a-zA-Z])+$" },
+      from: { type: 'string', pattern: "^([a-zA-Z])+$" },
+
+    },
+    // required: ['from'],
+    required: ['name', 'age', 'gender', 'residence', 'nameOfShip', 'from', 'dateOfArrival'],
+  };
 
   const columns = result.indexFile.columns.column;
 
