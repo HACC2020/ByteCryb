@@ -20,35 +20,11 @@ class Record extends React.Component {
     super();
     this.state = {
       loading: true,
-      xmlFile: '',
       pdfFile: '',
       xmlJSON: '',
     };
     this.Auth = new AuthService();
   }
-
-  blobToFile(theBlob, fileName) {
-    return new File([theBlob], fileName,
-        { lastModified: new Date().getTime(), type: 'text/xml' })
-  }
-
-  readFileContent(file) {
-    const reader = new FileReader();
-    return new Promise((resolve, reject) => {
-      reader.onload = event => resolve(event.target.result);
-      reader.onerror = error => reject(error);
-      reader.readAsText(file)
-      console.log(reader)
-    })
-  }
-
-  setXML = (content, input) => {
-    this.setState({ xmlFile: input });
-    console.log(content);
-    var obj = xmlToJSON(content);
-    obj.title = '';
-    this.setState({ xmlJSON: obj });
-  };
 
   async componentDidMount() {
     const urls = window.location.href.split('/');
@@ -64,14 +40,12 @@ class Record extends React.Component {
     const pdfID = record.pdfId;
 
     const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
-    // console.log(pdfFile)
     this.setState({ pdfFile: pdfFile });
 
     const XML = await this.Auth.fetchXML(`/api/v1/xml/${xmlID}`, requestOptions);
 
     this.setState({xmlJSON: xmlToJSON(XML)});
-
-
+    
     this.setState({ loading: false });
   }
 
@@ -165,24 +139,6 @@ class Record extends React.Component {
             </Col>
             <Col xs={5}>
               {hasXML()}
-              {/*<AutoForm schema={schema} onSubmit={console.log}>*/}
-              {/*  /!*<h4>ChineseArrivals_1847-1870_00001.pdf</h4>*!/*/}
-              {/*  <AutoField name="name"/>*/}
-              {/*  <AutoField name="age"/>*/}
-              {/*  <SelectField name="gender" allowedValues={["Male", "Female"]}/>*/}
-              {/*  <TextField*/}
-              {/*      name={"residence"}*/}
-              {/*      help={"Only A-Z characters allowed"}*/}
-              {/*  />*/}
-              {/*  <TextField name="dateOfArrival" placeholder={"01/23/1832"}/>*/}
-              {/*  <AutoField*/}
-              {/*      name="nameOfShip"*/}
-              {/*      help={"Only A-Z characters allowed"}*/}
-              {/*  />*/}
-              {/*  <AutoField name="from" help={"Only A-Z characters allowed"}/>*/}
-
-              {/*  <SubmitField/>*/}
-              {/*</AutoForm>*/}
             </Col>
           </Row>
         </Container>
