@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.security.Principal;
+import java.util.LinkedHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +17,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 import bytecryb.clio.exception.SignupTakenException;
 import bytecryb.clio.model.AuthenticationRequest;
@@ -88,7 +89,8 @@ public class UserAuthentication {
 	}
 
 	@RequestMapping(value="/login/google")
-	public Principal user(Principal principal) {
-		return principal;
+	public void user(OAuth2Authentication authentication) {
+		LinkedHashMap<String, Object> properties = (LinkedHashMap<String, Object>) authentication.getUserAuthentication().getDetails();
+        System.out.println(properties.get("email"));
 	 }
 }
