@@ -9,17 +9,35 @@ import {
   SubmitField,
 } from "uniforms-bootstrap4";
 import { bridge as schema } from "../../api/RookieTraining";
-import { Document, pdfjs, Page } from 'react-pdf';
-
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+import AuthService from '../../api/AuthService';
 
 class Record extends React.Component {
-  render() {
-
-    const DocumentWrapper = {
-      maxHeight: "600px",
-      overflowY: "auto"
+  constructor() {
+    super();
+    this.state = {
+      loading: false,
+      getRecord: false,
+      pdfFile: '',
     };
+    this.Auth = new AuthService();
+  }
+
+  async componentDidMount() {
+    let requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
+    const record = await this.Auth.fetch("/api/v1/records/pop?job_id=3", requestOptions);
+    const pdfID = record.pdfId;
+    console.log(record)
+    console.log(pdfID)
+    const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
+    console.log(pdfFile)
+    this.setState({pdfFile : pdfFile})
+  }
+
+  render() {
 
     return (
         <Container>
@@ -48,11 +66,12 @@ class Record extends React.Component {
               {/*    <Page pageNumber={1}  scale={5}/>*/}
               {/*  </Document>*/}
               {/*</div>*/}
-              <embed
-                  src="./ChineseArrivals_1847-1870_00001.pdf"
-                  width="500rem"
-                  height="550rem"
-              />
+              <iframe src={this.state.pdfFile} type="application/pdf" width="500rem" height="550"/>
+              {/*<embed*/}
+              {/*    src={this.state.pdfFile}*/}
+              {/*    width="500rem"*/}
+              {/*    height="550rem"*/}
+              {/*/>*/}
             </Col>
             <Col xs={5}>
               <AutoForm schema={schema} onSubmit={console.log}>

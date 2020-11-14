@@ -19,7 +19,10 @@ class CategoriesCard extends React.Component {
               </Col>
               <Col xs={2}>
                 <Button>
-                  <Link to="/record/1" style={{color: 'white', padding: '0.5rem'}}>
+                  <Link to={{
+                    pathname: '/record',
+                    category: this.props.category,
+                  }} style={{color: 'white', padding: '0.5rem'}}>
                     Start
                   </Link>
                   {/*<Nav.Link href="/record/:job_id" style={{color: 'white', padding: '0.5rem'}}>*/}
