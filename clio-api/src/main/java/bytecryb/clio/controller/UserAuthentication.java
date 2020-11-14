@@ -89,8 +89,29 @@ public class UserAuthentication {
 	}
 
 	@RequestMapping(value="/login/google")
-	public void user(OAuth2Authentication authentication) {
+	public ResponseEntity<?> googleLogin(OAuth2Authentication authentication) throws Exception {
 		LinkedHashMap<String, Object> properties = (LinkedHashMap<String, Object>) authentication.getUserAuthentication().getDetails();
-        System.out.println(properties.get("email"));
+		try {
+			CustomUser user = userRepo.findByEmail(properties.get("email").toString());
+			final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+			final String token = jwtTokenUtil.generateToken(userDetails);
+			return ResponseEntity.ok(new AuthenticationResponse(token));
+		} catch (Exception e) {
+			throw new Exception("Email associated with google account not found in database. Please signup.", e);
+		}
+
+	 }
+
+	 @RequestMapping(value="/signup/google")
+	 public long googleSignup(OAuth2Authentication authentication) {
+		LinkedHashMap<String, Object> properties = (LinkedHashMap<String, Object>) authentication.getUserAuthentication().getDetails();
+		CustomUser user = new CustomUser();
+		user.setEmail(properties.get("email").toString());
+		user.setFirstName(properties.get("given_name").toString());
+		user.setLastName(properties.get("family_name").toString());
+		Role role = roleRepo.findByRoleName("rookie");
+		user.setRole(role);
+		CustomUser savedUser = userRepo.save(user);
+		return savedUser.getUserId();
 	 }
 }
