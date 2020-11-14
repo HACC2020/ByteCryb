@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Col, Card, Button, Nav, ProgressBar } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 class CategoriesCard extends React.Component {
 
@@ -18,9 +19,12 @@ class CategoriesCard extends React.Component {
               </Col>
               <Col xs={2}>
                 <Button>
-                  <Nav.Link href="/record" style={{color: 'white', padding: '0.5rem'}}>
+                  <Link to="/record/1" style={{color: 'white', padding: '0.5rem'}}>
                     Start
-                  </Nav.Link>
+                  </Link>
+                  {/*<Nav.Link href="/record/:job_id" style={{color: 'white', padding: '0.5rem'}}>*/}
+                  {/*  Start*/}
+                  {/*</Nav.Link>*/}
                 </Button>
               </Col>
             </Row>
