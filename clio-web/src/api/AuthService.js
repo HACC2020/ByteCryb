@@ -95,6 +95,9 @@ export default class AuthService {
     console.log(response);
 
     let text = await response.blob();
+    if (text.type === 'application/json') {
+      return false;
+    }
     var objectURL = window.URL.createObjectURL(text);
     return objectURL;
 

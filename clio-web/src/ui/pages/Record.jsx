@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Button, Accordion, Card } from "react-bootstrap";
+import { Container, Row, Col, Button, Accordion, Card, Spinner } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import {
   AutoForm,
@@ -19,7 +19,7 @@ class Record extends React.Component {
   constructor() {
     super();
     this.state = {
-      loading: false,
+      loading: true,
       getRecord: false,
       pdfFile: '',
     };
@@ -43,6 +43,8 @@ class Record extends React.Component {
 
     const XML = await this.Auth.fetchPDF(`/api/v1/xml/${2}`, requestOptions);
     console.log(XML)
+
+    this.setState({ loading: false });
   }
 
   render() {
@@ -99,6 +101,26 @@ class Record extends React.Component {
         reader.onerror = error => reject(error);
         reader.readAsText(file)
       })
+    }
+
+    if (this.state.loading === true) {
+      return (
+          <Container align={"center"}>
+            <h2>Loading Record...</h2>
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </Container>
+      )
+    }
+
+    if (this.state.pdfFile === false) {
+      return (
+          <Container align={'center'}>
+            <h3>Sorry, this category has no available records!</h3>
+            <a href={'/landing'}>Go back</a>
+          </Container>
+      )
     }
 
     return (
