@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -86,4 +87,8 @@ public class UserAuthentication {
 		return ResponseEntity.ok(resUser);
 	}
 
+	@RequestMapping(value="/login/google")
+	public Principal user(Principal principal) {
+		return principal;
+	 }
 }
