@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.LinkedHashMap;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -101,16 +102,22 @@ public class UserAuthentication {
 	 }
 
 	 @RequestMapping(value="/signup/google")
-	 public long googleSignup(OAuth2Authentication authentication) {
+	 public ResponseEntity<?> googleSignup(OAuth2Authentication authentication) {
 		@SuppressWarnings("unchecked")
 		LinkedHashMap<String, Object> properties = (LinkedHashMap<String, Object>) authentication.getUserAuthentication().getDetails();
 		CustomUser user = new CustomUser();
+		UUID uuid = UUID.randomUUID();
+		user.setUsername(uuid.toString());
 		user.setEmail(properties.get("email").toString());
 		user.setFirstName(properties.get("given_name").toString());
 		user.setLastName(properties.get("family_name").toString());
 		Role role = roleRepo.findByRoleName("rookie");
 		user.setRole(role);
 		CustomUser savedUser = userRepo.save(user);
-		return savedUser.getUserId();
+		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
+		UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
+		String token = jwtTokenUtil.generateToken(userDetails);
+		resUser.setAuthToken(token);
+		return ResponseEntity.ok(resUser);
 	 }
 }
