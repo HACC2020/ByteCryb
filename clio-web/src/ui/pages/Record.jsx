@@ -25,6 +25,8 @@ class Record extends React.Component {
       info: '',
       jobID: '',
       xmlID: '',
+      id: '',
+      pdfID: '',
     };
     this.Auth = new AuthService();
   }
@@ -43,6 +45,10 @@ class Record extends React.Component {
     };
 
     const record = await this.Auth.fetch(`/api/v1/records/pop?job_id=${jobID}`, requestOptions);
+
+    this.setState({id: record.id});
+    this.setState({pdfID: record.pdfId});
+
     const pdfID = record.pdfId;
 
     const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
@@ -64,6 +70,32 @@ class Record extends React.Component {
         title: 'Record indexed!',
         footer: 'Loading next record...'
       });
+
+      let stringInfo = JSON.stringify(info);
+      // stringInfo = '"info":' + stringInfo;
+      //
+      console.log(stringInfo);
+
+      let jsonBody = {
+        id: this.state.id,
+        pdfId: this.state.pdfID,
+        checkedOut: false,
+        submitted: true,
+        approved: false,
+        json: stringInfo,
+      };
+
+      console.log(jsonBody);
+
+
+      const updateRecord = {
+        method: 'PUT',
+        body: jsonBody,
+      };
+
+      const pls = await this.Auth.putPDF('/api/v1/records', updateRecord);
+      console.log(pls);
+
       this.setState({ loading: true });
 
       let requestOptions = {
