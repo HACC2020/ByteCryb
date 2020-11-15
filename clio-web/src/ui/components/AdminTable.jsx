@@ -24,8 +24,6 @@ class AdminTable extends React.Component {
 
       document.body.removeChild(anchorElem);
 
-      // On Edge, revokeObjectURL should be called only after
-      // a.click() has completed, atleast on EdgeHTML 15.15048
       setTimeout(function() {
         window.URL.revokeObjectURL(url);
       }, 1000);
@@ -35,11 +33,10 @@ class AdminTable extends React.Component {
       const options = {
         method: 'GET',
       };
-
       let CSV = await this.Auth.createCSV(`/api/v1/jobs/csv?id=${this.props.category.id}`, options);
       let fileName = `${this.props.category.name}.csv`;
       saveAs(CSV, fileName);
-      console.log(CSV);
+      // console.log(CSV);
     };
 
     return (

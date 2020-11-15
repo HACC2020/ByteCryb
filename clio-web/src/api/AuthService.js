@@ -90,7 +90,7 @@ export default class AuthService {
     if (text.type === 'application/json') {
       return false;
     }
-    console.log(text);
+    // console.log(text);
     let objectURL = window.URL.createObjectURL(text);
     return objectURL;
 
@@ -103,6 +103,7 @@ export default class AuthService {
     if (this.loggedIn()) {
       headers['Authorization'] = 'Bearer ' + this.getToken();
     }
+    headers['Content-Type'] = 'application/json';
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url

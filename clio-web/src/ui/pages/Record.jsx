@@ -65,11 +65,6 @@ class Record extends React.Component {
 
     const onSubmit = async (info) => {
       this.setState({ info: info });
-      Swal.fire({
-        icon: 'success',
-        title: 'Record indexed!',
-        footer: 'Loading next record...'
-      });
 
       let stringInfo = JSON.stringify(info);
       // stringInfo = '"info":' + stringInfo;
@@ -93,8 +88,23 @@ class Record extends React.Component {
         body: jsonBody,
       };
 
-      const pls = await this.Auth.putPDF('/api/v1/records', updateRecord);
-      console.log(pls);
+      const response = await this.Auth.putPDF('/api/v1/records', updateRecord);
+      console.log(response);
+      if (response.includes('JSON parse error')) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error indexing',
+          footer: response,
+        });
+        return;
+      }
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Record indexed!',
+        footer: 'Loading next record...'
+      });
+
 
       this.setState({ loading: true });
 
