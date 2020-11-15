@@ -57,6 +57,15 @@ public class PDFService {
         PDF result = null;
         InputStream is = file.getInputStream();
 
+        int serialNum = 0;
+
+        // Keep looking for the next avaliable filename with num
+        while (path.toFile().exists()) {
+            serialNum++;
+            String[] splitFileName = fileName.split(".");
+            path = Paths.get(dest.toString() + "/" + splitFileName[0] + "(" + serialNum + ")" + splitFileName[1]);
+        }
+
         // Must increment to avoid overriding
         try {
             Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
