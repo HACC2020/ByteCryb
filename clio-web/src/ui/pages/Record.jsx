@@ -22,6 +22,9 @@ class Record extends React.Component {
       loading: true,
       pdfFile: '',
       xmlJSON: '',
+      info: '',
+      jobID: '',
+      xmlID: '',
     };
     this.Auth = new AuthService();
   }
@@ -31,6 +34,9 @@ class Record extends React.Component {
     const lastSec = urls[urls.length - 1].split('-');
     const jobID = lastSec[0];
     const xmlID = lastSec[1];
+    this.setState({jobID: jobID});
+    this.setState({xmlID: xmlID});
+
     let requestOptions = {
       method: 'GET',
       redirect: 'follow'
@@ -45,18 +51,46 @@ class Record extends React.Component {
     const XML = await this.Auth.fetchXML(`/api/v1/xml/${xmlID}`, requestOptions);
 
     this.setState({xmlJSON: xmlToJSON(XML)});
-    
+
     this.setState({ loading: false });
   }
 
   render() {
+
+    const onSubmit = async (info) => {
+      this.setState({ info: info });
+      Swal.fire({
+        icon: 'success',
+        title: 'Record indexed!',
+        footer: 'Loading next record...'
+      });
+      this.setState({ loading: true });
+
+      let requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+
+      const record = await this.Auth.fetch(`/api/v1/records/pop?job_id=${this.state.jobID}`, requestOptions);
+      const pdfID = record.pdfId;
+
+      const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
+      this.setState({ pdfFile: pdfFile });
+
+      const XML = await this.Auth.fetchXML(`/api/v1/xml/${this.state.xmlID}`, requestOptions);
+
+      this.setState({xmlJSON: xmlToJSON(XML)});
+
+      this.setState({ loading: false });
+
+    };
 
     const hasXML = () => {
       if (this.state.xmlJSON.length !== 0) {
         let schema = JSONBridge(this.state.xmlJSON);
         if (schema[0] !== false) {
           return (
-              <AutoForm schema={schema} onSubmit={console.log}>
+              <AutoForm schema={schema} onSubmit={info => onSubmit(info)}>
                 {_.map(this.state.xmlJSON.properties, (field, index, key) => renderFields(field, index, key))}
                 <ErrorsField/>
                 <SubmitField/>
