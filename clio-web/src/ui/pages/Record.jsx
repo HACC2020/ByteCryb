@@ -143,6 +143,13 @@ class Record extends React.Component {
       )
     }
 
+    const sticky = {
+      position: "-webkit-sticky",
+      position: "sticky",
+      top: "5.5rem",
+      alignSelf: "flex-start",
+    };
+
     return (
         <Container>
           <Accordion style={{ marginBottom: "2rem" }}>
@@ -165,6 +172,7 @@ class Record extends React.Component {
           <Row>
             <Col xs={6}>
               <embed
+                  style={sticky}
                   src={this.state.pdfFile}
                   width="500rem"
                   height="550rem"
