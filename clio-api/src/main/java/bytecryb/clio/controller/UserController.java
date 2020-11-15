@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -16,13 +17,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
 import bytecryb.clio.model.Score;
+import bytecryb.clio.repository.RoleRepository;
 // import bytecryb.clio.repository.AwardRepository;
 import bytecryb.clio.repository.ScoreRepository;
 import bytecryb.clio.repository.UserRepository;
@@ -40,6 +45,9 @@ public class UserController {
 
 	@Autowired
 	private UserRepository userRepo;
+
+	@Autowired
+	private RoleRepository roleRepo;
 
 	@Autowired
 	private ScoreRepository scoreRepo;
@@ -141,6 +149,31 @@ public class UserController {
 
 		return ResponseEntity.ok().body(result);
 	}
+
+	// UPDATES GIVEN USER'S ROLE
+	@PutMapping("/users/updateRole/{id}")
+    @Transactional
+    public ResponseEntity<CustomUser> updateRole(@PathVariable("id") long userId, @RequestParam String roleName) {
+		//Take out special characters and whitespaces
+		roleName = roleName.replaceAll("\\s", "");
+
+		//if given role name does not exist, throw an exception
+		if (!this.roleRepo.existsByRoleName(roleName)) {
+			throw new IllegalArgumentException("Role: " + roleName + " does not exist");
+		}
+		//if user does not exist, throw an exception
+        if (!this.userRepo.existsByUserId(userId)) {
+			throw new IllegalArgumentException("User with user_id: " + userId + " does not exist");
+		} 
+		
+		CustomUser user  = this.userRepo.findById(userId);
+		Role role = this.roleRepo.findByRoleName(roleName);
+		user.setRole(role);
+		final CustomUser update = this.userRepo.save(user);
+
+        return ResponseEntity.ok().body(update);
+
+    }
 
 	// gets jwt from http servlet request (not a endpoint)
 	private String extractJwtFromRequest(HttpServletRequest request) {
