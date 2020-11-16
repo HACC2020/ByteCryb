@@ -84,7 +84,7 @@ class Record extends React.Component {
 
       const raw = JSON.stringify(jsonBody);
 
-      console.log(raw);
+      // console.log(raw);
 
       const updateRecord = {
         method: 'PUT',
@@ -92,7 +92,8 @@ class Record extends React.Component {
       };
 
       const response = await this.Auth.putPDF('/api/v1/records', updateRecord);
-      console.log(response);
+      // console.log(response);
+
       if (response.includes('JSON parse error')) {
         Swal.fire({
           icon: 'error',
@@ -121,7 +122,7 @@ class Record extends React.Component {
       this.setState({id: record.id});
       const pdfID = record.pdfId;
 
-      console.log('Second pdfID:', pdfID)
+      // console.log('Second pdfID:', pdfID)
 
       const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
       this.setState({ pdfFile: pdfFile });

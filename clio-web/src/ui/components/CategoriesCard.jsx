@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 class CategoriesCard extends React.Component {
 
   render() {
+
     return (
         <Card style={{ marginBottom: '2rem' }} className='category'>
           <Card.Body>
@@ -14,7 +15,7 @@ class CategoriesCard extends React.Component {
                   {this.props.category.name}
                 </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">
-                  <ProgressBar animated now={45} label={'45% complete'}/>
+                  <ProgressBar animated now={this.props.category.indexed / this.props.category.size} label={'45% complete'}/>
                 </Card.Subtitle>
               </Col>
               <Col xs={2}>
