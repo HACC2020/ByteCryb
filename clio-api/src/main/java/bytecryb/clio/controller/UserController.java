@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bytecryb.clio.model.CustomUser;
@@ -151,9 +150,9 @@ public class UserController {
 	}
 
 	// UPDATES GIVEN USER'S ROLE
-	@PutMapping("/users/updateRole/{id}")
+	@PutMapping("/users/updateRole/{role_name}")
     @Transactional
-    public ResponseEntity<CustomUser> updateRole(@PathVariable("id") long userId, @RequestParam String roleName) {
+    public ResponseEntity<CustomUser> updateRole(@PathVariable(name = "role_name") String roleName, HttpServletRequest request) {
 		//Take out special characters and whitespaces
 		roleName = roleName.replaceAll("\\s", "");
 
@@ -161,12 +160,13 @@ public class UserController {
 		if (!this.roleRepo.existsByRoleName(roleName)) {
 			throw new IllegalArgumentException("Role: " + roleName + " does not exist");
 		}
-		//if user does not exist, throw an exception
-        if (!this.userRepo.existsByUserId(userId)) {
-			throw new IllegalArgumentException("User with user_id: " + userId + " does not exist");
-		} 
+
+		// get username
+		String jwtToken = extractJwtFromRequest(request);
+		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
 		
-		CustomUser user  = this.userRepo.findById(userId);
+		
+		CustomUser user  = this.userRepo.findByUsername(currUsername);
 		Role role = this.roleRepo.findByRoleName(roleName);
 		user.setRole(role);
 		final CustomUser update = this.userRepo.save(user);
