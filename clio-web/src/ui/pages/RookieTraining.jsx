@@ -71,17 +71,22 @@ class RookieTraining extends React.Component {
         method: 'PUT'
       };
 
-      const user = await this.Auth.fetch('/api/v1/users/updateRole/1?roleName=rookie', options);
+      const profile = await this.Auth.fetch('/api/v1/users/profile', {method: 'GET'});
 
-      sessionStorage.setItem("role", 'indexer');
+      if (profile.role === 'rookie') {
 
-      console.log(user);
+        const user = await this.Auth.fetch('/api/v1/users/updateRole/1?roleName=indexer', options);
+        sessionStorage.setItem('role', 'indexer');
+
+        console.log(user);
+
+      }
 
       Swal.fire({
         icon: 'success',
         title: 'Submitted!',
         text: 'Navigating to landing page...',
-        timeout: 1000,
+        timer: 1500,
       });
 
       setTimeout(() => {
@@ -89,6 +94,13 @@ class RookieTraining extends React.Component {
         this.props.history.go();
       }, 1000);
 
+    };
+
+    const sticky = {
+      position: "-webkit-sticky",
+      position: "sticky",
+      top: "5.5rem",
+      alignSelf: "flex-start",
     };
 
     return (
@@ -113,6 +125,7 @@ class RookieTraining extends React.Component {
           <Row>
             <Col xs={6}>
               <embed
+                  style={sticky}
                   src="./ChineseArrivals_1847-1870_00001.pdf"
                   width="500rem"
                   height="550rem"
