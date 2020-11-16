@@ -103,15 +103,27 @@ public class PDFService {
         Files.createDirectories(folderPath);
     }
 
-    public void remove(File file) {
+    public void removeFolder(File file) {
         for (File subFile : file.listFiles()) {
             if (subFile.isDirectory()) {
-                remove(subFile);
+                removeFolder(subFile);
             } else {
                 subFile.delete();
             }
         }
         file.delete();
+    }
+
+    public void removePDFById(Long id) throws Exception {
+        PDF result = this.pdfRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("PDF not found for ID: " + id));
+        Path path = Paths.get(result.getPath());
+        try {
+            path.toFile().delete();
+            this.pdfRepo.delete(result);
+        } catch (Exception e) {
+            throw new Exception("Unable to remove PDF with id: " + id);
+        }
     }
 
 }
