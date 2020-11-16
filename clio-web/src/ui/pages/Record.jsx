@@ -50,7 +50,7 @@ class Record extends React.Component {
     this.setState({pdfID: record.pdfId});
 
     const pdfID = record.pdfId;
-    console.log(pdfID)
+    // console.log(pdfID)
 
     const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
     this.setState({ pdfFile: pdfFile });
@@ -118,7 +118,7 @@ class Record extends React.Component {
       };
 
       const record = await this.Auth.fetch(`/api/v1/records/pop?job_id=${this.state.jobID}`, requestOptions);
-      console.log(record);
+      // console.log(record);
       this.setState({id: record.id});
       const pdfID = record.pdfId;
 
