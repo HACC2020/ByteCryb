@@ -6,7 +6,9 @@ function xmlToJSON(xml) {
   var options = { compact: true, spaces: 4 };
   let result = xmljs.xml2js(xml, options);
 
-  console.log(result.indexFile);
+  // console.log(result);
+
+  // console.log(result.indexFile);
 
   const data = {};
   data.properties = {};
@@ -104,7 +106,7 @@ function xmlToJSON(xml) {
     }
   }
 
-  console.log(data);
+  // console.log(data);
 
   return data;
 }

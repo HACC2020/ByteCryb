@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bytecryb.clio.model.CustomUser;
@@ -32,7 +31,6 @@ import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
 import bytecryb.clio.model.Score;
 import bytecryb.clio.repository.RoleRepository;
-// import bytecryb.clio.repository.AwardRepository;
 import bytecryb.clio.repository.ScoreRepository;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.service.CustomUserDetailsService;
@@ -44,9 +42,6 @@ public class UserController {
 
 	@Value("${welcome.message}")
 	private String welcomeMessage;
-
-	// @Autowired
-	// private AwardRepository awardRepo;
 
 	@Autowired
 	private UserRepository userRepo;
@@ -161,11 +156,11 @@ public class UserController {
 
 		return ResponseEntity.ok().body(result);
 	}
-
-	// UPDATES CURRENT USER'S ROLE
-	@PutMapping("/users/updateRole/{id}")
-    @Transactional
-    public ResponseEntity<CustomUser> updateRole(@PathVariable("id") long userId, @RequestParam String roleName) {
+  
+	// UPDATES GIVEN USER'S ROLE
+	@PutMapping("/users/updateRole/{role_name}")
+  @Transactional
+  public ResponseEntity<CustomUser> updateRole(@PathVariable(name = "role_name") String roleName, HttpServletRequest request) {
 		//Take out special characters and whitespaces
 		roleName = roleName.replaceAll("\\s", "");
 
@@ -173,12 +168,13 @@ public class UserController {
 		if (!this.roleRepo.existsByRoleName(roleName)) {
 			throw new IllegalArgumentException("Role: " + roleName + " does not exist");
 		}
-		//if user does not exist, throw an exception
-        if (!this.userRepo.existsByUserId(userId)) {
-			throw new IllegalArgumentException("User with user_id: " + userId + " does not exist");
-		} 
+
+		// get username
+		String jwtToken = extractJwtFromRequest(request);
+		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
 		
-		CustomUser user  = this.userRepo.findById(userId);
+		
+		CustomUser user  = this.userRepo.findByUsername(currUsername);
 		Role role = this.roleRepo.findByRoleName(roleName);
 		user.setRole(role);
 		final CustomUser update = this.userRepo.save(user);

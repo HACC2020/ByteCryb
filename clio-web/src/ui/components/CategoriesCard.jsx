@@ -1,9 +1,11 @@
 import React from 'react';
 import { Row, Col, Card, Button, Nav, ProgressBar } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 class CategoriesCard extends React.Component {
 
   render() {
+
     return (
         <Card style={{ marginBottom: '2rem' }} className='category'>
           <Card.Body>
@@ -13,14 +15,20 @@ class CategoriesCard extends React.Component {
                   {this.props.category.name}
                 </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">
-                  <ProgressBar animated now={45} label={'45% complete'}/>
+                  <ProgressBar animated now={this.props.category.indexed / this.props.category.size} label={'45% complete'}/>
                 </Card.Subtitle>
               </Col>
               <Col xs={2}>
                 <Button>
-                  <Nav.Link href="/record" style={{color: 'white', padding: '0.5rem'}}>
+                  <Link to={{
+                    pathname: `/record/${this.props.category.id}-${this.props.category.xmlId}`,
+                    category: this.props.category,
+                  }} style={{color: 'white', padding: '0.5rem'}}>
                     Start
-                  </Nav.Link>
+                  </Link>
+                  {/*<Nav.Link href="/record/:job_id" style={{color: 'white', padding: '0.5rem'}}>*/}
+                  {/*  Start*/}
+                  {/*</Nav.Link>*/}
                 </Button>
               </Col>
             </Row>

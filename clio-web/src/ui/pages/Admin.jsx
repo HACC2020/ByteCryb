@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Nav, Form, Tab, Row, Col, Table, Button } from 'react-bootstrap';
+import { Container, Nav, Form, Tab, Row, Col, Table, Button, Spinner } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { JSONBridge } from '../../api/XMLValidation';
 import Swal from "sweetalert2";
@@ -7,6 +7,8 @@ import { AutoForm, ErrorsField, SelectField, SubmitField, TextField } from 'unif
 import _ from 'lodash';
 import { xmlToJSON } from '../../xmlParser';
 import AuthService from '../../api/AuthService';
+import AdminTable from '../components/AdminTable';
+import CategoriesCard from '../components/CategoriesCard';
 
 class Admin extends React.Component {
   constructor(props) {
@@ -20,14 +22,35 @@ class Admin extends React.Component {
       pdfFiles: [],
       XMLHeader: 'XML Field Preview',
       XMLSpan: 'A preview of the job fields will be shown below once a XML file is uploaded.',
+      categories: [],
     };
     this.Auth = new AuthService();
   }
 
+  async componentDidMount() {
+    const options = {};
+    let categories = await this.Auth.fetch("/api/v1/jobs", options);
+    this.setState({ categories: categories });
+    this.setState({loading: false});
+  }
+
   render() {
+
+    if (this.state.loading === true) {
+      return (
+          <Container align={"center"}>
+            <h2>Loading Dashboard...</h2>
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </Container>
+      );
+    }
+
 
     function getXML(event) {
       const input = event.target;
+      // console.log(input.files)
       if ('files' in input && input.files.length > 0) {
         readFileContent(input.files[0]).then(content => {
           setXML(content, input.files[0])
@@ -221,54 +244,9 @@ class Admin extends React.Component {
                       </tr>
                       </thead>
                       <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Chinese Immigration</td>
-                        <td>Nov 11 2020 at 2:57pm</td>
-                        <td>22%</td>
-                        <td>
-                          <Button variant="primary" onClick={exportCSV}>Export</Button>
-                        </td>
-                        <td>
-                          <Button variant="primary">View</Button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Chinese Marriages</td>
-                        <td>Nov 2 2020 at 7:21am</td>
-                        <td>42%</td>
-                        <td>
-                          <Button variant="primary">Export</Button>
-                        </td>
-                        <td>
-                          <Button variant="primary">View</Button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>Chinese Divorces</td>
-                        <td>Nov 9 2020 at 1:20am</td>
-                        <td>81%</td>
-                        <td>
-                          <Button variant="primary">Export</Button>
-                        </td>
-                        <td>
-                          <Button variant="primary">View</Button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>4</td>
-                        <td>Negative Index Cards</td>
-                        <td>Nov 2 2020 at 12:57pm</td>
-                        <td>2%</td>
-                        <td>
-                          <Button variant="primary">Export</Button>
-                        </td>
-                        <td>
-                          <Button variant="primary">View</Button>
-                        </td>
-                      </tr>
+                      {this.state.categories.map((category, key) => {
+                        return <AdminTable category={category} key={key}/>
+                      })}
                       </tbody>
                     </Table>
                   </Tab.Pane>
