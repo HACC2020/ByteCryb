@@ -75,7 +75,7 @@ class RookieTraining extends React.Component {
 
       if (profile.role === 'rookie') {
 
-        const user = await this.Auth.fetch('/api/v1/users/updateRole/1?roleName=indexer', options);
+        const user = await this.Auth.fetch('/api/v1/users/updateRole/indexer', options);
         sessionStorage.setItem('role', 'indexer');
 
         console.log(user);
