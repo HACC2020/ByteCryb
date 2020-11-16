@@ -5,23 +5,17 @@ const schema = {
   title: 'Rookie',
   type: 'object',
   properties: {
-    name: { type: 'string', pattern: "^([a-zA-Z])+$"},
-    age: {
-      type: 'integer',
-      minimum: 0,
-      maximum: 100,
-    },
-    gender: { type: 'string', pattern: "^([a-zA-Z])+$"},
-    residence: { type: 'string', pattern: "^([a-zA-Z])+$"},
+    name: { type: 'string'},
+    age: { type: 'string'},
+    gender: { type: 'string'},
+    residence: { type: 'string'},
     dateOfArrival: {
       type: "string",
-      pattern: "(\\d{2}\\/\\d{2}\\/\\d{4})",
     },
-    nameOfShip: { type: 'string', pattern: "^([a-zA-Z])+$"},
-    from: { type: 'string', pattern: "^([a-zA-Z])+$"},
+    nameOfShip: { type: 'string'},
+    from: { type: 'string' },
 
   },
-  // required: ['from'],
   required: ['name', 'age', 'gender', 'residence', 'nameOfShip', 'from', 'dateOfArrival'],
 };
 
