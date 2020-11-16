@@ -1,6 +1,12 @@
 package bytecryb.clio.controller;
 
-import java.util.Date;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.LinkedHashMap;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,21 +15,17 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
+import bytecryb.clio.exception.SignupTakenException;
 import bytecryb.clio.model.AuthenticationRequest;
 import bytecryb.clio.model.AuthenticationResponse;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
-import bytecryb.clio.model.Score;
 import bytecryb.clio.repository.RoleRepository;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.service.CustomUserDetailsService;
-import bytecryb.clio.service.ScoreService;
 import bytecryb.clio.util.JwtUtil;
 
 
@@ -41,9 +43,6 @@ public class UserAuthentication {
 
 	@Autowired
 	private CustomUserDetailsService userDetailsService;
-
-	@Autowired
-	private ScoreService scoreService;
 
 	@Autowired
 	private JwtUtil jwtTokenUtil;
@@ -68,25 +67,18 @@ public class UserAuthentication {
 	
 	// {username, email, password}
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody CustomUser user) throws Exception {
+	public ResponseEntity<?> saveUser(@RequestBody CustomUser user) throws SignupTakenException {
+
         if(userRepo.existsByUsername(user.getUsername())) {
-            throw new Exception("USERNAME TAKEN");
+            throw new SignupTakenException("Username taken.");
         }
         if(userRepo.existsByEmail(user.getEmail())) {
-        	throw new Exception("EMAIL ALREADY IN USE");
+        	throw new SignupTakenException("Email is already in use.");
 		}
+
 		Role role = roleRepo.findByRoleName("rookie");
 		user.setRole(role);
 		CustomUser savedUser = userDetailsService.save(user);
-		Score defaultScore = new Score();
-		defaultScore.setUserId(savedUser.getUserId());
-
-		//DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		Date today = new Date();
-		
-		defaultScore.setDate(today);//formatter.format(today)
-		defaultScore.setScore(0);
-		scoreService.save(defaultScore);
 		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
@@ -94,4 +86,38 @@ public class UserAuthentication {
 		return ResponseEntity.ok(resUser);
 	}
 
+	@RequestMapping(value="/login/google")
+	public ResponseEntity<?> googleLogin(OAuth2Authentication authentication) throws Exception {
+		@SuppressWarnings("unchecked")
+		LinkedHashMap<String, Object> properties = (LinkedHashMap<String, Object>) authentication.getUserAuthentication().getDetails();
+		try {
+			CustomUser user = userRepo.findByEmail(properties.get("email").toString());
+			final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+			final String token = jwtTokenUtil.generateToken(userDetails);
+			return ResponseEntity.ok(new AuthenticationResponse(token));
+		} catch (Exception e) {
+			throw new Exception("Email associated with google account not found in database. Please signup.", e);
+		}
+
+	 }
+
+	 @RequestMapping(value="/signup/google")
+	 public ResponseEntity<?> googleSignup(OAuth2Authentication authentication) {
+		@SuppressWarnings("unchecked")
+		LinkedHashMap<String, Object> properties = (LinkedHashMap<String, Object>) authentication.getUserAuthentication().getDetails();
+		CustomUser user = new CustomUser();
+		UUID uuid = UUID.randomUUID();
+		user.setUsername(uuid.toString());
+		user.setEmail(properties.get("email").toString());
+		user.setFirstName(properties.get("given_name").toString());
+		user.setLastName(properties.get("family_name").toString());
+		Role role = roleRepo.findByRoleName("rookie");
+		user.setRole(role);
+		CustomUser savedUser = userRepo.save(user);
+		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
+		UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
+		String token = jwtTokenUtil.generateToken(userDetails);
+		resUser.setAuthToken(token);
+		return ResponseEntity.ok(resUser);
+	 }
 }
