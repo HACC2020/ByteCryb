@@ -27,6 +27,25 @@ export default class AuthService {
     });
   }
 
+  signUp(username, email, password) {
+    // Get a token from api server using the fetch api
+    return this.fetch('/auth/signup', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+      }),
+    }).then(res => { //what should be returned here?
+      this.setToken(res.token); // Setting the token in localStorage
+      return Promise.resolve(res);
+    });
+  }
+
   loggedIn() {
     // Checks if there is a saved token and it's still valid
     const token = this.getToken(); // GEtting token from localstorage
