@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,7 +66,30 @@ public class RecordController {
 
         for (Record r : filteredRecords) {
             // if record is incomplete (status == 0)
-            if (!r.isSubmitted()) {
+            if (!r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
+                // change status to in progress
+                r.setCheckedOut(true);
+
+                result = r;
+            }
+        }
+
+        // No incomplete record available, invalid result record returned
+        return ResponseEntity.ok().body(result);
+    }
+
+    // get first incomplete record pdf link
+    @GetMapping("/records/approve")
+    @Transactional
+    public ResponseEntity<Record> approveByJobId(@RequestParam(name = "job_id") Long jobId) {
+        // get a list of records with matching job id
+        List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
+
+        Record result = null;
+
+        for (Record r : filteredRecords) {
+            // if record is incomplete (status == 0)
+            if (!r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
                 // change status to in progress
                 r.setCheckedOut(true);
 
@@ -142,7 +166,22 @@ public class RecordController {
         result.setSubmitted(input.isSubmitted());
         result.setApproved(input.isApproved());
         result.setJson(input.getJson());
+
+        if (input.isSubmitted() && !input.isApproved()) {
+            Job job = this.jobRepo.findById(input.getJobId()).orElseThrow(() -> new ResourceNotFoundException(
+                "Job " + input.getJobId() + "  was not found!"
+            ));
+            job.setIndexed(job.getIndexed() + 1);
+            this.jobRepo.save(job);
+        }
+
         final Record update = this.recordRepo.save(result);
         return ResponseEntity.ok().body(update);
+    }
+
+    @DeleteMapping("/records/{id}")
+    public ResponseEntity<String> removeRecord(@PathVariable(value = "id") Long id) throws Exception {
+        this.pdfService.removePDFById(id);
+        return ResponseEntity.ok(new String("PDF " + id + " has been removed!"));
     }
 }

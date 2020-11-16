@@ -93,7 +93,7 @@ public class JobController {
             try {
                 filesUploaded.add(this.pdfService.uploadToLocal(file, pdfFolder));
             } catch (Exception e) {
-                this.pdfService.remove(new File(System.getProperty("user.dir") + "/data/pdf/" + pdfFolder.toString()));
+                this.pdfService.removeFolder(new File(System.getProperty("user.dir") + "/data/pdf/" + pdfFolder.toString()));
             }
         }
 
@@ -101,8 +101,8 @@ public class JobController {
         try {
             newXml = this.xmlService.uploadToLocal(xml, xmlFolder);
         } catch (Exception e) {
-            this.pdfService.remove(new File(System.getProperty("user.dir") + "/data/pdf/" + pdfFolder.toString()));
-            this.pdfService.remove(new File(System.getProperty("user.dir") + "/data/pdf/" + xmlFolder.toString()));
+            this.pdfService.removeFolder(new File(System.getProperty("user.dir") + "/data/pdf/" + pdfFolder.toString()));
+            this.pdfService.removeFolder(new File(System.getProperty("user.dir") + "/data/pdf/" + xmlFolder.toString()));
         }
 
         newJob.setName(name);
