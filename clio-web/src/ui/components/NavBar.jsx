@@ -24,6 +24,7 @@ class NavBar extends React.Component {
   logOut = () => {
     console.log("log out fuction");
     sessionStorage.removeItem("id_token");
+    sessionStorage.removeItem("role");
     /**
      <NavDropdown.Item href="/" onClick={this.logOut}>
                       Log out
