@@ -9,7 +9,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faFile } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faFile, faTrophy, faAward, faUserCircle } from '@fortawesome/free-solid-svg-icons'
 import { AutoForm, SubmitField, TextField } from 'uniforms-bootstrap4';
 import { bridge as schema } from '../../api/EditProfile';
 
@@ -144,6 +144,9 @@ class ViewProfile extends React.Component {
 
     return (
         <Container>
+          <h3 align={'center'} style={{marginBottom: '4rem'}}>
+            <FontAwesomeIcon icon={faUserCircle} style={{ marginRight: '0.5rem' }}/>Your Profile
+          </h3>
           <Row>
             <Col xs={6}>
               <Container align={'center'}>
@@ -154,11 +157,16 @@ class ViewProfile extends React.Component {
                 />
                 <h5>{this.state.username}</h5>
                 <p>{this.state.role}</p>
-                <p>Score: {this.state.score}</p>
+                <p>
+                  <FontAwesomeIcon icon={faAward} style={{ marginRight: '0.5rem' }}/>
+                Score: {this.state.score}</p>
               </Container>
             </Col>
             <Col xs={6}>
-              <h4> Badges </h4>
+              <h4>
+                <FontAwesomeIcon icon={faTrophy} style={{ marginRight: '0.5rem' }}/>
+                Badges
+              </h4>
               <OverlayTrigger
                   placement="top"
                   delay={{ show: 250, hide: 400 }}
