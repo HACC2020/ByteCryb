@@ -69,30 +69,103 @@ export default class AuthService {
     return decode(this.getToken());
   }
 
-  async fetch(url, options) {
+  async createCSV(url, options) {
     // performs api calls sending the required authentication headers
     const headers = {};
-
-
-    // headers['Access-Control-Allow-Origin'] = '*';
-    // headers['Access-Control-Allow-Headers'] = 'x-requested-with, x-requested-by';
-    // headers['Access-Control-Allow-Methods'] = 'GET, PUT, POST, DELETE, OPTIONS';
-    // headers['Allow-Origin'] = '*';
-    // Setting Authorization header
-    // Authorization: Bearer xxxxxxx.xxxxxxxx.xxxxxx
 
     if (this.loggedIn()) {
       headers['Authorization'] = 'Bearer ' + this.getToken();
     }
 
     // console.log(headers);
-
+    // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
     const response = await fetch(url, {
       headers,
       ...options,
     });
     // .then(this._checkStatus)
-    // console.log(response);
+    console.log(response);
+
+    let text = await response.blob();
+    if (text.type === 'application/json') {
+      return false;
+    }
+    // console.log(text);
+    let objectURL = window.URL.createObjectURL(text);
+    return objectURL;
+
+  }
+
+  async fetchPDF(url, options) {
+    // performs api calls sending the required authentication headers
+    const headers = {};
+
+    if (this.loggedIn()) {
+      headers['Authorization'] = 'Bearer ' + this.getToken();
+    }
+    headers['Content-Type'] = 'application/json';
+
+    // console.log(headers);
+    // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
+    const response = await fetch(url, {
+      headers,
+      ...options,
+    });
+    // .then(this._checkStatus)
+    console.log(response);
+
+    let text = await response.blob();
+    if (text.type === 'application/json') {
+      return false;
+    }
+    var objectURL = window.URL.createObjectURL(text);
+    return objectURL;
+
+  }
+
+  async fetchXML(url, options) {
+    // performs api calls sending the required authentication headers
+    const headers = {};
+
+    if (this.loggedIn()) {
+      headers['Authorization'] = 'Bearer ' + this.getToken();
+    }
+
+    // console.log(headers);
+    // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
+    const response = await fetch(url, {
+      headers,
+      ...options,
+    });
+    // .then(this._checkStatus)
+    console.log(response);
+
+    let text = await response.blob();
+    if (text.type === 'application/json') {
+      return false;
+    }
+
+    var xmlText = await text.text();
+
+    return xmlText;
+  }
+
+  async fetch(url, options) {
+    // performs api calls sending the required authentication headers
+    const headers = {};
+
+    if (this.loggedIn()) {
+      headers['Authorization'] = 'Bearer ' + this.getToken();
+    }
+
+    // console.log(headers);
+    // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
+    const response = await fetch(url, {
+      headers,
+      ...options,
+    });
+    // .then(this._checkStatus)
+    console.log(response);
     let text = await response.text();
     try {
       const json = JSON.parse(text);
@@ -102,6 +175,27 @@ export default class AuthService {
       // console.log(text);
       return text;
     }
+  }
+
+  async putPDF(url, options) {
+    // performs api calls sending the required authentication headers
+    const headers = {};
+
+    if (this.loggedIn()) {
+      headers['Authorization'] = 'Bearer ' + this.getToken();
+    }
+    headers['Content-Type'] = 'application/json';
+
+    // console.log(headers);
+    // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
+    const response = await fetch(url, {
+      headers,
+      ...options,
+    });
+    // .then(this._checkStatus)
+    console.log(response);
+    let text = await response.text();
+    return text;
   }
 
   _checkStatus(response) {

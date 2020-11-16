@@ -23,7 +23,7 @@ class App extends React.Component {
           <NavBar/>
           <Switch>
             <Route exact path='/testPage' component={TestPage}/>
-            <Route exact path='/record' component={Record}/>
+            <Route exact path='/record/:job_id' component={Record}/>
             <Route exact path='/' component={Login}/>
             <Route exact path='/signup' component={SignUp}/>
             <Route exact path='/my-job' component={MyJob}/>

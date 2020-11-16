@@ -25,8 +25,9 @@ class Landing extends React.Component {
     const daily = await this.Auth.fetch("/api/v1/scores/daily", options);
     const month = await this.Auth.fetch("/api/v1/scores/month", options);
     const allTime = await this.Auth.fetch("/api/v1/scores/alltime", options);
-    let categories = await this.Auth.fetch("/api/v1/categories", options);
+    let categories = await this.Auth.fetch("/api/v1/jobs", options);
     this.setState({ categories: categories });
+    console.log(categories);
     data.push(daily);
     data.push(month);
     data.push(allTime);

@@ -25,4 +25,5 @@ yarn-error.log*
 
 .idea
 
+# folders
 /public/pdfs
