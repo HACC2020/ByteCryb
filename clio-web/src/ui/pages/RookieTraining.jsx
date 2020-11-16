@@ -15,11 +15,13 @@ import {
   ErrorsField,
   TextField,
   SelectField,
+  SubmitField
 } from "uniforms-bootstrap4";
 import { bridge as schema } from "../../api/RookieTraining";
 import { Prompt } from "react-router";
 import { useEffect, isPrompt, shouldBlockNavigation } from "react";
 import Swal from 'sweetalert2';
+import AuthService from '../../api/AuthService';
 
 class RookieTraining extends React.Component {
   constructor() {
@@ -27,6 +29,7 @@ class RookieTraining extends React.Component {
     this.state = {
       pageNum: 0,
     };
+    this.Auth = new AuthService();
   }
 
   render() {
@@ -62,12 +65,30 @@ class RookieTraining extends React.Component {
 
     // console.log(this.state.pageNum);
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
+
+      const options = {
+        method: 'PUT'
+      };
+
+      const user = await this.Auth.fetch('/api/v1/users/updateRole/1?roleName=rookie', options);
+
+      sessionStorage.setItem("role", 'indexer');
+
+      console.log(user);
+
       Swal.fire({
         icon: 'success',
         title: 'Submitted!',
-        text: 'Navigating to landing page...'
-      })
+        text: 'Navigating to landing page...',
+        timeout: 1000,
+      });
+
+      setTimeout(() => {
+        this.props.history.push("/landing/");
+        this.props.history.go();
+      }, 1000);
+
     };
 
     return (
