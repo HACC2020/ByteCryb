@@ -54,6 +54,7 @@ class SignUp extends React.Component {
         this.state.email,
         this.state.password
       );
+
       console.log("This is the loginResponse", loginResponse);
 
       const loginBody = await loginResponse;
