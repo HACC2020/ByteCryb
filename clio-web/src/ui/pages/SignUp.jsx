@@ -48,7 +48,7 @@ class SignUp extends React.Component {
 
     //for submitting
     const handleSubmit = async (e) => {
-      console.log("Submitted!");
+      //console.log("Submitted!");
       e.preventDefault();
       const loginResponse = await this.Auth.signUp(
         this.state.username,
@@ -56,10 +56,10 @@ class SignUp extends React.Component {
         this.state.password
       );
 
-      console.log("This is the loginResponse", loginResponse);
+      //console.log("This is the loginResponse", loginResponse);
 
       const loginBody = await loginResponse;
-      console.log("This is the loginBody", loginBody);
+      //console.log("This is the loginBody", loginBody);
 
       if (!loginBody.message) {
         const loginResponse = this.Auth.login(
