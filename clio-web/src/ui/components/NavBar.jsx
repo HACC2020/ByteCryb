@@ -187,11 +187,6 @@ class NavBar extends React.Component {
                     <NavDropdown.Item href="/view-profile">
                       View Profile
                     </NavDropdown.Item>
-                    <NavDropdown.Item href="/edit-profile">
-                      Edit Profile
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/my-job">My Jobs</NavDropdown.Item>
-                    <NavDropdown.Divider />
                     <NavDropdown.Item href="/" onClick={this.logOut}>
                       Sign out
                     </NavDropdown.Item>
