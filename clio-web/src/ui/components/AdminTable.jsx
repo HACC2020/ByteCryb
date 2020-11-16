@@ -41,7 +41,7 @@ class AdminTable extends React.Component {
 
     return (
         <tr>
-          <td>2</td>
+          <td>{this.props.category.id}</td>
           <td>{this.props.category.name}</td>
           <td>Nov 2 2020 at 7:21am</td>
           <td>{this.props.category.indexed / this.props.category.size}%</td>

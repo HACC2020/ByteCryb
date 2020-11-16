@@ -50,13 +50,18 @@ class Record extends React.Component {
     this.setState({pdfID: record.pdfId});
 
     const pdfID = record.pdfId;
+    console.log(pdfID)
 
     const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
     this.setState({ pdfFile: pdfFile });
 
     const XML = await this.Auth.fetchXML(`/api/v1/xml/${xmlID}`, requestOptions);
 
-    this.setState({xmlJSON: xmlToJSON(XML)});
+    try {
+      this.setState({xmlJSON: xmlToJSON(XML)});
+
+    } catch (e) {
+    }
 
     this.setState({ loading: false });
   }
@@ -67,9 +72,6 @@ class Record extends React.Component {
       this.setState({ info: info });
 
       let stringInfo = JSON.stringify(info);
-      // stringInfo = '"info":' + stringInfo;
-      //
-      console.log(stringInfo);
 
       let jsonBody = {
         id: this.state.id,
@@ -80,12 +82,13 @@ class Record extends React.Component {
         json: stringInfo,
       };
 
-      console.log(jsonBody);
+      const raw = JSON.stringify(jsonBody);
 
+      console.log(raw);
 
       const updateRecord = {
         method: 'PUT',
-        body: jsonBody,
+        body: raw,
       };
 
       const response = await this.Auth.putPDF('/api/v1/records', updateRecord);
@@ -114,7 +117,11 @@ class Record extends React.Component {
       };
 
       const record = await this.Auth.fetch(`/api/v1/records/pop?job_id=${this.state.jobID}`, requestOptions);
+      console.log(record);
+      this.setState({id: record.id});
       const pdfID = record.pdfId;
+
+      console.log('Second pdfID:', pdfID)
 
       const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
       this.setState({ pdfFile: pdfFile });
