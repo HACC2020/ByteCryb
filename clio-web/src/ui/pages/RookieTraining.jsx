@@ -39,7 +39,7 @@ class RookieTraining extends React.Component {
       this.setState({ pageNum: num });
     };
 
-    if (this.state.pageNum === 1) {
+    if (this.state.pageNum === 0) {
       return (
           <Container>
             <h4>Welcome</h4>
