@@ -27,7 +27,7 @@ export default class AuthService {
     });
   }
 
-  signUp(username, email, password) {
+  async signUp(username, email, password) {
     // Get a token from api server using the fetch api
     return this.fetch('/auth/signup', {
       method: 'POST',
