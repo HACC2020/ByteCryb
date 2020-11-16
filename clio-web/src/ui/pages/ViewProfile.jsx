@@ -4,13 +4,14 @@ import {
   Container,
   Tooltip,
   Button,
-  OverlayTrigger, Row, Col, Table, NavLink, Badge, Modal
+  OverlayTrigger, Row, Col, Table, Badge, Modal
 } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faFile } from '@fortawesome/free-solid-svg-icons'
-
+import { AutoForm, SubmitField, TextField } from 'uniforms-bootstrap4';
+import { bridge as schema } from '../../api/EditProfile';
 
 class ViewProfile extends React.Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class ViewProfile extends React.Component {
       username: '',
       score: '',
       showModal: false,
+      showEdit: false,
     };
     this.Auth = new AuthService();
   }
@@ -54,6 +56,37 @@ class ViewProfile extends React.Component {
           Indexed 1 record
         </Tooltip>
     );
+
+    function EditProfile(props) {
+      return (
+          <Modal
+              {...props}
+              size="lg"
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title-vcenter">
+                Edit Profile
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <AutoForm
+                  schema={schema}
+                  onSubmit={model => console.log(model)}
+              >
+                <TextField name={'firstName'} icon={'user'}/>
+                <TextField name={'lastName'}/>
+                <TextField name={'username'} defaultValue={'hi'}/>
+                <SubmitField/>
+              </AutoForm>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={props.onHide}>Close</Button>
+            </Modal.Footer>
+          </Modal>
+      )
+    }
 
     function MoreRecords(props) {
       return (
@@ -109,7 +142,6 @@ class ViewProfile extends React.Component {
       );
     }
 
-
     return (
         <Container>
           <Row>
@@ -123,12 +155,6 @@ class ViewProfile extends React.Component {
                 <h5>{this.state.username}</h5>
                 <p>{this.state.role}</p>
                 <p>Score: {this.state.score}</p>
-                <NavLink href={'/edit-profile'}>
-                  <Button size="sm">
-                    <FontAwesomeIcon icon={faEdit} style={{marginRight: '0.5rem'}}/>
-                    Edit Profile
-                  </Button>
-                </NavLink>
               </Container>
             </Col>
             <Col xs={6}>
@@ -138,19 +164,28 @@ class ViewProfile extends React.Component {
                   delay={{ show: 250, hide: 400 }}
                   overlay={renderTooltip}
               >
-                <Badge pill variant="primary" style={{marginBottom: '5rem'}}>
+                <Badge pill variant="primary" style={{ marginBottom: '5rem' }}>
                   1st index!
                 </Badge>
               </OverlayTrigger>
               <br/>
               <hr/>
-              <Button onClick={() => this.setState({showModal: true})}>
-                <FontAwesomeIcon icon={faFile} style={{marginRight: '0.5rem'}}/>
+              <Button onClick={() => this.setState({ showModal: true })}>
+                <FontAwesomeIcon icon={faFile} style={{ marginRight: '0.5rem' }}/>
                 View Past Records
               </Button>
               <MoreRecords
                   show={this.state.showModal}
-                  onHide={() => this.setState({showModal: false})}
+                  onHide={() => this.setState({ showModal: false })}
+              />
+              <br/>
+              <Button onClick={() => this.setState({showEdit: true})} style={{marginTop: '1rem'}}>
+                <FontAwesomeIcon icon={faEdit} style={{ marginRight: '0.5rem' }}/>
+                Edit Profile
+              </Button>
+              <EditProfile
+                  show={this.state.showEdit}
+                  onHide={() => this.setState({ showEdit: false })}
               />
             </Col>
           </Row>
