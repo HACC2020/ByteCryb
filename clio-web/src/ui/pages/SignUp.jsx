@@ -47,8 +47,9 @@ class SignUp extends React.Component {
     };
 
     //for submitting
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
       console.log("Submitted!");
+      e.preventDefault();
       const loginResponse = await this.Auth.signUp(
         this.state.username,
         this.state.email,
@@ -61,6 +62,12 @@ class SignUp extends React.Component {
       console.log("This is the loginBody", loginBody);
 
       if (!loginBody.message) {
+        const loginResponse = this.Auth.login(
+          this.state.username,
+          this.state.password
+        );
+        const loginBody = await loginResponse;
+
         this.props.history.push("/landing/");
         this.props.history.go();
       } else {
