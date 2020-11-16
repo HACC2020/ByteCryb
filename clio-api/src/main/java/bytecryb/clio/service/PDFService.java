@@ -57,6 +57,15 @@ public class PDFService {
         PDF result = null;
         InputStream is = file.getInputStream();
 
+        int serialNum = 0;
+
+        // Keep looking for the next avaliable filename with num
+        while (path.toFile().exists()) {
+            serialNum++;
+            String[] splitFileName = fileName.split(".");
+            path = Paths.get(dest.toString() + "/" + splitFileName[0] + "(" + serialNum + ")" + splitFileName[1]);
+        }
+
         // Must increment to avoid overriding
         try {
             Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
@@ -94,15 +103,27 @@ public class PDFService {
         Files.createDirectories(folderPath);
     }
 
-    public void remove(File file) {
+    public void removeFolder(File file) {
         for (File subFile : file.listFiles()) {
             if (subFile.isDirectory()) {
-                remove(subFile);
+                removeFolder(subFile);
             } else {
                 subFile.delete();
             }
         }
         file.delete();
+    }
+
+    public void removePDFById(Long id) throws Exception {
+        PDF result = this.pdfRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("PDF not found for ID: " + id));
+        Path path = Paths.get(result.getPath());
+        try {
+            path.toFile().delete();
+            this.pdfRepo.delete(result);
+        } catch (Exception e) {
+            throw new Exception("Unable to remove PDF with id: " + id);
+        }
     }
 
 }
