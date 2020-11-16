@@ -3,7 +3,7 @@ import decode from 'jwt-decode';
 export default class AuthService {
   // Initializing important variables
   constructor(domain) {
-    this.domain = 'http://localhost:8080'; // API server domain
+    this.domain = 'http://164.90.149.100:8080'; // API server domain
     this.fetch = this.fetch.bind(this); // React binding stuff
     this.login = this.login.bind(this);
     this.getProfile = this.getProfile.bind(this);
@@ -98,7 +98,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
@@ -126,7 +126,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
@@ -152,7 +152,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
@@ -179,7 +179,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
@@ -207,7 +207,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
