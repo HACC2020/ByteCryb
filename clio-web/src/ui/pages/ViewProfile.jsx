@@ -23,6 +23,8 @@ class ViewProfile extends React.Component {
       score: '',
       showModal: false,
       showEdit: false,
+      firstName: '',
+      lastName: '',
     };
     this.Auth = new AuthService();
   }
@@ -36,6 +38,8 @@ class ViewProfile extends React.Component {
       let profile = await this.Auth.fetch('/api/v1/users/profile', options);
       this.setState({ score: profile.score });
       this.setState({ username: profile.username });
+      this.setState({ firstName: profile.firstName });
+      this.setState({ lastName: profile.lastName });
     }
   }
 
@@ -155,7 +159,7 @@ class ViewProfile extends React.Component {
                     roundedCircle
                     style={iconStyle}
                 />
-                <h5>{this.state.username}</h5>
+                <h5> {this.state.firstName} {this.state.lastName} | {this.state.username}</h5>
                 <p>{this.state.role}</p>
                 <p>
                   <FontAwesomeIcon icon={faAward} style={{ marginRight: '0.5rem' }}/>
