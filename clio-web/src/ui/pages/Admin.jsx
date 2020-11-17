@@ -23,6 +23,7 @@ class Admin extends React.Component {
       XMLHeader: 'XML Field Preview',
       XMLSpan: 'A preview of the job fields will be shown below once a XML file is uploaded.',
       categories: [],
+      loadingButton: false,
     };
     this.Auth = new AuthService();
   }
@@ -163,6 +164,7 @@ class Admin extends React.Component {
     };
 
     const onCreateJob = async () => {
+      this.setState({loadingButton: true});
 
       const formdata = new FormData();
       formdata.append("name", this.state.jobName);
@@ -213,6 +215,29 @@ class Admin extends React.Component {
           text: job.message,
         })
       }
+      this.setState({loadingButton: false});
+    };
+
+    const renderButton = () => {
+      if (this.state.loadingButton === false) {
+        return (
+            <Button variant="primary" onClick={onCreateJob}>
+              Submit
+            </Button>
+        )
+      }
+      return (
+          <Button variant="primary" disabled>
+            <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+            />
+            Submitting...
+          </Button>
+      )
     };
 
     return (
@@ -267,9 +292,7 @@ class Admin extends React.Component {
                                        multiple
                                        onChange={(e) => getPDFs(e)}/>
                           </Form.Group>
-                          <Button variant="primary" onClick={onCreateJob}>
-                            Submit
-                          </Button>
+                          {renderButton()}
                         </Form>
                       </Col>
                       <Col sm={6} style={{backgroundColor: '#f1eded', borderRadius: '1rem'}}>

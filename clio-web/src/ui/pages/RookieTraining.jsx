@@ -103,6 +103,13 @@ class RookieTraining extends React.Component {
       alignSelf: "flex-start",
     };
 
+    window.addEventListener('beforeunload',  function (e) {
+      // Cancel the event
+      e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+      return e.returnValue = 'Are you sure you want to close?';
+    });
+
+
     return (
         <Container>
           <Accordion style={{ marginBottom: "2rem" }}>

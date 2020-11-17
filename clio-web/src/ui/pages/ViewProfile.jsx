@@ -9,7 +9,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faFile, faTrophy, faAward, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faFile, faTrophy, faAward, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { AutoForm, SubmitField, TextField } from 'uniforms-bootstrap4';
 import { bridge as schema } from '../../api/EditProfile';
 
