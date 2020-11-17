@@ -71,6 +71,8 @@ public class RecordController {
                 r.setCheckedOut(true);
 
                 result = r;
+                
+                break;
             }
         }
 
@@ -94,6 +96,8 @@ public class RecordController {
                 r.setCheckedOut(true);
 
                 result = r;
+
+                break;
             }
         }
 
