@@ -79,9 +79,7 @@ class LeaderboardRanking extends React.Component {
     };
     let sliced = this.props.users.slice(3, this.props.users.length);
 
-
-    const cards = (user) => {
-      console.log(user)
+    const cards = (user, key) => {
       return (
           <Card>
             <Card.Body>
@@ -90,10 +88,10 @@ class LeaderboardRanking extends React.Component {
                   <Image
                       src="https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg"
                       rounded style={profileImg}/>
-                  Jane Foo | {user.score}
+                  {user.username} | {user.score}
                 </Col>
                 <Col>
-                  <h3 align={'right'}>#4</h3>
+                  <h3 align={'right'}>#{key+4}</h3>
                 </Col>
               </Row>
             </Card.Body>
@@ -130,7 +128,7 @@ class LeaderboardRanking extends React.Component {
             </Col>
           </Row>
           {sliced.map((user, key) => {
-            {cards(user)}
+            {return cards(user, key)}
           })}
 
           {/*{cards()}*/}
