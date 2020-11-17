@@ -5,14 +5,16 @@ import AuthService from "../../api/AuthService";
 import LeaderboardCard from "../components/LeaderboardCard";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight, faAward, faMedal } from '@fortawesome/free-solid-svg-icons';
+import LeaderboardRanking from '../components/LeaderboardRanking';
+import { _ } from 'lodash';
 
 class Leaderboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      daily: "",
-      month: "",
-      allTime: "",
+      daily: [],
+      month: [],
+      allTime: [],
       loading: true,
     };
     this.Auth = new AuthService();
@@ -27,6 +29,7 @@ class Leaderboard extends React.Component {
     const allTime = await this.Auth.fetch("/api/v1/scores/alltime", options);
     this.setState({ allTime: allTime });
     this.setState({ loading: false });
+
   }
 
   render() {
@@ -48,94 +51,95 @@ class Leaderboard extends React.Component {
 
     return (
         <Container>
-          <h3 align={'center'} className={'animate__animated animate__fadeInUp'}>
-            Leaderboard
-          </h3>
-          <h4 align={'center'} className={'animate__animated animate__fadeInUp'}
-              style={{ marginBottom: '2rem' }}>
-            <FontAwesomeIcon
-                icon={faAngleLeft}
-                style={{ marginRight: "0.5rem" }}
-            />
-            All Time
-            <FontAwesomeIcon
-                icon={faAngleRight}
-                style={{ marginLeft: "0.5rem" }}
-            />
-          </h4>
-          <Row className="justify-content-md-center" style={{ marginBottom: '3rem' }}>
-            <Col>
-              <div align={'center'}>
-                <Card className={'leaderboardTopThree'} style={{width: '12rem'}}>
-                  <Card.Img variant="top"
-                            src="https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg"/>
-                  <Card.Body align={'center'}>
-                    <Card.Title>#2 John Foo</Card.Title>
-                    <FontAwesomeIcon icon={faMedal} style={{
-                      marginRight: '0.2rem', color: 'silver',
-                      fontSize: '1.5rem'
-                    }}/>
-                    <Card.Text>
-                      250 points
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </div>
-            </Col>
-            <Col>
-              <div align={'center'}>
-                <Card style={{ width: '15rem' }} className={'leaderboardTopThree'}>
-                  <Card.Img variant="top"
-                            src="https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg"/>
-                  <Card.Body align={'center'}>
-                    <Card.Title>#1 John Foo</Card.Title>
-                    <FontAwesomeIcon icon={faMedal} style={{
-                      marginRight: '0.2rem', color: 'gold',
-                      fontSize: '1.5rem'
-                    }}/>
-                    <Card.Text>
-                      305 points
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </div>
+          <LeaderboardRanking users={this.state.allTime} />
+          {/*<h3 align={'center'} className={'animate__animated animate__fadeInUp'}>*/}
+          {/*  Leaderboard*/}
+          {/*</h3>*/}
+          {/*<h4 align={'center'} className={'animate__animated animate__fadeInUp'}*/}
+          {/*    style={{ marginBottom: '2rem' }}>*/}
+          {/*  <FontAwesomeIcon*/}
+          {/*      icon={faAngleLeft}*/}
+          {/*      style={{ marginRight: "0.5rem" }}*/}
+          {/*  />*/}
+          {/*  All Time*/}
+          {/*  <FontAwesomeIcon*/}
+          {/*      icon={faAngleRight}*/}
+          {/*      style={{ marginLeft: "0.5rem" }}*/}
+          {/*  />*/}
+          {/*</h4>*/}
+          {/*<Row className="justify-content-md-center" style={{ marginBottom: '3rem' }}>*/}
+          {/*  <Col>*/}
+          {/*    <div align={'center'}>*/}
+          {/*      <Card className={'leaderboardTopThree'} style={{width: '12rem'}}>*/}
+          {/*        <Card.Img variant="top"*/}
+          {/*                  src="https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg"/>*/}
+          {/*        <Card.Body align={'center'}>*/}
+          {/*          <Card.Title>#2 John Foo</Card.Title>*/}
+          {/*          <FontAwesomeIcon icon={faMedal} style={{*/}
+          {/*            marginRight: '0.2rem', color: 'silver',*/}
+          {/*            fontSize: '1.5rem'*/}
+          {/*          }}/>*/}
+          {/*          <Card.Text>*/}
+          {/*            250 points*/}
+          {/*          </Card.Text>*/}
+          {/*        </Card.Body>*/}
+          {/*      </Card>*/}
+          {/*    </div>*/}
+          {/*  </Col>*/}
+          {/*  <Col>*/}
+          {/*    <div align={'center'}>*/}
+          {/*      <Card style={{ width: '15rem' }} className={'leaderboardTopThree'}>*/}
+          {/*        <Card.Img variant="top"*/}
+          {/*                  src="https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg"/>*/}
+          {/*        <Card.Body align={'center'}>*/}
+          {/*          <Card.Title>#1 John Foo</Card.Title>*/}
+          {/*          <FontAwesomeIcon icon={faMedal} style={{*/}
+          {/*            marginRight: '0.2rem', color: 'gold',*/}
+          {/*            fontSize: '1.5rem'*/}
+          {/*          }}/>*/}
+          {/*          <Card.Text>*/}
+          {/*            305 points*/}
+          {/*          </Card.Text>*/}
+          {/*        </Card.Body>*/}
+          {/*      </Card>*/}
+          {/*    </div>*/}
 
-            </Col>
-            <Col>
-              <div align={'center'}>
-                <Card style={{ width: '10rem' }} className={'leaderboardTopThree'}>
-                  <Card.Img variant="top"
-                            src="https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg"/>
-                  <Card.Body align={'center'}>
-                    <Card.Title>#3 John Foo</Card.Title>
-                    <FontAwesomeIcon icon={faMedal} style={{
-                      marginRight: '0.2rem', color: 'brown',
-                      fontSize: '1.5rem'
-                    }}/>
-                    <Card.Text>
-                      103 points
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </div>
+          {/*  </Col>*/}
+          {/*  <Col>*/}
+          {/*    <div align={'center'}>*/}
+          {/*      <Card style={{ width: '10rem' }} className={'leaderboardTopThree'}>*/}
+          {/*        <Card.Img variant="top"*/}
+          {/*                  src="https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg"/>*/}
+          {/*        <Card.Body align={'center'}>*/}
+          {/*          <Card.Title>#3 John Foo</Card.Title>*/}
+          {/*          <FontAwesomeIcon icon={faMedal} style={{*/}
+          {/*            marginRight: '0.2rem', color: 'brown',*/}
+          {/*            fontSize: '1.5rem'*/}
+          {/*          }}/>*/}
+          {/*          <Card.Text>*/}
+          {/*            103 points*/}
+          {/*          </Card.Text>*/}
+          {/*        </Card.Body>*/}
+          {/*      </Card>*/}
+          {/*    </div>*/}
 
-            </Col>
-          </Row>
-          <Card>
-            <Card.Body>
-              <Row>
-                <Col>
-                  <Image
-                      src="https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg"
-                      rounded style={profileImg}/>
-                  Jane Foo | 53 points
-                </Col>
-                <Col>
-                  <h3 align={'right'}>#4</h3>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
+          {/*  </Col>*/}
+          {/*</Row>*/}
+          {/*<Card>*/}
+          {/*  <Card.Body>*/}
+          {/*    <Row>*/}
+          {/*      <Col>*/}
+          {/*        <Image*/}
+          {/*            src="https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg"*/}
+          {/*            rounded style={profileImg}/>*/}
+          {/*        Jane Foo | 53 points*/}
+          {/*      </Col>*/}
+          {/*      <Col>*/}
+          {/*        <h3 align={'right'}>#4</h3>*/}
+          {/*      </Col>*/}
+          {/*    </Row>*/}
+          {/*  </Card.Body>*/}
+          {/*</Card>*/}
         </Container>
     );
   }
