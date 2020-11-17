@@ -225,7 +225,7 @@ class Admin extends React.Component {
               Submit
             </Button>
         )
-      } 
+      }
       return (
           <Button variant="primary" disabled>
             <Spinner
