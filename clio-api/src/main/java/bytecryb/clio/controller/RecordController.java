@@ -1,5 +1,6 @@
 package bytecryb.clio.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -65,13 +66,24 @@ public class RecordController {
         Record result = null;
 
         for (Record r : filteredRecords) {
+            // check if the record had been checked out for longer than 5 minutes
+            if (r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
+                if (System.currentTimeMillis() - r.getDue().getTime() > 300000l) {
+                    r.setDue(new Timestamp(System.currentTimeMillis()));
+
+                    result = r;
+
+                    break;
+                }
+            }
+
             // if record is incomplete (status == 0)
             if (!r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
                 // change status to in progress
                 r.setCheckedOut(true);
 
                 result = r;
-                
+
                 break;
             }
         }
@@ -90,13 +102,23 @@ public class RecordController {
         Record result = null;
 
         for (Record r : filteredRecords) {
+            // check if the record had been checked out for longer than 5 minutes
+            if (r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
+                if (System.currentTimeMillis() - r.getDue().getTime() > 300000l) {
+                    r.setDue(new Timestamp(System.currentTimeMillis()));
+
+                    result = r;
+
+                    break;
+                }
+            }
+
             // if record is incomplete (status == 0)
             if (!r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
                 // change status to in progress
                 r.setCheckedOut(true);
-
+                r.setDue(new Timestamp(System.currentTimeMillis()));
                 result = r;
-
                 break;
             }
         }
@@ -170,25 +192,27 @@ public class RecordController {
 
     @PutMapping("/records")
     @Transactional
-    public ResponseEntity<Record> update(@RequestBody Record input) throws ResourceNotFoundException {
+    public ResponseEntity<Record> update(@RequestBody Record input) throws Exception {
         Record result = this.recordRepo.findById(input.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Record not found for id: " + input.getId()));
 
-        result.setCheckedOut(input.isCheckedOut());
+        if (result.isSubmitted()) {
+            throw new Exception("Already Submitted!");
+        }
+
+        result.setCheckedOut(false);
         result.setSubmitted(input.isSubmitted());
         result.setApproved(input.isApproved());
         result.setJson(input.getJson());
 
         if (input.isSubmitted() && !input.isApproved()) {
-            Job job = this.jobRepo.findById(input.getJobId()).orElseThrow(() -> new ResourceNotFoundException(
-                "Job " + input.getJobId() + "  was not found!"
-            ));
+            Job job = this.jobRepo.findById(input.getJobId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Job " + input.getJobId() + "  was not found!"));
             job.setIndexed(job.getIndexed() + 1);
             this.jobRepo.save(job);
         }
 
-        final Record update = this.recordRepo.save(result);
-        return ResponseEntity.ok().body(update);
+        return ResponseEntity.ok().body(this.recordRepo.save(result));
     }
 
     @DeleteMapping("/records/{id}")
