@@ -109,6 +109,7 @@ public class JobController {
         newJob.setCategoryId(catId);
         newJob.setXmlId(newXml.getId());
         newJob.setSize(filesUploaded.size());
+        newJob.setPoints(5);
 
         newJob = this.jobRepo.save(newJob);
 
