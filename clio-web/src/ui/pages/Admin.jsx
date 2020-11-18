@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Nav, Form, Tab, Row, Col, Table, Button, Spinner } from 'react-bootstrap';
+import { Container, Nav, Form, Tab, Row, Col, Table, Button, Spinner, Modal } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { JSONBridge } from '../../api/XMLValidation';
 import Swal from "sweetalert2";
@@ -8,7 +8,6 @@ import _ from 'lodash';
 import { xmlToJSON } from '../../xmlParser';
 import AuthService from '../../api/AuthService';
 import AdminTable from '../components/AdminTable';
-import CategoriesCard from '../components/CategoriesCard';
 
 class Admin extends React.Component {
   constructor(props) {
@@ -283,6 +282,7 @@ class Admin extends React.Component {
                         <th>Percentage Completed</th>
                         <th>Export as CSV</th>
                         <th>View Job</th>
+                        <th>Edit Job</th>
                       </tr>
                       </thead>
                       <tbody>
