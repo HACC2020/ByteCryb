@@ -81,7 +81,7 @@ public class RecordController {
             if (!r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
                 // change status to in progress
                 r.setCheckedOut(true);
-
+                r.setDue(new Timestamp(System.currentTimeMillis()));
                 result = r;
 
                 break;
