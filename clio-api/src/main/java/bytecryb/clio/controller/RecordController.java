@@ -113,6 +113,14 @@ public class RecordController {
         return ResponseEntity.ok().body(filteredRecords);
     }
 
+    // Get submitted but NOT approved records
+    @GetMapping("/records/unapproved")
+    public ResponseEntity<List<Record>> getUnapprovedRecords() {
+        // get list of records submitted
+        List<Record> unapprovedRecords = this.recordRepo.findBySubmittedUnapproved();
+        return ResponseEntity.ok().body(unapprovedRecords);
+    }
+
     @PostMapping("/records")
     public ResponseEntity<String> push(@RequestBody Record input) {
         Record result = this.recordRepo.save(input);
