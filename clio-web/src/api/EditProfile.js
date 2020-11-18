@@ -5,8 +5,8 @@ const schema = {
   title: 'Profile',
   type: 'object',
   properties: {
-    firstName: { type: 'string' },
-    lastName: { type: 'string' },
+    first_name: { type: 'string' },
+    last_name: { type: 'string' },
     username: { type: 'string' },
   },
   required: [],

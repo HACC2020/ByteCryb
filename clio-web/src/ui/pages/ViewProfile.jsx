@@ -4,7 +4,7 @@ import {
   Container,
   Tooltip,
   Button,
-  OverlayTrigger, Row, Col, Table, Badge, Modal
+  OverlayTrigger, Row, Col, Table, Badge, Modal, Spinner
 } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faFile, faTrophy, faAward, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { AutoForm, SubmitField, TextField } from 'uniforms-bootstrap4';
 import { bridge as schema } from '../../api/EditProfile';
+import Swal from "sweetalert2";
 
 class ViewProfile extends React.Component {
   constructor(props) {
@@ -23,8 +24,10 @@ class ViewProfile extends React.Component {
       score: '',
       showModal: false,
       showEdit: false,
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
+      loading: true,
+      loggedIn: true,
     };
     this.Auth = new AuthService();
   }
@@ -36,14 +39,43 @@ class ViewProfile extends React.Component {
       this.setState({ role: sessionStorage.getItem('role') });
       const options = {};
       let profile = await this.Auth.fetch('/api/v1/users/profile', options);
+      console.log(profile);
+      let user = profile.user;
+      const username = user.match(/(username=([Aa-zZ0-9]*))/g)[0].split('=')[1];
+      const firstName = user.match(/(firstName=([Aa-zZ0-9]*))/g)[0].split('=')[1];
+      const lastName = user.match(/(lastName=([Aa-zZ0-9]*))/g)[0].split('=')[1];
       this.setState({ score: profile.score });
-      this.setState({ username: profile.username });
-      this.setState({ firstName: profile.firstName });
-      this.setState({ lastName: profile.lastName });
+      this.setState({ username: username });
+
+      this.setState({ first_name: firstName });
+      this.setState({ last_name: lastName });
+
+      this.setState({ loading: false });
+    } else {
+      this.setState({ loggedIn: false });
     }
   }
 
   render() {
+
+    if (this.state.loggedIn === false) {
+      return (
+          <Container align={"center"}>
+            <h2>Sorry, you're not logged in!</h2>
+          </Container>
+      )
+    }
+
+    if (this.state.loading === true) {
+      return (
+          <Container align={"center"}>
+            <h2>Loading Profile...</h2>
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </Container>
+      )
+    }
 
     const imgStyle = {
       height: '50px',
@@ -61,6 +93,27 @@ class ViewProfile extends React.Component {
         </Tooltip>
     );
 
+    const onSubmit = async (data) => {
+      const updateRecord = {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      };
+      let response = await this.Auth.fetch('/api/v1/users/updateNames', updateRecord);
+      sessionStorage.setItem('id_token', response.token);
+
+      this.setState({showEdit: false});
+
+      Swal.fire({
+        icon: "success",
+        title: "Profile updated!",
+      });
+
+      this.setState({first_name: data.first_name});
+      this.setState({last_name: data.last_name});
+      this.setState({username: data.username});
+
+    };
+
     function EditProfile(props) {
       return (
           <Modal
@@ -77,11 +130,16 @@ class ViewProfile extends React.Component {
             <Modal.Body>
               <AutoForm
                   schema={schema}
-                  onSubmit={model => console.log(model)}
+                  model={{
+                    first_name: props.first_name,
+                    last_name: props.last_name,
+                    username: props.username,
+                  }}
+                  onSubmit={model => onSubmit(model)}
               >
-                <TextField name={'firstName'} icon={'user'}/>
-                <TextField name={'lastName'}/>
-                <TextField name={'username'} defaultValue={'hi'}/>
+                <TextField name={'first_name'}/>
+                <TextField name={'last_name'}/>
+                <TextField name={'username'}/>
                 <SubmitField/>
               </AutoForm>
             </Modal.Body>
@@ -148,7 +206,7 @@ class ViewProfile extends React.Component {
 
     return (
         <Container>
-          <h3 align={'center'} style={{marginBottom: '4rem'}}>
+          <h3 align={'center'} style={{ marginBottom: '4rem' }}>
             <FontAwesomeIcon icon={faUserCircle} style={{ marginRight: '0.5rem' }}/>Your Profile
           </h3>
           <Row>
@@ -159,11 +217,11 @@ class ViewProfile extends React.Component {
                     roundedCircle
                     style={iconStyle}
                 />
-                <h5> {this.state.firstName} {this.state.lastName} | {this.state.username}</h5>
+                <h5> {this.state.first_name} {this.state.last_name} | {this.state.username}</h5>
                 <p>{this.state.role}</p>
                 <p>
                   <FontAwesomeIcon icon={faAward} style={{ marginRight: '0.5rem' }}/>
-                Score: {this.state.score}</p>
+                  Score: {this.state.score}</p>
               </Container>
             </Col>
             <Col xs={6}>
@@ -191,12 +249,16 @@ class ViewProfile extends React.Component {
                   onHide={() => this.setState({ showModal: false })}
               />
               <br/>
-              <Button onClick={() => this.setState({showEdit: true})} style={{marginTop: '1rem'}}>
+              <Button onClick={() => this.setState({ showEdit: true })}
+                      style={{ marginTop: '1rem' }}>
                 <FontAwesomeIcon icon={faEdit} style={{ marginRight: '0.5rem' }}/>
                 Edit Profile
               </Button>
               <EditProfile
                   show={this.state.showEdit}
+                  first_name={this.state.first_name}
+                  last_name={this.state.last_name}
+                  username={this.state.username}
                   onHide={() => this.setState({ showEdit: false })}
               />
             </Col>
