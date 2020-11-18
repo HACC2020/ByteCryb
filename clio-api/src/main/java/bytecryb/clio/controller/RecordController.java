@@ -63,13 +63,17 @@ public class RecordController {
         // get a list of records with matching job id
         List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
 
+        for (Record record : filteredRecords) {
+            System.out.println(record);
+        }
+
         Record result = null;
 
         for (Record r : filteredRecords) {
             // check if the record had been checked out for longer than 5 minutes
             if (r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
-                if (System.currentTimeMillis() - r.getDue().getTime() > 300000l) {
-                    r.setDue(new Timestamp(System.currentTimeMillis()));
+                if (System.currentTimeMillis() > r.getDue().getTime()) {
+                    r.setDue(new Timestamp(System.currentTimeMillis() + 5000));
 
                     result = r;
 
@@ -81,7 +85,7 @@ public class RecordController {
             if (!r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
                 // change status to in progress
                 r.setCheckedOut(true);
-                r.setDue(new Timestamp(System.currentTimeMillis()));
+                r.setDue(new Timestamp(System.currentTimeMillis() + 5000));
                 result = r;
 
                 break;
@@ -103,13 +107,17 @@ public class RecordController {
         // get a list of records with matching job id
         List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
 
+        for (Record record : filteredRecords) {
+            System.out.println(record);
+        }
+
         Record result = null;
 
         for (Record r : filteredRecords) {
             // check if the record had been checked out for longer than 5 minutes
             if (r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
-                if (System.currentTimeMillis() - r.getDue().getTime() > 300000l) {
-                    r.setDue(new Timestamp(System.currentTimeMillis()));
+                if (System.currentTimeMillis() > r.getDue().getTime()) {
+                    r.setDue(new Timestamp(System.currentTimeMillis() + 5000));
 
                     result = r;
 
@@ -121,7 +129,7 @@ public class RecordController {
             if (!r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
                 // change status to in progress
                 r.setCheckedOut(true);
-                r.setDue(new Timestamp(System.currentTimeMillis()));
+                r.setDue(new Timestamp(System.currentTimeMillis() + 5000));
                 result = r;
                 break;
             }
