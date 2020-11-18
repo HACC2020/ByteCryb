@@ -59,14 +59,14 @@ class SignUp extends React.Component {
       //console.log("This is the loginResponse", loginResponse);
 
       const loginBody = await loginResponse;
-      //console.log("This is the loginBody", loginBody);
+      sessionStorage.setItem('id_token', loginBody.token);
+      sessionStorage.setItem('role', 'rookie');
 
       if (!loginBody.message) {
         const loginResponse = this.Auth.login(
           this.state.username,
           this.state.password
         );
-        const loginBody = await loginResponse;
 
         this.props.history.push("/landing/");
         this.props.history.go();
@@ -76,7 +76,7 @@ class SignUp extends React.Component {
     };
 
     const passMatch = () => {
-      if (this.state.password != this.state.confirmPass) {
+      if (this.state.password !== this.state.confirmPass) {
         return (
           <div>
             <span style={{ color: "#fe4040", fontSize: "12px" }}>
@@ -88,7 +88,7 @@ class SignUp extends React.Component {
     };
 
     const enterPass = () => {
-      if (this.state.password == "" || this.state.confirmPass == "") {
+      if (this.state.password === "" || this.state.confirmPass === "") {
         return (
           <div>
             <span style={{ color: "#fe4040", fontSize: "12px" }}>
