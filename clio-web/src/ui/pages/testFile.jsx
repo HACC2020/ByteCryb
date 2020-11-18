@@ -94,6 +94,7 @@ class testFile extends React.Component {
         fontSize: 35,
         fontWeight: 900,
         paddingBottom: 0,
+        color: "081C15",
       },
 
       avatar: {
