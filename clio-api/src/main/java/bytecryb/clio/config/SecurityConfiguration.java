@@ -59,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.permitAll()
 		.anyRequest()
 		.authenticated();
-
+    
 		// Add a filter to validate the tokens with every request
 		http.addFilterBefore(customJwtAuthenticationFilter, 
 		UsernamePasswordAuthenticationFilter.class);
