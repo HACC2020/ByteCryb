@@ -62,13 +62,6 @@ public class PDFController {
             fileDownloadUrls.add(this.pdfService.uploadToLocal(file, folder));
         }
 
-        // Arrays.asList(files).stream().forEach(file -> {
-        // try {
-        // fileDownloadUrls.add(this.pdfService.uploadToLocal(file, folder));
-        // } catch (Exception e) {
-        // }
-        // });
-
         return ResponseEntity.ok(fileDownloadUrls);
     }
 

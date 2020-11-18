@@ -2,10 +2,6 @@ package bytecryb.clio.repository;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,6 +21,9 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
 
     @Query(value = "SELECT s.user_id, SUM(s.score) FROM Scores s WHERE CAST(EXTRACT(YEAR FROM s.date) AS INT) = ?1 GROUP BY s.user_id ORDER BY SUM(s.score) DESC", nativeQuery = true)
     List<Object[]> findAllYearlyScores(int year);
+
+    @Query(value = "SELECT s.user_id, SUM(s.score) FROM Scores s GROUP BY s.user_id ORDER BY SUM(s.score) DESC", nativeQuery = true)
+    List<Object[]> findAllScores();
 
 }
 

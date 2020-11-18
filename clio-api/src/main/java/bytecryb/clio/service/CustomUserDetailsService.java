@@ -33,6 +33,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 		if (user != null) {
 			Role role = user.getRole();
 			roles = Arrays.asList(new SimpleGrantedAuthority(role.getName()));
+			if(user.getPassword() == null) {
+				return new User(user.getUsername(), "", roles);
+			}
 			return new User(user.getUsername(), user.getPassword(), roles);
 		}
 		throw new UsernameNotFoundException("User not found with the name " + username);

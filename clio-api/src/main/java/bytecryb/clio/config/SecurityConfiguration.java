@@ -1,5 +1,6 @@
 package bytecryb.clio.config;
 
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +9,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -17,6 +17,7 @@ import bytecryb.clio.service.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
+@EnableOAuth2Sso
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
@@ -24,9 +25,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	private CustomJwtAuthenticationFilter customJwtAuthenticationFilter;
-	
-	@Autowired
-  	private JwtAuthenticationEntryPoint unauthorizedHandler;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -50,25 +48,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http
 		.csrf()
 		.disable()
+		.cors()
+		.disable()
 		.authorizeRequests()
-		.antMatchers("/api/users/restricted").authenticated()
 		.antMatchers("/api/users/rookie").hasAuthority("rookie")
 		.antMatchers("/api/users/indexer").hasAuthority("indexer")
 		.antMatchers("/api/users/proofer").hasAuthority("proofer")
 		.antMatchers("/api/users/archivist").hasAuthority("archivist")
-		.antMatchers("/**", "/auth/login", "/auth/signup", "/api/users/all")
+		.antMatchers("/auth/login", "/auth/signup", "/api/v1/users")
 		.permitAll()
 		.anyRequest()
-		.authenticated()
-		//if any exception occurs call this
-		.and().exceptionHandling()
-        .authenticationEntryPoint(unauthorizedHandler).and().
-		// make sure we use stateless session; session won't be used to
-		// store user's state.
-		sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-
+		.authenticated();
+    
 		// Add a filter to validate the tokens with every request
 		http.addFilterBefore(customJwtAuthenticationFilter, 
 		UsernamePasswordAuthenticationFilter.class);

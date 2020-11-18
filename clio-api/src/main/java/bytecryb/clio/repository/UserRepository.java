@@ -8,7 +8,7 @@ import bytecryb.clio.model.CustomUser;
 
 @Repository
 public interface UserRepository extends JpaRepository<CustomUser, Long> {
-    Optional<CustomUser> findByEmail(String email);
+    CustomUser findByEmail(String email);
 
     Optional<CustomUser> findByUsernameOrEmail(String username, String email);
 
@@ -17,6 +17,8 @@ public interface UserRepository extends JpaRepository<CustomUser, Long> {
     CustomUser findByUsername(String username);
 
     Boolean existsByUsername(String username);
+
+    Boolean existsByUserId(Long id);
 
     Boolean existsByEmail(String email);
 }
