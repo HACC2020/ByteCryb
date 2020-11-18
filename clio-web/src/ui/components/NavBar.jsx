@@ -22,7 +22,7 @@ class NavBar extends React.Component {
   }
 
   logOut = () => {
-    console.log("log out fuction");
+    // console.log("log out fuction");
     sessionStorage.removeItem("id_token");
     sessionStorage.removeItem("role");
     /**
@@ -67,9 +67,6 @@ class NavBar extends React.Component {
                     <NavDropdown.Item href="/view-profile">
                       View Profile
                     </NavDropdown.Item>
-                    <NavDropdown.Item href="/edit-profile">
-                      Edit Profile
-                    </NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/" onClick={this.logOut}>
                       Sign out
@@ -105,9 +102,6 @@ class NavBar extends React.Component {
                   >
                     <NavDropdown.Item href="/view-profile">
                       View Profile
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/edit-profile">
-                      Edit Profile
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/" onClick={this.logOut}>
@@ -145,9 +139,6 @@ class NavBar extends React.Component {
                   >
                     <NavDropdown.Item href="/view-profile">
                       View Profile
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/edit-profile">
-                      Edit Profile
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="/" onClick={this.logOut}>

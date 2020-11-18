@@ -69,14 +69,6 @@ class Record extends React.Component {
 
   render() {
 
-    /** Ask if users want to leave. Already sets checkedOut to be false*/
-    window.addEventListener('beforeunload',  function (e) {
-      // Cancel the event
-      e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-      return e.returnValue = 'Are you sure you want to close?';
-    });
-
-
     const onSubmit = async (info) => {
       this.setState({ info: info });
 
@@ -201,6 +193,14 @@ class Record extends React.Component {
           </Container>
       )
     }
+
+    /** Ask if users want to leave. Already sets checkedOut to be false*/
+    window.addEventListener('beforeunload',  function (e) {
+      // Cancel the event
+      e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+      return e.returnValue = 'Are you sure you want to close?';
+    });
+
 
     const sticky = {
       position: "-webkit-sticky",
