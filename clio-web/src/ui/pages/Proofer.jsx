@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Spinner } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import {
   AutoForm,
@@ -26,6 +26,7 @@ class Proofer extends React.Component {
       xmlID: '',
       id: '',
       pdfID: '',
+      loading: true,
     };
     this.Auth = new AuthService();
   }
@@ -127,6 +128,17 @@ class Proofer extends React.Component {
         )
       }
     };
+
+    if (this.state.loading === true) {
+      return (
+          <Container align={"center"}>
+            <h2>Loading Record...</h2>
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </Container>
+      )
+    }
 
     const sticky = {
       position: "-webkit-sticky",
