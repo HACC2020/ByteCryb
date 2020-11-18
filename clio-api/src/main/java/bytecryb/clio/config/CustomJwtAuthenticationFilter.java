@@ -61,8 +61,6 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
 				// that the current user is authenticated. So it passes the
 				// Spring Security Configurations successfully.
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-			} else {
-				System.out.println("Cannot set the Security Context");
 			}
 
 		} catch (ExpiredJwtException ex) {
