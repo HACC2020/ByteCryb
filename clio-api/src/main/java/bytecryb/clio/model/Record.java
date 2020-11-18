@@ -1,6 +1,6 @@
 package bytecryb.clio.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -67,7 +67,7 @@ public class Record {
     @Getter
     @Setter
     @Column(name = "due")
-    private Date due;
+    private Timestamp due;
 
     @Getter
     @Setter
