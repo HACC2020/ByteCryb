@@ -88,6 +88,10 @@ public class RecordController {
             }
         }
 
+        if (result != null) {
+            result = this.recordRepo.save(result);
+        }
+
         // No incomplete record available, invalid result record returned
         return ResponseEntity.ok().body(result);
     }
@@ -121,6 +125,10 @@ public class RecordController {
                 result = r;
                 break;
             }
+        }
+
+        if (result != null) {
+            result = this.recordRepo.save(result);
         }
 
         // No incomplete record available, invalid result record returned
@@ -180,10 +188,14 @@ public class RecordController {
             filesUploaded.add(this.pdfService.uploadToLocal(file, folder));
         }
 
+        int recordCount = 0;
+
         for (PDF file : filesUploaded) {
             records.add(this.recordRepo.save(new Record(id, file.getId(), false, false, false, "{}")));
-            job.setSize(job.getSize() + 1);
+            recordCount += 1;
         }
+
+        job.setSize(job.getSize() + recordCount);
 
         this.jobRepo.save(job);
 
