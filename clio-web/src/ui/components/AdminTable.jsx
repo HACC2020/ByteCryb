@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Modal, Form, Spinner } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 import AuthService from '../../api/AuthService';
@@ -7,6 +7,10 @@ import AuthService from '../../api/AuthService';
 class AdminTable extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      onShow: false,
+      loadingExport: false,
+    };
     this.Auth = new AuthService();
   }
 
@@ -30,14 +34,75 @@ class AdminTable extends React.Component {
     }
 
     const exportCSV = async () => {
+      this.setState({loadingExport: true});
       const options = {
         method: 'GET',
       };
       let CSV = await this.Auth.createCSV(`/api/v1/jobs/csv?id=${this.props.category.id}`, options);
       let fileName = `${this.props.category.name}.csv`;
       saveAs(CSV, fileName);
+      this.setState({loadingExport: false})
       // console.log(CSV);
     };
+
+    const renderExportButton = () => {
+      if (this.state.loadingExport === false) {
+        return (
+            <Button variant="primary" onClick={exportCSV}>
+              Export
+            </Button>
+        )
+      }
+      
+      return (
+          <Button variant="primary" disabled>
+            <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+            />
+            Exporting...
+          </Button>
+      )
+    };
+
+    function EditJob(props) {
+      return (
+          <Modal
+              {...props}
+              size="lg"
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title-vcenter">
+                Edit Job: {props.name}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <h6>Edit Points</h6>
+                <Form.Group onChange={(e) => console.log(e.target.value)}>
+                  <Form.Label>Points per Record</Form.Label>
+                  <Form.Control placeholder="5"/>
+                </Form.Group>
+                <h6>Upload more Records</h6>
+                <Form.Group>
+                  <Form.File id="exampleFormControlFile1" label="Upload PDF File(s)"
+                             multiple
+                             onChange={(e) => console.log(e)}/>
+                </Form.Group>
+                <Button>Save</Button>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={props.onHide}>Close</Button>
+            </Modal.Footer>
+          </Modal>
+      );
+    }
 
     return (
         <tr>
@@ -46,13 +111,22 @@ class AdminTable extends React.Component {
           <td>Nov 2 2020 at 7:21am</td>
           <td>{this.props.category.indexed / this.props.category.size}%</td>
           <td>
-            <Button variant="primary" onClick={exportCSV}>
-              Export
-            </Button>
+            {renderExportButton()}
           </td>
           <td>
             <Button variant="primary">View</Button>
           </td>
+          <td>
+            <Button variant="primary" onClick={() => this.setState({onShow: true})}>
+              Edit
+            </Button>
+          </td>
+          <EditJob
+              show={this.state.onShow}
+              onHide={() => this.setState({onShow: false})}
+              name={this.props.category.name}
+              id={this.props.category.id}
+          />
         </tr>
     )
   }
