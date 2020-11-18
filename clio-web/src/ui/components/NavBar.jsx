@@ -21,9 +21,21 @@ class NavBar extends React.Component {
     }
   }
 
+  logOut = () => {
+    console.log("log out fuction");
+    sessionStorage.removeItem("id_token");
+    sessionStorage.removeItem("role");
+    /**
+     <NavDropdown.Item href="/" onClick={this.logOut}>
+                      Log out
+                    </NavDropdown.Item>
+     
+     */
+  };
+
   render() {
     const imgStyle = {
-      height: "50px",
+      height: "30px",
       width: "auto",
     };
 
@@ -34,13 +46,12 @@ class NavBar extends React.Component {
             <Navbar
               collapseOnSelect
               expand="lg"
-              bg="light"
               variant="light"
-              style={{ marginBottom: "5rem" }}
+              style={{ marginBottom: "5rem", backgroundColor: "EBEBEB" }}
               sticky={"top"}
             >
               <Navbar.Brand href="/training">
-                <Image src={"./hsa-logo.png"} style={imgStyle} />
+                <Image src={"./PROJECT-CLIO.png"} style={imgStyle} />
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
@@ -60,8 +71,8 @@ class NavBar extends React.Component {
                       Edit Profile
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="/sign-out">
-                      Sign Out
+                    <NavDropdown.Item href="/" onClick={this.logOut}>
+                      Sign out
                     </NavDropdown.Item>
                   </NavDropdown>
                 </Nav>
@@ -79,12 +90,11 @@ class NavBar extends React.Component {
               sticky={"top"}
             >
               <Navbar.Brand href="/landing">
-                <Image src={"./hsa-logo.png"} style={imgStyle} />
+                <Image src={"./PROJECT-CLIO.png"} style={imgStyle} />
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                  <Nav.Link href="/categories">Categories</Nav.Link>
                   <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
                 </Nav>
                 <Nav>
@@ -100,8 +110,8 @@ class NavBar extends React.Component {
                       Edit Profile
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="/sign-out">
-                      Sign Out
+                    <NavDropdown.Item href="/" onClick={this.logOut}>
+                      Sign out
                     </NavDropdown.Item>
                   </NavDropdown>
                 </Nav>
@@ -119,12 +129,11 @@ class NavBar extends React.Component {
               sticky={"top"}
             >
               <Navbar.Brand href="/landing">
-                <Image src={"./hsa-logo.png"} style={imgStyle} />
+                <Image src={"./PROJECT-CLIO.png"} style={imgStyle} />
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                  <Nav.Link href="/categories">Categories</Nav.Link>
                   <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
                   <Nav.Link href="/proofer">Review Submissions</Nav.Link>
                 </Nav>
@@ -141,8 +150,8 @@ class NavBar extends React.Component {
                       Edit Profile
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="/sign-out">
-                      Sign Out
+                    <NavDropdown.Item href="/" onClick={this.logOut}>
+                      Sign out
                     </NavDropdown.Item>
                   </NavDropdown>
                 </Nav>
@@ -154,18 +163,15 @@ class NavBar extends React.Component {
             <Navbar
               collapseOnSelect
               expand="lg"
-              bg="light"
-              variant="light"
-              style={{ marginBottom: "5rem" }}
+              style={{ marginBottom: "5rem", backgroundColor: "#EBEBEB" }}
               sticky={"top"}
             >
-              <Navbar.Brand href="/">
-                <Image src={"./hsa-logo.png"} style={imgStyle} />
+              <Navbar.Brand href="/landing">
+                <Image src={"./PROJECT-CLIO.png"} style={imgStyle} />
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                  <Nav.Link href="/categories">Categories</Nav.Link>
                   <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
                   <Nav.Link href="/admin">Admin</Nav.Link>
                   <Nav.Link href="/landing">Landing</Nav.Link>
@@ -181,13 +187,8 @@ class NavBar extends React.Component {
                     <NavDropdown.Item href="/view-profile">
                       View Profile
                     </NavDropdown.Item>
-                    <NavDropdown.Item href="/edit-profile">
-                      Edit Profile
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/my-job">My Jobs</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="/sign-out">
-                      Sign Out
+                    <NavDropdown.Item href="/" onClick={this.logOut}>
+                      Sign out
                     </NavDropdown.Item>
                   </NavDropdown>
                 </Nav>
@@ -205,7 +206,7 @@ class NavBar extends React.Component {
               sticky={"top"}
             >
               <Navbar.Brand href="/">
-                <Image src={"./hsa-logo.png"} style={imgStyle} />
+                <Image src={"./PROJECT-CLIO.png"} style={imgStyle} />
               </Navbar.Brand>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
@@ -228,7 +229,7 @@ class NavBar extends React.Component {
             sticky={"top"}
           >
             <Navbar.Brand href="/">
-              <Image src={"./hsa-logo.png"} style={imgStyle} />
+              <Image src={"./PROJECT-CLIO.png"} style={imgStyle} />
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">

@@ -48,6 +48,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http
 		.csrf()
 		.disable()
+		.cors()
+		.disable()
 		.authorizeRequests()
 		.antMatchers("/api/users/rookie").hasAuthority("rookie")
 		.antMatchers("/api/users/indexer").hasAuthority("indexer")

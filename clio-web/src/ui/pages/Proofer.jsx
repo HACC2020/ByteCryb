@@ -12,6 +12,19 @@ import { bridge as schema } from "../../api/RookieTraining";
 
 class Proofer extends React.Component {
   render() {
+
+    window.addEventListener('beforeunload', function (e) {
+      // Cancel the event
+      e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+      // Chrome requires returnValue to be set
+      return e.returnValue = 'Are you sure you want to close?';
+    });
+
+    window.addEventListener('unload', function (e) {
+      console.log('unload!')
+    });
+
+
     return (
       <Container>
         <Row>

@@ -1,5 +1,6 @@
 package bytecryb.clio.service;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,6 +57,16 @@ public class PDFService {
         PDF result = null;
         InputStream is = file.getInputStream();
 
+        int serialNum = 0;
+
+        // Keep looking for the next avaliable filename with num
+        while (path.toFile().exists()) {
+            serialNum++;
+            String[] splitFileName = fileName.split(".");
+            path = Paths.get(dest.toString() + "/" + splitFileName[0] + "(" + serialNum + ")" + splitFileName[1]);
+        }
+
+        // Must increment to avoid overriding
         try {
             Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
             result = this.pdfRepo.save(new PDF(fileName, path.toString()));
@@ -90,6 +101,29 @@ public class PDFService {
 
     public void createDir(Path folderPath) throws Exception {
         Files.createDirectories(folderPath);
+    }
+
+    public void removeFolder(File file) {
+        for (File subFile : file.listFiles()) {
+            if (subFile.isDirectory()) {
+                removeFolder(subFile);
+            } else {
+                subFile.delete();
+            }
+        }
+        file.delete();
+    }
+
+    public void removePDFById(Long id) throws Exception {
+        PDF result = this.pdfRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("PDF not found for ID: " + id));
+        Path path = Paths.get(result.getPath());
+        try {
+            path.toFile().delete();
+            this.pdfRepo.delete(result);
+        } catch (Exception e) {
+            throw new Exception("Unable to remove PDF with id: " + id);
+        }
     }
 
 }
