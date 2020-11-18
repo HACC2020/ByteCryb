@@ -129,7 +129,7 @@ class NavBar extends React.Component {
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
                   <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
-                  <Nav.Link href="/proofer">Review Submissions</Nav.Link>
+                  <Nav.Link href="/review-records">Review Records</Nav.Link>
                 </Nav>
                 <Nav>
                   <NavDropdown
@@ -166,7 +166,7 @@ class NavBar extends React.Component {
                   <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
                   <Nav.Link href="/admin">Admin</Nav.Link>
                   <Nav.Link href="/landing">Landing</Nav.Link>
-                  <Nav.Link href="/proofer">Review Submissions</Nav.Link>
+                  <Nav.Link href="/review-records">Review Records</Nav.Link>
                   <Nav.Link href="/training">Training</Nav.Link>
                 </Nav>
                 <Nav>

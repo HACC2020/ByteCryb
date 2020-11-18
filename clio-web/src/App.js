@@ -15,6 +15,7 @@ import MyJob from './ui/pages/MyJob';
 import Proofer from './ui/pages/Proofer';
 import TestPage from './ui/pages/TestPage';
 import Record from './ui/pages/Record';
+import ProoferCategories from './ui/pages/ProoferCategories';
 
 class App extends React.Component {
   render () {
@@ -32,7 +33,8 @@ class App extends React.Component {
             <Route exact path='/admin' component={Admin}/>
             <Route exact path='/view-profile' component={ViewProfile}/>
             <Route exact path='/training' component={RookieTraining}/>
-            <Route exact path='/proofer' component={Proofer}/>
+            <Route exact path='/review-records' component={ProoferCategories}/>
+            <Route exact path='/review/:job_id' component={Proofer}/>
           </Switch>
           <Footer/>
         </Router>
