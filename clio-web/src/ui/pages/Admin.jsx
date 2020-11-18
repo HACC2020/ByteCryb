@@ -24,6 +24,7 @@ class Admin extends React.Component {
       XMLSpan: 'A preview of the job fields will be shown below once a XML file is uploaded.',
       categories: [],
       loadingButton: false,
+      points: 0,
     };
     this.Auth = new AuthService();
   }
@@ -154,6 +155,10 @@ class Admin extends React.Component {
       this.setState({ jobName: value });
     };
 
+    const getScore = (value) => {
+      this.setState({points: value});
+    };
+
     const exportCSV = async () => {
       const options = {
         method: 'GET',
@@ -164,6 +169,18 @@ class Admin extends React.Component {
     };
 
     const onCreateJob = async () => {
+
+      let isNum = /^\d+$/.test(this.state.points);
+
+      if (isNum === false) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid input',
+          text: `${this.state.points} is not a valid number`
+        });
+        return;
+      }
+
       this.setState({loadingButton: true});
 
       const formdata = new FormData();
@@ -282,6 +299,10 @@ class Admin extends React.Component {
                           <Form.Group onChange={(e) => getJobName(e.target.value)}>
                             <Form.Label>Job Name</Form.Label>
                             <Form.Control placeholder="Eg. Chinese Arrivals"/>
+                          </Form.Group>
+                          <Form.Group onChange={(e) => getScore(e.target.value)}>
+                            <Form.Label>Points per Record</Form.Label>
+                            <Form.Control placeholder="5"/>
                           </Form.Group>
                           <Form.Group>
                             <Form.File id="exampleFormControlFile1" label="Upload XML File"
