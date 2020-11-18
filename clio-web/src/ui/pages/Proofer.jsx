@@ -5,13 +5,135 @@ import {
   AutoForm,
   AutoField,
   TextField,
-  SelectField,
+  SelectField, ErrorsField, SubmitField,
 } from "uniforms-bootstrap4";
 
 import { bridge as schema } from "../../api/RookieTraining";
+import AuthService from '../../api/AuthService';
+import { xmlToJSON } from '../../xmlParser';
+import { JSONBridge } from '../../api/XMLValidation';
+import _ from 'lodash';
+import Swal from "sweetalert2";
 
 class Proofer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pdfFile: '',
+      xmlJSON: '',
+      info: '',
+      jobID: '',
+      xmlID: '',
+      id: '',
+      pdfID: '',
+    };
+    this.Auth = new AuthService();
+  }
+
+  async componentDidMount() {
+    const urls = window.location.href.split('/');
+    const lastSec = urls[urls.length - 1].split('-');
+    const jobID = lastSec[0];
+    const xmlID = lastSec[1];
+    this.setState({ jobID: jobID });
+    this.setState({ xmlID: xmlID });
+
+    let requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
+    const record = await this.Auth.fetch(`/api/v1/records/approve?job_id=${jobID}`, requestOptions);
+
+    console.log(record);
+
+    this.setState({ id: record.id });
+    this.setState({ pdfID: record.pdfId });
+    this.setState({ info: record.json });
+
+    console.log(record.json);
+
+    const pdfID = record.pdfId;
+    // console.log(pdfID)
+
+    const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
+    this.setState({ pdfFile: pdfFile });
+
+    const XML = await this.Auth.fetchXML(`/api/v1/xml/${xmlID}`, requestOptions);
+
+    try {
+      this.setState({ xmlJSON: xmlToJSON(XML) });
+
+    } catch (e) {
+    }
+
+    this.setState({ loading: false });
+  }
+
   render() {
+
+    const onSubmit = async (info) => {
+      this.setState({ info: info });
+
+      let stringInfo = JSON.stringify(info);
+
+      let jsonBody = {
+        id: this.state.id,
+        pdfId: this.state.pdfID,
+        checkedOut: false,
+        submitted: true,
+        approved: false,
+        json: stringInfo,
+      };
+
+      const raw = JSON.stringify(jsonBody);
+
+    };
+
+    const hasXML = () => {
+      if (this.state.xmlJSON.length !== 0) {
+        let schema = JSONBridge(this.state.xmlJSON);
+        if (schema[0] !== false) {
+          return (
+              <AutoForm schema={schema}
+                        onSubmit={info =>
+                            onSubmit(info)}>
+                {_.map(this.state.xmlJSON.properties, (field, index, key) => renderFields(field, index, key))}
+                <ErrorsField/>
+              </AutoForm>
+          )
+        }
+      }
+    };
+
+    const renderFields = (field, key) => {
+      let required = '';
+      for (let i = 0; i < this.state.xmlJSON.required.length; i++) {
+        if (this.state.xmlJSON.required[i] === key) {
+          required = '*Required Field';
+        }
+      }
+
+      if (field.enum) {
+        return (
+            <SelectField name={key} key={key}
+                         help={`${required}`}/>
+        )
+      }
+      if (field.type === 'string') {
+        return (
+            <TextField name={key} key={key}
+                       help={`${required}`}/>
+        )
+      }
+    };
+
+    const sticky = {
+      position: "-webkit-sticky",
+      position: "sticky",
+      top: "5.5rem",
+      alignSelf: "flex-start",
+    };
 
     window.addEventListener('beforeunload', function (e) {
       // Cancel the event
@@ -20,50 +142,26 @@ class Proofer extends React.Component {
       return e.returnValue = 'Are you sure you want to close?';
     });
 
-    window.addEventListener('unload', function (e) {
-      console.log('unload!')
-    });
-
-
     return (
-      <Container>
-        <Row>
-          <Col xs={6}>
-            <embed
-              src="./ChineseArrivals_1847-1870_00001.pdf"
-              width="500rem"
-              height="550rem"
-            />
-          </Col>
-          <Col xs={5}>
-            <AutoForm
-              model={{
-                name: "ThisIsFilledInByUsers",
-                age: 99,
-                gender: "Male",
-                residence: "Residence",
-                dateOfArrival: "01/23/1832",
-                nameOfShip: "NameofShip",
-                from: "PlaceOfOrigin",
-              }}
-              schema={schema}
-              onSubmit={console.log}
-            >
+        <Container>
+          <Row>
+            <Col xs={6}>
+              <embed
+                  style={sticky}
+                  src={this.state.pdfFile}
+                  width="500rem"
+                  height="550rem"
+                  type="application/pdf"
+              />
+            </Col>
+            <Col xs={5}>
+
               <h4>Approve/Deny</h4>
-              <AutoField name="name" />
-              <AutoField name="age" />
-              <SelectField name="gender" allowedValues={["Male", "Female"]} />
-              <TextField name={"residence"} />
-              <TextField name="dateOfArrival" placeholder={"01/23/1832"} />
-              {/*<DateField*/}
-              {/*    showInlineError*/}
-              {/*    name="dateOfArrival"*/}
-              {/*    max={new Date(1870, 1, 1)}*/}
-              {/*    min={new Date(1847, 1, 1)}/>*/}
-              <AutoField name="nameOfShip" />
-              <AutoField name="from" />
+
+              {hasXML()}
+
               <Row className="justify-content-md-center">
-                <a style={{ marginRight: ".5rem" }} />
+                <a style={{ marginRight: ".5rem" }}/>
                 <Col>
                   <Button variant="success" size="lg" block>
                     Approve
@@ -75,16 +173,15 @@ class Proofer extends React.Component {
                     Deny
                   </Button>
                 </Col>
-                <a style={{ marginLeft: ".5rem" }} />
+                <a style={{ marginLeft: ".5rem" }}/>
               </Row>
 
               {/** have to make an onClick event and tick the submit functionality in there somewhere
                * <SubmitField />
                */}
-            </AutoForm>
-          </Col>
-        </Row>
-      </Container>
+            </Col>
+          </Row>
+        </Container>
     );
   }
 }
