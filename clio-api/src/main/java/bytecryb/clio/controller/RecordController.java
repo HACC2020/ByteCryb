@@ -269,6 +269,7 @@ public class RecordController {
         if (result.isApproved()) {
             throw new Exception("Already Approved!");
         }
+        result.setApproved(true);
         /*
         //Convert user_id from Long to long
         Long uId = result.getSubmittedBy();
