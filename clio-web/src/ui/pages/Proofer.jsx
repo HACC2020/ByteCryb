@@ -51,10 +51,8 @@ class Proofer extends React.Component {
     this.setState({ pdfID: record.pdfId });
     this.setState({ info: JSON.parse(record.json) });
 
-    console.log(JSON.parse(record.json));
 
     const pdfID = record.pdfId;
-    // console.log(pdfID)
 
     const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
     this.setState({ pdfFile: pdfFile });
@@ -72,21 +70,29 @@ class Proofer extends React.Component {
 
   render() {
 
-    const onSubmit = async (info) => {
-      this.setState({ info: info });
+    const onSubmit = async () => {
 
-      let stringInfo = JSON.stringify(info);
+      let stringInfo = JSON.stringify(this.state.info);
 
       let jsonBody = {
         id: this.state.id,
         pdfId: this.state.pdfID,
         checkedOut: false,
         submitted: true,
-        approved: false,
+        approved: true,
         json: stringInfo,
       };
 
       const raw = JSON.stringify(jsonBody);
+
+      const approveRecord = {
+        method: 'PUT',
+        body: raw,
+      };
+
+      const record = await this.Auth.fetch('/api/v1/records/approveBy', approveRecord);
+      console.log(record);
+
 
     };
 
@@ -98,7 +104,7 @@ class Proofer extends React.Component {
               <AutoForm schema={schema}
                         model={this.state.info}
                         onSubmit={info =>
-                            onSubmit(info)}>
+                            this.setState({info: info})}>
                 {_.map(this.state.xmlJSON.properties, (field, index, key) => renderFields(field, index, key))}
                 <ErrorsField/>
               </AutoForm>
@@ -175,7 +181,8 @@ class Proofer extends React.Component {
               <Row className="justify-content-md-center">
                 <a style={{ marginRight: ".5rem" }}/>
                 <Col>
-                  <Button variant="success" size="lg" block>
+                  <Button variant="success" size="lg" block
+                          onClick={()=>onSubmit()}>
                     Approve
                   </Button>
                 </Col>
