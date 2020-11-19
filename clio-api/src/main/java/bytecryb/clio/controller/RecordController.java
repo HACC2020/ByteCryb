@@ -239,7 +239,20 @@ public class RecordController {
 
     @DeleteMapping("/records/{id}")
     public ResponseEntity<String> removeRecord(@PathVariable(value = "id") Long id) throws Exception {
-        this.pdfService.removePDFById(id);
-        return ResponseEntity.ok(new String("PDF " + id + " has been removed!"));
+        Record deletedRecord = this.recordRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Record " + id + " was not found!"));
+
+        PDF deleted = this.pdfService.removePDFById(deletedRecord.getPdfId());
+
+        Long jobId = deletedRecord.getJobId();
+
+        Job job = this.jobRepo.findById(jobId)
+                .orElseThrow(() -> new ResourceNotFoundException("Record " + jobId + " was not found!"));
+
+        job.setSize(job.getSize() - 1);
+
+        this.jobRepo.save(job);
+
+        return ResponseEntity.ok(new String("PDF " + deleted.getId() + " has been removed!"));
     }
 }
