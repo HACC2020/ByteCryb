@@ -232,9 +232,8 @@ export default class AuthService {
       ...options,
     });
     // .then(this._checkStatus)
-    console.log(response);
-    let text = await response.response;
-    return text;
+
+    return response;
   }
 
   _checkStatus(response) {

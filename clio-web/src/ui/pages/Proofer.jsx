@@ -96,8 +96,14 @@ class Proofer extends React.Component {
         body: raw,
       };
 
-      // const record = await this.Auth.approveRecord('/api/v1/records/approveBy', approveRecord);
-
+      const record = await this.Auth.approveRecord('/api/v1/records/approveBy', approveRecord);
+      if (record.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Record approved!',
+          footer: 'Loading next record...'
+        });
+      }
 
     };
 
