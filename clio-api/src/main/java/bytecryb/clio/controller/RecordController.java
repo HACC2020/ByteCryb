@@ -1,5 +1,6 @@
 package bytecryb.clio.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -62,18 +63,37 @@ public class RecordController {
         // get a list of records with matching job id
         List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
 
+        for (Record record : filteredRecords) {
+            System.out.println(record);
+        }
+
         Record result = null;
 
         for (Record r : filteredRecords) {
+            // check if the record had been checked out for longer than 5 minutes
+            if (r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
+                if (System.currentTimeMillis() > r.getDue().getTime()) {
+                    r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
+
+                    result = r;
+
+                    break;
+                }
+            }
+
             // if record is incomplete (status == 0)
             if (!r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
                 // change status to in progress
                 r.setCheckedOut(true);
-
+                r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
                 result = r;
-                
+
                 break;
             }
+        }
+
+        if (result != null) {
+            result = this.recordRepo.save(result);
         }
 
         // No incomplete record available, invalid result record returned
@@ -87,18 +107,36 @@ public class RecordController {
         // get a list of records with matching job id
         List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
 
+        for (Record record : filteredRecords) {
+            System.out.println(record);
+        }
+
         Record result = null;
 
         for (Record r : filteredRecords) {
+            // check if the record had been checked out for longer than 5 minutes
+            if (r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
+                if (System.currentTimeMillis() > r.getDue().getTime()) {
+                    r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
+
+                    result = r;
+
+                    break;
+                }
+            }
+
             // if record is incomplete (status == 0)
             if (!r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
                 // change status to in progress
                 r.setCheckedOut(true);
-
+                r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
                 result = r;
-
                 break;
             }
+        }
+
+        if (result != null) {
+            result = this.recordRepo.save(result);
         }
 
         // No incomplete record available, invalid result record returned
@@ -158,37 +196,45 @@ public class RecordController {
             filesUploaded.add(this.pdfService.uploadToLocal(file, folder));
         }
 
+        int recordCount = 0;
+
         for (PDF file : filesUploaded) {
             records.add(this.recordRepo.save(new Record(id, file.getId(), false, false, false, "{}")));
-            job.setSize(job.getSize() + 1);
+            recordCount += 1;
         }
+
+        job.setSize(job.getSize() + recordCount);
 
         this.jobRepo.save(job);
 
         return ResponseEntity.ok(records);
     }
 
-    @PutMapping("/records")
+    @PutMapping("/records/submit")
     @Transactional
-    public ResponseEntity<Record> update(@RequestBody Record input) throws ResourceNotFoundException {
+    public ResponseEntity<Record> update(@RequestBody Record input) throws Exception {
         Record result = this.recordRepo.findById(input.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Record not found for id: " + input.getId()));
 
-        result.setCheckedOut(input.isCheckedOut());
+        if (result.isSubmitted()) {
+            throw new Exception("Already Submitted!");
+        }
+
+        result.setCheckedOut(false);
         result.setSubmitted(input.isSubmitted());
-        result.setApproved(input.isApproved());
+        result.setApproved(false);
         result.setJson(input.getJson());
+        result.setSubmittedBy(result.getSubmittedBy());
+        result.setSubmittedOn(result.getSubmittedOn());
 
         if (input.isSubmitted() && !input.isApproved()) {
-            Job job = this.jobRepo.findById(input.getJobId()).orElseThrow(() -> new ResourceNotFoundException(
-                "Job " + input.getJobId() + "  was not found!"
-            ));
+            Job job = this.jobRepo.findById(input.getJobId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Job " + input.getJobId() + "  was not found!"));
             job.setIndexed(job.getIndexed() + 1);
             this.jobRepo.save(job);
         }
 
-        final Record update = this.recordRepo.save(result);
-        return ResponseEntity.ok().body(update);
+        return ResponseEntity.ok().body(this.recordRepo.save(result));
     }
 
     @DeleteMapping("/records/{id}")
