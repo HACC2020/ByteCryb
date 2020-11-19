@@ -29,6 +29,7 @@ import bytecryb.clio.model.Job;
 import bytecryb.clio.model.PDF;
 import bytecryb.clio.model.Record;
 import bytecryb.clio.model.XML;
+import bytecryb.clio.repository.CategoryRepository;
 import bytecryb.clio.repository.JobRepository;
 import bytecryb.clio.repository.RecordRepository;
 import bytecryb.clio.service.PDFService;
@@ -42,6 +43,9 @@ public class JobController {
 
     @Autowired
     private RecordRepository recordRepo;
+
+    @Autowired
+    private CategoryRepository categoryRepo;
 
     @Autowired
     private PDFService pdfService;
@@ -74,6 +78,16 @@ public class JobController {
         String csv = CDL.toString(jsonArray);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/csv"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"output_job_" + id + ".csv\"").body(csv);
+    }
+
+    // Get Jobs by Category ID
+    @GetMapping("/jobs/byCategory/{category_id}")
+    public ResponseEntity<List<Job>> getJobByCategory(@PathVariable(name = "category_id") long categoryId) {
+        //check if category exists
+        if (!this.categoryRepo.existsById(categoryId)) throw new IllegalArgumentException("Category with category_id: " + categoryId + " does not exist!");
+
+        List<Job> result = this.jobRepo.findByCategoryId(categoryId);
+        return ResponseEntity.ok().body(result);
     }
 
     @PostMapping("/jobs")
