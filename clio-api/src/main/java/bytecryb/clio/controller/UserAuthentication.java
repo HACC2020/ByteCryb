@@ -79,7 +79,7 @@ public class UserAuthentication {
 		user.setRole(role);
 		CustomUser savedUser = userDetailsService.save(user);
 
-		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
+		ResultUser resUser = new ResultUser(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		resUser.setAuthToken(token);
@@ -114,7 +114,7 @@ public class UserAuthentication {
 		Role role = roleRepo.findByRoleName("rookie");
 		user.setRole(role);
 		CustomUser savedUser = userRepo.save(user);
-		ResultUser resUser = new ResultUser(savedUser.getUserId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
+		ResultUser resUser = new ResultUser(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
 		UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
 		String token = jwtTokenUtil.generateToken(userDetails);
 		resUser.setAuthToken(token);
