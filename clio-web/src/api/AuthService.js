@@ -203,7 +203,6 @@ export default class AuthService {
     if (this.loggedIn()) {
       headers['Authorization'] = 'Bearer ' + this.getToken();
     }
-    headers['Content-Type'] = 'application/json';
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url

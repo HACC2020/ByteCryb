@@ -85,20 +85,21 @@ class Record extends React.Component {
       this.setState({ info: info });
 
       let stringInfo = JSON.stringify(info);
+      
+      const formData = new FormData();
 
-      let jsonBody = {
-        id: this.state.id,
-        json: stringInfo,
-        submitted: true,
-      };
+      formData.append("id", this.state.id);
+      formData.append("json", stringInfo);
 
-      const raw = JSON.stringify(jsonBody);
+
+      // const raw = JSON.stringify(jsonBody);
 
       // console.log(raw);
 
       const updateRecord = {
         method: 'PUT',
-        body: raw,
+        body: formData,
+        redirect: 'follow',
       };
 
       const response = await this.Auth.putPDF('/api/v1/records/submit', updateRecord);
