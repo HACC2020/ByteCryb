@@ -131,9 +131,9 @@ class Login extends React.Component {
               alignItems: "center",
             }}
           >
-            <h2 align={"center"} style={{ font: "caption", fontSize: "1.5em" }}>
+            {/* <h2 align={"center"} style={{ font: "caption", fontSize: "1.5em" }}>
               SIGN IN
-            </h2>
+            </h2> */}
             <br />
             <Form>
               <Form.Group
@@ -162,10 +162,12 @@ class Login extends React.Component {
                 }}
                 block
               >
-                Login
+                Sign In
               </Button>
               <Form.Text className="text-muted">
-                <NavLink href="/signup">Don't have an account? Sign Up</NavLink>
+                <NavLink href="/signup">
+                  Don't have an account? Sign up!
+                </NavLink>
               </Form.Text>
             </Form>
           </Col>
