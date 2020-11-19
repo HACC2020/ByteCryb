@@ -72,7 +72,7 @@ public class RecordController {
 
     @Autowired
     private JwtUtil jwtUtil;
-    
+
     // get all records
     @GetMapping("/records/all")
     public List<Record> getAll() {

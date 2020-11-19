@@ -216,6 +216,27 @@ export default class AuthService {
     return text;
   }
 
+  async approveRecord(url, options) {
+    // performs api calls sending the required authentication headers
+    const headers = {};
+
+    if (this.loggedIn()) {
+      headers['Authorization'] = 'Bearer ' + this.getToken();
+    }
+    headers['Content-Type'] = 'application/json';
+
+    // console.log(headers);
+    // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
+    const response = await fetch(url, {
+      headers,
+      ...options,
+    });
+    // .then(this._checkStatus)
+    console.log(response);
+    let text = await response.response;
+    return text;
+  }
+
   _checkStatus(response) {
     // raises an error in case response status is not a success
     if (response.status >= 200 && response.status < 300) {

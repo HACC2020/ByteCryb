@@ -47,23 +47,28 @@ class Proofer extends React.Component {
 
     console.log(record);
 
-    this.setState({ id: record.id });
-    this.setState({ pdfID: record.pdfId });
-    this.setState({ info: JSON.parse(record.json) });
+    if (record.length !== 0) {
+      this.setState({ id: record.id });
+      this.setState({ pdfID: record.pdfId });
+      this.setState({ info: JSON.parse(record.json) });
+      const pdfID = record.pdfId;
 
+      const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
+      this.setState({ pdfFile: pdfFile });
 
-    const pdfID = record.pdfId;
+      const XML = await this.Auth.fetchXML(`/api/v1/xml/${xmlID}`, requestOptions);
 
-    const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
-    this.setState({ pdfFile: pdfFile });
+      try {
+        this.setState({ xmlJSON: xmlToJSON(XML) });
 
-    const XML = await this.Auth.fetchXML(`/api/v1/xml/${xmlID}`, requestOptions);
-
-    try {
-      this.setState({ xmlJSON: xmlToJSON(XML) });
-
-    } catch (e) {
+      } catch (e) {
+      }
+    } else {
+      this.setState({id: false})
     }
+
+
+
 
     this.setState({ loading: false });
   }
@@ -71,7 +76,7 @@ class Proofer extends React.Component {
   render() {
 
     const onSubmit = async () => {
-      console.log(this.state.info)
+      console.log(this.state.info);
 
       let stringInfo = JSON.stringify(this.state.info);
 
@@ -91,8 +96,7 @@ class Proofer extends React.Component {
         body: raw,
       };
 
-      const record = await this.Auth.putPDF('/api/v1/records/approveBy', approveRecord);
-      console.log(record);
+      const record = await this.Auth.approveRecord('/api/v1/records/approveBy', approveRecord);
 
 
     };
@@ -146,6 +150,16 @@ class Proofer extends React.Component {
           </Container>
       )
     }
+
+    if (this.state.id === false) {
+      return (
+          <Container align={'center'}>
+            <h3>Sorry, this category has no available records!</h3>
+            <a href={'/review-records'}>Go back</a>
+          </Container>
+      )
+    }
+
 
     const sticky = {
       position: "-webkit-sticky",
