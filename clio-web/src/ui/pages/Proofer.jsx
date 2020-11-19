@@ -3,9 +3,8 @@ import { Container, Row, Col, Button, Spinner } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import {
   AutoForm,
-  AutoField,
   TextField,
-  SelectField, ErrorsField, SubmitField,
+  SelectField, ErrorsField,
 } from "uniforms-bootstrap4";
 
 import { bridge as schema } from "../../api/RookieTraining";
@@ -50,9 +49,9 @@ class Proofer extends React.Component {
 
     this.setState({ id: record.id });
     this.setState({ pdfID: record.pdfId });
-    this.setState({ info: record.json });
+    this.setState({ info: JSON.parse(record.json) });
 
-    console.log(record.json);
+    console.log(JSON.parse(record.json));
 
     const pdfID = record.pdfId;
     // console.log(pdfID)
@@ -97,6 +96,7 @@ class Proofer extends React.Component {
         if (schema[0] !== false) {
           return (
               <AutoForm schema={schema}
+                        model={this.state.info}
                         onSubmit={info =>
                             onSubmit(info)}>
                 {_.map(this.state.xmlJSON.properties, (field, index, key) => renderFields(field, index, key))}
