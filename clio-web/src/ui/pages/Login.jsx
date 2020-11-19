@@ -43,54 +43,6 @@ class Login extends React.Component {
       width: "auto",
     };
 
-    // const classes = makeStyles((theme) => ({
-    //   root: {
-    //     height: "100vh",
-    //   },
-    //   image: {
-    //     backgroundImage: "url(https://source.unsplash.com/random)",
-    //     backgroundRepeat: "no-repeat",
-    //     backgroundColor:
-    //       theme.palette.type === "light"
-    //         ? theme.palette.grey[50]
-    //         : theme.palette.grey[900],
-    //     backgroundSize: "cover",
-    //     backgroundPosition: "center",
-    //   },
-    //   paper: {
-    //     margin: theme.spacing(8, 4),
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     alignItems: "center",
-    //   },
-    //   paper2: {
-    //     margin: theme.spacing(8, 4),
-    //     flexDirection: "column",
-    //     alignItems: "center",
-    //     padding: "10px 50px 20px",
-    //   },
-    //   needHelp: {
-    //     fontSize: 35,
-    //     fontWeight: 900,
-    //     paddingBottom: 0,
-    //     color: "081C15",
-    //   },
-
-    //   avatar: {
-    //     margin: theme.spacing(1),
-    //     //backgroundColor: theme.palette.secondary.main,
-    //     backgroundColor: "#1B4332",
-    //   },
-    //   form: {
-    //     width: "100%", // Fix IE 11 issue.
-    //     marginTop: theme.spacing(1),
-    //   },
-    //   submit: {
-    //     margin: theme.spacing(3, 0, 2),
-    //     backgroundColor: "#1B4332",
-    //   },
-    // }));
-
     const onChangePW = (value) => {
       this.setState({ password: value });
     };
@@ -133,11 +85,7 @@ class Login extends React.Component {
     return (
       <Container
         fluid
-        //className={classes.root}
         style={{
-          // paddingTop: "5%",
-          // paddingLeft: 40,
-          // paddingRight: 40,
           height: "100vh",
           margin: 1,
           padding: 0,
@@ -145,9 +93,6 @@ class Login extends React.Component {
       >
         <Row>
           <Col
-            // xs={false}
-            // sm={4}
-            // md={7}
             sm={7}
             component={Paper}
             style={{
@@ -190,9 +135,7 @@ class Login extends React.Component {
           <Col
             style={{
               background: "linear-gradient(to left top, #D8F3DC, #FFFFFF)",
-              //height: 500,
               height: "100vh",
-              //width: "Auto",
               paddingTop: "13%",
               paddingRight: "7%",
               paddingLeft: "4%",
@@ -210,7 +153,6 @@ class Login extends React.Component {
                 controlId="username"
                 onChange={(e) => onChangeUsername(e.target.value)}
               >
-                {/* <Form.Label>Username</Form.Label> */}
                 <Form.Control placeholder="Username" size="lg" />
               </Form.Group>
 
@@ -218,7 +160,6 @@ class Login extends React.Component {
                 controlId="formBasicPassword"
                 onChange={(e) => onChangePW(e.target.value)}
               >
-                {/* <Form.Label>Password</Form.Label> */}
                 <Form.Control
                   type="password"
                   placeholder="Password"
