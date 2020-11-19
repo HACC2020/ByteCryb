@@ -261,7 +261,7 @@ public class RecordController {
         return ResponseEntity.ok().body(this.recordRepo.save(result));
     }
 
-    @PutMapping("/records/approveBy")
+    @PostMapping("/records/approveBy")
     public ResponseEntity<Record> approveRecord(@RequestBody Record input) throws Exception {
         Record result = this.recordRepo.findById(input.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Record not found for id: " + input.getId()));
@@ -269,6 +269,7 @@ public class RecordController {
         if (result.isApproved()) {
             throw new Exception("Already Approved!");
         }
+        /*
         //Convert user_id from Long to long
         Long uId = result.getSubmittedBy();
         Optional<Long> temp = Optional.ofNullable(uId);
@@ -320,7 +321,7 @@ public class RecordController {
         } else {
             throw new Exception("No user linked to this record!");
         }
-        
+        */
         return ResponseEntity.ok().body(this.recordRepo.save(result));
     }
 
