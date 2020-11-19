@@ -62,8 +62,17 @@ public class PDFService {
         // Keep looking for the next avaliable filename with num
         while (path.toFile().exists()) {
             serialNum++;
-            String[] splitFileName = fileName.split(".");
-            path = Paths.get(dest.toString() + "/" + splitFileName[0] + "(" + serialNum + ")" + splitFileName[1]);
+            System.out.println(fileName);
+            String[] splitFileName = fileName.split("\\.");
+            for (String part: splitFileName) {
+                System.out.println("hello");
+                System.out.println(part.toString());
+            }
+            if (splitFileName.length == 2) {
+                path = Paths.get(dest.toString() + "/" + splitFileName[0] + "(" + serialNum + ")." + splitFileName[1]);
+            } else {
+                throw new Exception("Filenames must only contain one \".\" followed by file extension!");
+            }
         }
 
         // Must increment to avoid overriding
