@@ -54,3 +54,7 @@
   color: #081c15 !important;
   padding: 0 !important;
 }
+
+.shadow {
+  box-shadow: 5px 10px #888888 !important;
+}
