@@ -109,6 +109,7 @@ public class JobController {
         newJob.setCategoryId(catId);
         newJob.setXmlId(newXml.getId());
         newJob.setSize(filesUploaded.size());
+        newJob.setPoints(5);
 
         newJob = this.jobRepo.save(newJob);
 
@@ -129,6 +130,23 @@ public class JobController {
         result.setCategoryId(job.getCategoryId());
         result.setIndexed(job.getIndexed());
         result.setStatus(job.getStatus());
+        return ResponseEntity.ok(this.jobRepo.save(result));
+    }
+
+    @PutMapping("/jobs/points")
+    @Transactional
+    public ResponseEntity<?> updatePoints(@RequestBody String jsonStr) throws Exception {
+        		// put json string into json object
+		JSONObject input = new JSONObject(jsonStr);
+
+		// retrieve separate inputs from json object
+		Long id = input.getLong("id");
+        int points = input.getInt("points");
+        
+        Job result = this.jobRepo.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Job not found for ID: " + id));
+
+        result.setPoints(points);
         return ResponseEntity.ok(this.jobRepo.save(result));
     }
 

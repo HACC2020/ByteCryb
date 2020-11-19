@@ -14,5 +14,5 @@ INSERT INTO scores (id, user_id, date, score) VALUES (3, 3, CURRENT_DATE, 25);
 INSERT INTO scores (id, user_id, date, score) VALUES (4, 4, CURRENT_DATE, 35);
 INSERT INTO scores (id, user_id, date, score) VALUES (5, 1, CURRENT_DATE + 1, 55);
 
-INSERT INTO jobs (id, name, category_id, status, xml_id, num_indexed, size) VALUES (1, 'test1', 1, 1, 1, 0, 2);
-INSERT INTO jobs (id, name, category_id, status, xml_id, num_indexed, size) VALUES (2, 'test2', 1, 1, 2, 0, 3);
+INSERT INTO jobs (id, name, category_id, status, xml_id, num_indexed, size, points) VALUES (1, 'test1', 1, 1, 1, 0, 2, 3);
+INSERT INTO jobs (id, name, category_id, status, xml_id, num_indexed, size, points) VALUES (2, 'test2', 1, 1, 2, 0, 3, 5);
