@@ -64,7 +64,7 @@ public class PDFService {
             serialNum++;
             System.out.println(fileName);
             String[] splitFileName = fileName.split("\\.");
-            for (String part: splitFileName) {
+            for (String part : splitFileName) {
                 System.out.println("hello");
                 System.out.println(part.toString());
             }
@@ -123,7 +123,7 @@ public class PDFService {
         file.delete();
     }
 
-    public void removePDFById(Long id) throws Exception {
+    public PDF removePDFById(Long id) throws Exception {
         PDF result = this.pdfRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("PDF not found for ID: " + id));
         Path path = Paths.get(result.getPath());
@@ -133,6 +133,8 @@ public class PDFService {
         } catch (Exception e) {
             throw new Exception("Unable to remove PDF with id: " + id);
         }
+
+        return result;
     }
 
 }
