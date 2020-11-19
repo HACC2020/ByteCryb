@@ -71,6 +71,7 @@ class Proofer extends React.Component {
   render() {
 
     const onSubmit = async () => {
+      console.log(this.state.info)
 
       let stringInfo = JSON.stringify(this.state.info);
 
@@ -86,11 +87,11 @@ class Proofer extends React.Component {
       const raw = JSON.stringify(jsonBody);
 
       const approveRecord = {
-        method: 'PUT',
+        method: 'POST',
         body: raw,
       };
 
-      const record = await this.Auth.fetch('/api/v1/records/approveBy', approveRecord);
+      const record = await this.Auth.putPDF('/api/v1/records/approveBy', approveRecord);
       console.log(record);
 
 

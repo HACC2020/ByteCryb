@@ -88,11 +88,8 @@ class Record extends React.Component {
 
       let jsonBody = {
         id: this.state.id,
-        pdfId: this.state.pdfID,
-        checkedOut: false,
-        submitted: true,
-        approved: false,
         json: stringInfo,
+        submitted: true,
       };
 
       const raw = JSON.stringify(jsonBody);
@@ -104,10 +101,10 @@ class Record extends React.Component {
         body: raw,
       };
 
-      const response = await this.Auth.putPDF('/api/v1/records', updateRecord);
-      // console.log(response);
+      const response = await this.Auth.putPDF('/api/v1/records/submit', updateRecord);
+      console.log(response);
 
-      if (response.includes('JSON parse error')) {
+      if (response.message) {
         Swal.fire({
           icon: 'error',
           title: 'Error indexing',
