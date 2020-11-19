@@ -68,15 +68,15 @@ import testFile from './ui/pages/testFile';
 
 
 class App extends React.Component {
-  //
-  //
+  //<NavBar/>
+  //<Footer/>
   render () {
     return (
         <Router>
           <Route exact path='/' component={Login}/>
           <Route exact path='/signup' component={SignUp}/>
           <Route exact path='/testfile' component={testFile}/>
-          <NavBar/>
+
           <Switch>
             <Route exact path='/testPage' component={TestPage}/>
             <Route exact path='/record' component={Record}/>
@@ -88,7 +88,7 @@ class App extends React.Component {
             <Route exact path='/training' component={RookieTraining}/>
             <Route exact path='/proofer' component={Proofer}/>
           </Switch>
-          <Footer/>
+          
         </Router>
     );
   }

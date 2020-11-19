@@ -29,22 +29,6 @@ class testFile extends React.Component {
     this.Auth = new AuthService();
   }
 
-  // async componentDidMount() {
-  //
-  //   const response = await fetch('/api/v1/users', {
-  //     method: 'GET',
-  //     mode: 'no-cors',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //   });
-  //   console.log(response);
-  //   const body = await response.json();
-  //   console.log(body)
-  //
-  // }
-
   render() {
     function Copyright() {
       return (
@@ -223,54 +207,3 @@ class testFile extends React.Component {
 }
 
 export default withRouter(testFile);
-
-//   <Container className={classes.root}>
-//     <CssBaseline />
-//     <Row>
-//       <Col xs={false} sm={4} md={7} style={{ background: "pink" }}>
-//         <Image src={"./hsa-logo.png"} style={imgStyle} />
-//         <p style={{ paddingTop: "1rem" }}>
-//           We need your help! The Public Archives of Hawai'i is the keeper of
-//           public memory. As such, we have millions of records that protect
-//           your rights, identity, property and history. But given the volume
-//           and varying record keeping practicies of the past, these records
-//           are often difficult or time consuming to find. But with your help,
-//           we can make finding records a much easier and straightforward
-//           process.. Volunteer today to help us index these records and join
-//           us in connecting the People of Hawaiʻi with their past, their
-//           heritage and their culture!
-//         </p>
-//         {/* <Image src={"./hsa-logo.png"} style={imgStyle} />
-//          */}
-//       </Col>
-//       <Col xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-//         <h2 align={"center"}>Login</h2>
-//         <Form>
-//           <Form.Group
-//             controlId="username"
-//             onChange={(e) => onChangeUsername(e.target.value)}
-//           >
-//             <Form.Label>Username</Form.Label>
-//             <Form.Control placeholder="Enter username" />
-//           </Form.Group>
-
-//           <Form.Group
-//             controlId="formBasicPassword"
-//             onChange={(e) => onChangePW(e.target.value)}
-//           >
-//             <Form.Label>Password</Form.Label>
-//             <Form.Control type="password" placeholder="Password" />
-//             {renderInvalid()}
-//             <Form.Text className="text-muted">
-//               <NavLink href="/signup">
-//                 Not registered yet? Sign up here!
-//               </NavLink>
-//             </Form.Text>
-//           </Form.Group>
-//           <Button variant="primary" onClick={handleSubmit}>
-//             Login
-//           </Button>
-//         </Form>
-//       </Col>
-//     </Row>
-//   </Container>
