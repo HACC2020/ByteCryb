@@ -180,7 +180,15 @@ class Admin extends React.Component {
         return;
       }
 
-      this.setState({loadingButton: true});
+      if (this.state.jobName.length === 0) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Sorry, category field is empty!',
+        });
+        return;
+      }
+
+      const points = parseInt(this.state.points);
 
       const formdata = new FormData();
       formdata.append("name", this.state.jobName);
@@ -192,7 +200,17 @@ class Admin extends React.Component {
       };
 
       let category = await this.Auth.fetch('/api/v1/categories', requestOptions);
-      const catID = category.match(/(\d+)/g);
+      let catID = '';
+
+      try {
+        catID = category.match(/(\d+)/g);
+      } catch (e) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Sorry, category field is empty!',
+        });
+        return;
+      }
 
       if (category.message) {
         Swal.fire({
@@ -201,6 +219,8 @@ class Admin extends React.Component {
         });
         return;
       }
+
+      this.setState({loadingButton: true});
 
       const formData = new FormData();
 
