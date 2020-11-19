@@ -7,12 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -32,7 +35,7 @@ public class JwtUtil {
 	public void setSecret(String secret) {
 		this.secret = secret;
 	}
-	
+
 	@Value("${jwt.expirationDateInMs}")
 	public void setJwtExpirationInMs(int jwtExpirationInMs) {
 		this.jwtExpirationInMs = jwtExpirationInMs;
@@ -60,9 +63,10 @@ public class JwtUtil {
 	private String doGenerateToken(Map<String, Object> claims, String subject) {
 
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs)).signWith(SignatureAlgorithm.HS512, secret).compact();
+				.setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
+				.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
-	
+
 	public boolean validateToken(String authToken) throws BadCredentialsException {
 		try {
 			// Jwt token has not been tampered with
@@ -74,7 +78,7 @@ public class JwtUtil {
 			throw new BadCredentialsException("EXPIRED_TOKEN", ex);
 		}
 	}
-	
+
 	public String getUsernameFromToken(String token) {
 		Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 
@@ -101,6 +105,15 @@ public class JwtUtil {
 			roles = Arrays.asList(new SimpleGrantedAuthority("archivist"));
 		}
 		return roles;
+	}
+
+	// gets jwt from http servlet request (not a endpoint)
+	public String extractJwtFromRequest(HttpServletRequest request) {
+		String bearerToken = request.getHeader("Authorization");
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+			return bearerToken.substring(7, bearerToken.length());
+		}
+		return null;
 	}
 
 }
