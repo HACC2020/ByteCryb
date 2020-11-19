@@ -16,6 +16,7 @@ import Proofer from './ui/pages/Proofer';
 import TestPage from './ui/pages/TestPage';
 import Record from './ui/pages/Record';
 import ProoferCategories from './ui/pages/ProoferCategories';
+import EditJobPage from './ui/pages/EditJobPage';
 
 class App extends React.Component {
   render () {
@@ -35,6 +36,7 @@ class App extends React.Component {
             <Route exact path='/training' component={RookieTraining}/>
             <Route exact path='/review-records' component={ProoferCategories}/>
             <Route exact path='/review/:job_id' component={Proofer}/>
+            <Route exact path='/edit-job/:job_id' component={EditJobPage}/>
           </Switch>
           <Footer/>
         </Router>

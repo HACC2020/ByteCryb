@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button, Modal, Form, Spinner } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import _ from 'lodash';
 import AuthService from '../../api/AuthService';
+import Swal from "sweetalert2";
 
 class AdminTable extends React.Component {
   constructor(props) {
@@ -10,6 +11,8 @@ class AdminTable extends React.Component {
     this.state = {
       onShow: false,
       loadingExport: false,
+      points: 0,
+      pdfFiles: [],
     };
     this.Auth = new AuthService();
   }
@@ -53,7 +56,6 @@ class AdminTable extends React.Component {
             </Button>
         )
       }
-      
       return (
           <Button variant="primary" disabled>
             <Spinner
@@ -68,41 +70,39 @@ class AdminTable extends React.Component {
       )
     };
 
-    function EditJob(props) {
-      return (
-          <Modal
-              {...props}
-              size="lg"
-              aria-labelledby="contained-modal-title-vcenter"
-              centered
-          >
-            <Modal.Header closeButton>
-              <Modal.Title id="contained-modal-title-vcenter">
-                Edit Job: {props.name}
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <h6>Edit Points</h6>
-                <Form.Group onChange={(e) => console.log(e.target.value)}>
-                  <Form.Label>Points per Record</Form.Label>
-                  <Form.Control placeholder="5"/>
-                </Form.Group>
-                <h6>Upload more Records</h6>
-                <Form.Group>
-                  <Form.File id="exampleFormControlFile1" label="Upload PDF File(s)"
-                             multiple
-                             onChange={(e) => console.log(e)}/>
-                </Form.Group>
-                <Button>Save</Button>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-          </Modal>
-      );
-    }
+    // function EditJob(props) {
+    //   return (
+    //       <Modal
+    //           {...props}
+    //           size="lg"
+    //           aria-labelledby="contained-modal-title-vcenter"
+    //           centered
+    //       >
+    //         <Modal.Header closeButton>
+    //           <Modal.Title id="contained-modal-title-vcenter">
+    //             Edit Job: {props.name}
+    //           </Modal.Title>
+    //         </Modal.Header>
+    //         <Modal.Body>
+    //           <Form>
+    //             <h6>Edit Points</h6>
+    //             <Form.Group onChange={(e) => getScore(e.target.value)}>
+    //               <Form.Label>Points per Record</Form.Label>
+    //               <Form.Control placeholder="5"/>
+    //             </Form.Group>
+    //             <h6>Upload more Records</h6>
+    //             <Form.Group>
+    //               <Form.File id="exampleFormControlFile1" label="Upload PDF File(s)"
+    //                          multiple
+    //                          onChange={(e) => getPDFs(e)}/>
+    //             </Form.Group>
+    //             <Button onClick={() => onSubmit()}>Save</Button>
+    //
+    //           </Form>
+    //         </Modal.Body>
+    //       </Modal>
+    //   );
+    // }
 
     return (
         <tr>
@@ -118,15 +118,23 @@ class AdminTable extends React.Component {
           </td>
           <td>
             <Button variant="primary" onClick={() => this.setState({onShow: true})}>
-              Edit
+              <Link to={{
+                pathname: `/edit-job/${this.props.category.id}`,
+                category: this.props.category,
+              }} style={{color: 'white', padding: '0.5rem'}}>
+                Edit
+              </Link>
             </Button>
+            {/*<Button variant="primary" onClick={() => this.setState({onShow: true})}>*/}
+            {/*  Edit*/}
+            {/*</Button>*/}
           </td>
-          <EditJob
-              show={this.state.onShow}
-              onHide={() => this.setState({onShow: false})}
-              name={this.props.category.name}
-              id={this.props.category.id}
-          />
+          {/*<EditJob*/}
+          {/*    show={this.state.onShow}*/}
+          {/*    onHide={() => this.setState({onShow: false})}*/}
+          {/*    name={this.props.category.name}*/}
+          {/*    id={this.props.category.id}*/}
+          {/*/>*/}
         </tr>
     )
   }
