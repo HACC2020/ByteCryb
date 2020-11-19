@@ -56,14 +56,12 @@ public class Job {
 	@Column(name = "size", nullable = false)
 	private int size;
 
-	/*
 	@Getter
 	@Setter
 	@Column(name = "points")
 	private int points;
-	*/
 
-	public Job(String name, long categoryId, int status, long xmlId, int indexed, int size) {
+	public Job(String name, long categoryId, int status, long xmlId, int indexed, int size, int points) {
 		super();
 		this.name = name;
 		this.categoryId = categoryId;
@@ -71,5 +69,6 @@ public class Job {
 		this.xmlId = xmlId;
 		this.indexed = indexed;
 		this.size = size;
+		this.points = points;
 	}
 }

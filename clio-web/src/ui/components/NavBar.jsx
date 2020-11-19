@@ -154,7 +154,12 @@ class NavBar extends React.Component {
             <Navbar
               collapseOnSelect
               expand="lg"
-              style={{ marginBottom: "5rem", backgroundColor: "#EBEBEB" }}
+              style={{
+                marginBottom: "5rem",
+                //backgroundColor: "#EBEBEB",
+                background:
+                  "linear-gradient(180deg, rgba(216,243,220,1) 0%, rgba(251,254,252,1) 43%, rgba(255,255,255,1) 100%)",
+              }}
               sticky={"top"}
             >
               <Navbar.Brand href="/landing">
@@ -233,6 +238,9 @@ class NavBar extends React.Component {
         );
       }
     };
+
+    if (window.location.pathname === "/") return null;
+    if (window.location.pathname === "/signup") return null;
 
     return <div>{renderNav()}</div>;
   }
