@@ -96,7 +96,7 @@ class Proofer extends React.Component {
         body: raw,
       };
 
-      const record = await this.Auth.approveRecord('/api/v1/records/approveBy', approveRecord);
+      // const record = await this.Auth.approveRecord('/api/v1/records/approveBy', approveRecord);
 
 
     };
@@ -108,7 +108,7 @@ class Proofer extends React.Component {
           return (
               <AutoForm schema={schema}
                         model={this.state.info}
-                        onSubmit={info =>
+                        onChangeModel={info =>
                             this.setState({info: info})}>
                 {_.map(this.state.xmlJSON.properties, (field, index, key) => renderFields(field, index, key))}
                 <ErrorsField/>
