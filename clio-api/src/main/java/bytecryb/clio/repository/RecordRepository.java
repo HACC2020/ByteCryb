@@ -15,6 +15,9 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     @Query(value = "SELECT * FROM Records r WHERE r.submitted = true AND r.approved = false", nativeQuery = true)
     List<Record> findBySubmittedUnapproved();
 
+    @Query(value = "SELECT * FROM Records r WHERE r.submitted = true AND r.approved = false AND r.job_id =?1", nativeQuery = true)
+    List<Record> findBySubmittedUnapprovedJobId(Long jobId);
+
     Record findFirstByJobId(Long id);
 
 }

@@ -170,6 +170,16 @@ public class RecordController {
         return ResponseEntity.ok().body(unapprovedRecords);
     }
 
+    // Get submitted but NOT approved records FILTERED by jobs
+    @GetMapping("/records/unapproved/{job_id}")
+    public ResponseEntity<List<Record>> getUnapprovedRecordsByJob(@PathVariable(name = "job_id") Long jobId) {
+        // check if job exists
+        if (!this.jobRepo.existsById(jobId)) throw new IllegalArgumentException("Job with job_id: " + jobId + " does not exist!");
+        // get list of records submitted by job id
+        List<Record> unapprovedRecords = this.recordRepo.findBySubmittedUnapprovedJobId(jobId);
+        return ResponseEntity.ok().body(unapprovedRecords);
+    }
+
     @PostMapping("/records")
     public ResponseEntity<String> push(@RequestBody Record input) {
         Record result = this.recordRepo.save(input);
