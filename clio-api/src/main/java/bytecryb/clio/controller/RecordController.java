@@ -2,7 +2,11 @@ package bytecryb.clio.controller;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +23,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.transaction.annotation.Transactional;
 
+import bytecryb.clio.repository.AwardRepository;
+import bytecryb.clio.repository.BadgeRepository;
 import bytecryb.clio.repository.JobRepository;
 import bytecryb.clio.repository.PDFRepository;
 import bytecryb.clio.repository.RecordRepository;
+import bytecryb.clio.repository.ScoreRepository;
+import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.service.PDFService;
 import bytecryb.clio.exception.ResourceNotFoundException;
+import bytecryb.clio.model.Award;
+import bytecryb.clio.model.Badge;
+import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.Job;
 import bytecryb.clio.model.PDF;
 import bytecryb.clio.model.Record;
+import bytecryb.clio.model.Score;
 
 @RestController
 @RequestMapping("/api/v1")
 public class RecordController {
     @Autowired
     private RecordRepository recordRepo;
+
+    @Autowired
+    private UserRepository userRepo;
+
+    @Autowired
+    private AwardRepository awardRepo;
+
+    @Autowired
+    private BadgeRepository badgeRepo;
+
+    @Autowired
+    private ScoreRepository scoreRepo;
 
     @Autowired
     private PDFService pdfService;
@@ -234,6 +258,69 @@ public class RecordController {
             this.jobRepo.save(job);
         }
 
+        return ResponseEntity.ok().body(this.recordRepo.save(result));
+    }
+
+    @PutMapping("/records/approveBy")
+    public ResponseEntity<Record> approveRecord(@RequestBody Record input) throws Exception {
+        Record result = this.recordRepo.findById(input.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Record not found for id: " + input.getId()));
+
+        if (result.isApproved()) {
+            throw new Exception("Already Approved!");
+        }
+        //Convert user_id from Long to long
+        Long uId = result.getSubmittedBy();
+        Optional<Long> temp = Optional.ofNullable(uId);
+        // Sets userId to -1 if it is NULL
+        long userId = temp.orElse(-1L);
+
+        if (userId != -1) {
+            //set record to approved
+            result.setApproved(true);
+
+            //Update user score and awards
+            //grab points user earned from submitting an approved record
+            CustomUser user = this.userRepo.findById(userId);
+            Job relatedJob = this.jobRepo.findById(result.getJobId())
+                .orElseThrow(() -> new ResourceNotFoundException("Job" + result.getJobId() + " was not found!"));
+            int pointsToAdd = relatedJob.getPoints();
+            Score newUserScore = new Score(userId, new Date(), pointsToAdd);
+            //save new earned points into scores table
+            this.scoreRepo.save(newUserScore);
+
+            //grab total scores earned by user
+            int userScore = this.scoreRepo.findTotalScoreByUserId(userId);
+
+            //grab all awards associated with user and badge ids
+            List<Award> userAwards = this.awardRepo.findByUserId(userId);
+            Set<Long> currBadges = new HashSet<>();
+            
+            for (Award a : userAwards) {
+                currBadges.add(a.getBadge().getId());
+            }
+
+            //get all badges
+            List<Badge> allBadges = this.badgeRepo.findAll();
+
+            //check if user has a badge, if not check if their score is greater than or equal to badge's required score
+            //if requirements are met, give them a new award
+            for (Badge b : allBadges) {
+                long badgeId = b.getId();
+                int badgeScore = b.getScore();
+
+                if (currBadges.contains(badgeId)) {
+                    continue;
+                } else if (!currBadges.contains(badgeId) && badgeScore >= userScore) {
+                    Award newAward = new Award(user, b);
+                    this.awardRepo.save(newAward);
+                }
+            }
+
+        } else {
+            throw new Exception("No user linked to this record!");
+        }
+        
         return ResponseEntity.ok().body(this.recordRepo.save(result));
     }
 
