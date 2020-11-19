@@ -73,12 +73,12 @@ class App extends React.Component {
   render () {
     return (
         <Router>
-          <Route exact path='/' component={Login}/>
-          <Route exact path='/signup' component={SignUp}/>
-          <Route exact path='/testfile' component={testFile}/>
-
+          <NavBar/>
           <Switch>
             <Route exact path='/testPage' component={TestPage}/>
+            <Route exact path='/' component={Login}/>
+            <Route exact path='/signup' component={SignUp}/>
+            <Route exact path='/testfile' component={testFile}/>
             <Route exact path='/record' component={Record}/>
             <Route exact path='/my-job' component={MyJob}/>
             <Route exact path='/landing' component={Landing}/>
@@ -88,6 +88,7 @@ class App extends React.Component {
             <Route exact path='/training' component={RookieTraining}/>
             <Route exact path='/proofer' component={Proofer}/>
           </Switch>
+          <Footer/>
           
         </Router>
     );

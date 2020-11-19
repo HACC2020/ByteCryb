@@ -16,6 +16,7 @@ import {
   SelectField,
 } from "uniforms-bootstrap4";
 import { bridge as schema } from "../../api/RookieTraining";
+import NavBar from "../components/NavBar";
 
 class RookieTraining extends React.Component {
   constructor() {
