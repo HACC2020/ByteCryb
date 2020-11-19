@@ -73,7 +73,7 @@ public class RecordController {
             // check if the record had been checked out for longer than 5 minutes
             if (r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
                 if (System.currentTimeMillis() > r.getDue().getTime()) {
-                    r.setDue(new Timestamp(System.currentTimeMillis() + 5000));
+                    r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
 
                     result = r;
 
@@ -85,7 +85,7 @@ public class RecordController {
             if (!r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
                 // change status to in progress
                 r.setCheckedOut(true);
-                r.setDue(new Timestamp(System.currentTimeMillis() + 5000));
+                r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
                 result = r;
 
                 break;
@@ -117,7 +117,7 @@ public class RecordController {
             // check if the record had been checked out for longer than 5 minutes
             if (r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
                 if (System.currentTimeMillis() > r.getDue().getTime()) {
-                    r.setDue(new Timestamp(System.currentTimeMillis() + 5000));
+                    r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
 
                     result = r;
 
@@ -129,7 +129,7 @@ public class RecordController {
             if (!r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
                 // change status to in progress
                 r.setCheckedOut(true);
-                r.setDue(new Timestamp(System.currentTimeMillis() + 5000));
+                r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
                 result = r;
                 break;
             }
@@ -210,7 +210,7 @@ public class RecordController {
         return ResponseEntity.ok(records);
     }
 
-    @PutMapping("/records")
+    @PutMapping("/records/submit")
     @Transactional
     public ResponseEntity<Record> update(@RequestBody Record input) throws Exception {
         Record result = this.recordRepo.findById(input.getId())
@@ -222,8 +222,10 @@ public class RecordController {
 
         result.setCheckedOut(false);
         result.setSubmitted(input.isSubmitted());
-        result.setApproved(input.isApproved());
+        result.setApproved(false);
         result.setJson(input.getJson());
+        result.setSubmittedBy(result.getSubmittedBy());
+        result.setSubmittedOn(result.getSubmittedOn());
 
         if (input.isSubmitted() && !input.isApproved()) {
             Job job = this.jobRepo.findById(input.getJobId())
