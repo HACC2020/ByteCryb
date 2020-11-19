@@ -98,7 +98,7 @@ class EditJobPage extends React.Component {
       if (!job.message) {
         Swal.fire({
           icon: 'success',
-          title: 'Job successfully created',
+          title: `Successfully uploaded ${this.state.pdfFiles.length} records`,
         })
       } else {
         Swal.fire({
