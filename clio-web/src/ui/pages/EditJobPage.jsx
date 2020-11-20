@@ -39,7 +39,7 @@ class EditJobPage extends React.Component {
     }
 
     const getScore = (value) => {
-      this.setState({points: value});
+      this.setState({ points: value });
     };
 
     function getPDFs(event) {
@@ -68,47 +68,55 @@ class EditJobPage extends React.Component {
         return;
       }
 
-      if (this.state.pdfFiles.length === 0) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'You didn\'t upload anything!'
-        });
-        return;
-      }
+      this.setState({ loadingButton: true });
 
-      this.setState({loadingButton: true});
+      const points = {
+        id: this.state.jobID,
+        points: this.state.points,
+      };
 
-      const formData = new FormData();
-
-      for (let i = 0; i < this.state.pdfFiles.length; i++) {
-        formData.append('files', this.state.pdfFiles[i]);
-      }
-
-      formData.append('job_id', parseInt(this.state.job.id));
-
-      const options = {
-        method: 'POST',
-        body: formData,
+      const addPointsOption = {
+        method: 'PUT',
+        body: points,
         redirect: 'follow',
       };
 
-      let job = await this.Auth.fetch('/api/v1/jobs/record', options);
-      console.log(job);
-      if (!job.message) {
-        Swal.fire({
-          icon: 'success',
-          title: `Successfully uploaded ${this.state.pdfFiles.length} records`,
-        })
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Job creation failed',
-          text: job.message,
-        })
+      let addPoints = await this.Auth.fetch('/api/v1/jobs/points', addPointsOption);
+      console.log(addPoints);
+
+      if (this.state.pdfFiles.length !== 0) {
+        const formData = new FormData();
+
+        for (let i = 0; i < this.state.pdfFiles.length; i++) {
+          formData.append('files', this.state.pdfFiles[i]);
+        }
+
+        formData.append('job_id', parseInt(this.state.job.id));
+
+        const options = {
+          method: 'POST',
+          body: formData,
+          redirect: 'follow',
+        };
+
+        let job = await this.Auth.fetch('/api/v1/jobs/record', options);
+
+        console.log(job);
+        if (!job.message) {
+          Swal.fire({
+            icon: 'success',
+            title: `Successfully uploaded ${this.state.pdfFiles.length} records`,
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed to upload records',
+            text: job.message,
+          })
+        }
       }
-      this.setState({onShow: true});
-      this.setState({loadingButton: false});
+
+      this.setState({ loadingButton: false });
     };
 
     const renderExportButton = () => {
