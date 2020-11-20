@@ -31,7 +31,7 @@ public class CustomUser {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")
     @SequenceGenerator(name = "user_id_generator", sequenceName = "user_seq", initialValue = 5)
     @Column(name = "id", updatable = false, nullable = false)
-    private long userId;
+    private long id;
 
     @Getter
     @Setter

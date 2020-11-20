@@ -3,13 +3,15 @@ import {
   Container,
   Row,
   Col,
+  Button,
   Image,
   Form,
-  Button,
   NavLink,
 } from "react-bootstrap";
 import { withRouter, Redirect } from "react-router-dom";
 import AuthService from "../../api/AuthService";
+
+import Paper from "@material-ui/core/Paper";
 
 class Login extends React.Component {
   constructor(props) {
@@ -22,25 +24,9 @@ class Login extends React.Component {
     this.Auth = new AuthService();
   }
 
-  // async componentDidMount() {
-  //
-  //   const response = await fetch('/api/v1/users', {
-  //     method: 'GET',
-  //     mode: 'no-cors',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //   });
-  //   console.log(response);
-  //   const body = await response.json();
-  //   console.log(body)
-  //
-  // }
-
   render() {
     const imgStyle = {
-      height: "20%",
+      height: "150px",
       width: "auto",
     };
 
@@ -84,49 +70,105 @@ class Login extends React.Component {
     };
 
     return (
-      <Container>
+      <Container
+        fluid
+        style={{
+          height: "100vh",
+          margin: 1,
+          padding: 0,
+        }}
+      >
         <Row>
-          <Col xs={6}>
+          <Col
+            sm={7}
+            component={Paper}
+            style={{
+              paddingLeft: "7%",
+              paddingTop: "5%",
+              paddingRight: "7%",
+              height: "100vh",
+              width: "75%",
+            }}
+          >
             <Image src={"./hsa-logo.png"} style={imgStyle} />
-            <p style={{ paddingTop: "1rem" }}>
-              We need your help! The Public Archives of Hawai'i is the keeper of
-              public memory. As such, we have millions of records that protect
-              your rights, identity, property and history. But given the volume
-              and varying record keeping practicies of the past, these records
-              are often difficult or time consuming to find. But with your help,
-              we can make finding records a much easier and straightforward
-              process.. Volunteer today to help us index these records and join
-              us in connecting the People of Hawaiʻi with their past, their
-              heritage and their culture!
-            </p>
+            <div>
+              <p
+                style={{
+                  fontSize: 35,
+                  fontWeight: 900,
+                  paddingBottom: 0,
+                  paddingTop: "1em",
+                  margin: 0,
+                  color: "081C15",
+                }}
+              >
+                WE NEED YOUR HELP
+              </p>
+              <p style={{ paddingTop: "1rem" }} class="paragraph">
+                The Public Archives of Hawai'i are the keepers of public memory.
+                As such, they hold millions of records that protect your rights,
+                identity, property and history. Given the volume and varying
+                record keeping practices of the past, these records are often
+                difficult or time consuming to find. With your help, we can make
+                finding records a much easier and straightforward process..
+              </p>
+              <p class="paragraph">
+                Volunteer today to help us index these records and join us in
+                connecting the people of Hawaiʻi with their past, their
+                heritage, and their culture!
+              </p>
+            </div>
           </Col>
-          <Col xs={6}>
-            <h2 align={"center"}>Login</h2>
+          <Col
+            style={{
+              background: "linear-gradient(to left top, #D8F3DC, #FFFFFF)",
+              height: "100vh",
+              paddingTop: "13%",
+              paddingRight: "7%",
+              paddingLeft: "4%",
+              width: "75%",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            {/* <h2 align={"center"} style={{ font: "caption", fontSize: "1.5em" }}>
+              SIGN IN
+            </h2> */}
+            <br />
             <Form>
               <Form.Group
                 controlId="username"
                 onChange={(e) => onChangeUsername(e.target.value)}
               >
-                <Form.Label>Username</Form.Label>
-                <Form.Control placeholder="Enter username" />
+                <Form.Control placeholder="Username" size="lg" />
               </Form.Group>
 
               <Form.Group
                 controlId="formBasicPassword"
                 onChange={(e) => onChangePW(e.target.value)}
               >
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  size="lg"
+                />
                 {renderInvalid()}
-                <Form.Text className="text-muted">
-                  <NavLink href="/signup">
-                    Not registered yet? Sign up here!
-                  </NavLink>
-                </Form.Text>
               </Form.Group>
-              <Button variant="primary" onClick={handleSubmit}>
-                Login
+              <Button
+                variant="primary"
+                onClick={handleSubmit}
+                style={{
+                  backgroundColor: "#1B4332",
+                }}
+                block
+              >
+                Sign In
               </Button>
+              <Form.Text className="text-muted">
+                <NavLink href="/signup">
+                  Don't have an account? Sign up!
+                </NavLink>
+              </Form.Text>
             </Form>
           </Col>
         </Row>

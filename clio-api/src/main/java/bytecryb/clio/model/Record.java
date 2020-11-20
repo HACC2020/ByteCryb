@@ -62,7 +62,7 @@ public class Record {
     @Getter
     @Setter
     @Column(name = "submitted_on")
-    private Long submittedOn;
+    private Timestamp submittedOn;
 
     @Getter
     @Setter

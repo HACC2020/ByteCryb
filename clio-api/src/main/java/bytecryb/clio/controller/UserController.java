@@ -64,7 +64,6 @@ public class UserController {
 	@Autowired
 	private JwtUtil jwtTokenUtil;
 
-
 	// Get username from token
 	public String getUser(HttpServletRequest request) {
 		String jwtToken = extractJwtFromRequest(request);
@@ -84,7 +83,7 @@ public class UserController {
 			CustomUser tmp = userIterator.next();
 			Role currRole = tmp.getRole();
 			String roleName = currRole.getName();
-			result.add(new ResultUser(tmp.getUserId(), tmp.getUsername(), tmp.getFirstName(), tmp.getLastName(),
+			result.add(new ResultUser(tmp.getId(), tmp.getUsername(), tmp.getFirstName(), tmp.getLastName(),
 					tmp.getEmail(), roleName));
 		}
 
@@ -115,7 +114,7 @@ public class UserController {
 		result.put("role", currRoleName);
 
 		// get total score
-		Long userId = currUser.getUserId();
+		Long userId = currUser.getId();
 		List<Score> score = this.scoreRepo.findByUserId(userId);
 		result.put("score", score.get(0).getScore());
 
@@ -147,7 +146,7 @@ public class UserController {
 
 		Map<String, Object> result = new LinkedHashMap<>();
 
-		result.put("userId", currUser.getUserId());
+		result.put("userId", currUser.getId());
 		result.put("username", currUser.getUsername());
 		result.put("firstName", currUser.getFirstName());
 		result.put("lastName", currUser.getLastName());
@@ -156,15 +155,16 @@ public class UserController {
 
 		return ResponseEntity.ok().body(result);
 	}
-  
+
 	// UPDATES GIVEN USER'S ROLE
 	@PutMapping("/users/updateRole/{role_name}")
-  @Transactional
-  public ResponseEntity<CustomUser> updateRole(@PathVariable(name = "role_name") String roleName, HttpServletRequest request) {
-		//Take out special characters and whitespaces
+	@Transactional
+	public ResponseEntity<CustomUser> updateRole(@PathVariable(name = "role_name") String roleName,
+			HttpServletRequest request) {
+		// Take out special characters and whitespaces
 		roleName = roleName.replaceAll("\\s", "");
 
-		//if given role name does not exist, throw an exception
+		// if given role name does not exist, throw an exception
 		if (!this.roleRepo.existsByRoleName(roleName)) {
 			throw new IllegalArgumentException("Role: " + roleName + " does not exist");
 		}
@@ -172,17 +172,16 @@ public class UserController {
 		// get username
 		String jwtToken = extractJwtFromRequest(request);
 		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
-		
-		
-		CustomUser user  = this.userRepo.findByUsername(currUsername);
+
+		CustomUser user = this.userRepo.findByUsername(currUsername);
 		Role role = this.roleRepo.findByRoleName(roleName);
 		user.setRole(role);
 		final CustomUser update = this.userRepo.save(user);
 
-        return ResponseEntity.ok().body(update);
+		return ResponseEntity.ok().body(update);
 
 	}
-	
+
 	// UPDATES CURRENT USER'S FIRST & LAST NAME AND USERNAME
 	@PutMapping("/users/updateNames")
 	public ResponseEntity<Map<String, Object>> updateNames(HttpServletRequest request, @RequestBody String jsonStr) {
@@ -207,15 +206,15 @@ public class UserController {
 			currUser.setFirstName(firstName);
 		}
 
-		if (lastName.length() > 0  && !lastName.equals(currUser.getLastName())) {
+		if (lastName.length() > 0 && !lastName.equals(currUser.getLastName())) {
 			currUser.setLastName(lastName);
 		}
 
 		if (username.length() > 0 && !username.equals(currUser.getUsername())) {
 			currUser.setUsername(username);
 			this.userRepo.save(currUser);
-			ResultUser resUser = new ResultUser(currUser.getUserId(), currUser.getUsername(), currUser.getFirstName(), 
-			currUser.getLastName(), currUser.getEmail(), currUser.getRole().getName());
+			ResultUser resUser = new ResultUser(currUser.getId(), currUser.getUsername(), currUser.getFirstName(),
+					currUser.getLastName(), currUser.getEmail(), currUser.getRole().getName());
 			final UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
 			final String token = jwtTokenUtil.generateToken(userDetails);
 			resUser.setAuthToken(token);
@@ -225,7 +224,7 @@ public class UserController {
 			this.userRepo.save(currUser);
 		}
 
-		res.put("user_id", currUser.getUserId());
+		res.put("user_id", currUser.getId());
 		res.put("username", currUser.getUsername());
 		res.put("first_name", currUser.getFirstName());
 		res.put("last_name", currUser.getLastName());

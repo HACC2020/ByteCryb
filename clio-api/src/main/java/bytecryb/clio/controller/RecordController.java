@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,9 +33,8 @@ import bytecryb.clio.repository.RecordRepository;
 import bytecryb.clio.repository.ScoreRepository;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.service.PDFService;
+import bytecryb.clio.util.JwtUtil;
 import bytecryb.clio.exception.ResourceNotFoundException;
-import bytecryb.clio.model.Award;
-import bytecryb.clio.model.Badge;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.Job;
 import bytecryb.clio.model.PDF;
@@ -45,9 +46,6 @@ import bytecryb.clio.model.Score;
 public class RecordController {
     @Autowired
     private RecordRepository recordRepo;
-
-    @Autowired
-    private UserRepository userRepo;
 
     @Autowired
     private AwardRepository awardRepo;
@@ -66,6 +64,12 @@ public class RecordController {
 
     @Autowired
     private JobRepository jobRepo;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserRepository userRepo;
 
     // get all records
     @GetMapping("/records/all")
@@ -183,6 +187,16 @@ public class RecordController {
         return ResponseEntity.ok().body(unapprovedRecords);
     }
 
+    // Get submitted but NOT approved records FILTERED by jobs
+    @GetMapping("/records/unapproved/{job_id}")
+    public ResponseEntity<List<Record>> getUnapprovedRecordsByJob(@PathVariable(name = "job_id") Long jobId) {
+        // check if job exists
+        if (!this.jobRepo.existsById(jobId)) throw new IllegalArgumentException("Job with job_id: " + jobId + " does not exist!");
+        // get list of records submitted by job id
+        List<Record> unapprovedRecords = this.recordRepo.findBySubmittedUnapprovedJobId(jobId);
+        return ResponseEntity.ok().body(unapprovedRecords);
+    }
+
     @PostMapping("/records")
     public ResponseEntity<String> push(@RequestBody Record input) {
         Record result = this.recordRepo.save(input);
@@ -236,27 +250,32 @@ public class RecordController {
 
     @PutMapping("/records/submit")
     @Transactional
-    public ResponseEntity<Record> update(@RequestBody Record input) throws Exception {
-        Record result = this.recordRepo.findById(input.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Record not found for id: " + input.getId()));
+    public ResponseEntity<Record> submit(HttpServletRequest request, @RequestParam(value = "id") Long id,
+            @RequestParam(value = "json") String json) throws Exception {
+        Record result = this.recordRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Record " + id + " was not found!"));
 
         if (result.isSubmitted()) {
             throw new Exception("Already Submitted!");
         }
+        String token = jwtUtil.extractJwtFromRequest(request);
+        String username = jwtUtil.getUsernameFromToken(token);
+
+        CustomUser user = this.userRepo.findByUsername(username);
 
         result.setCheckedOut(false);
-        result.setSubmitted(input.isSubmitted());
+        result.setSubmitted(true);
         result.setApproved(false);
-        result.setJson(input.getJson());
-        result.setSubmittedBy(result.getSubmittedBy());
-        result.setSubmittedOn(result.getSubmittedOn());
+        result.setJson(json);
+        result.setSubmittedBy(user.getId());
+        result.setSubmittedOn(new Timestamp(System.currentTimeMillis()));
 
-        if (input.isSubmitted() && !input.isApproved()) {
-            Job job = this.jobRepo.findById(input.getJobId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Job " + input.getJobId() + "  was not found!"));
-            job.setIndexed(job.getIndexed() + 1);
-            this.jobRepo.save(job);
-        }
+        Job job = this.jobRepo.findById(result.getJobId())
+                .orElseThrow(() -> new ResourceNotFoundException("Job " + result.getJobId() + "  was not found!"));
+
+        job.setIndexed(job.getIndexed() + 1);
+
+        this.jobRepo.save(job);
 
         return ResponseEntity.ok().body(this.recordRepo.save(result));
     }
@@ -328,7 +347,20 @@ public class RecordController {
 
     @DeleteMapping("/records/{id}")
     public ResponseEntity<String> removeRecord(@PathVariable(value = "id") Long id) throws Exception {
-        this.pdfService.removePDFById(id);
-        return ResponseEntity.ok(new String("PDF " + id + " has been removed!"));
+        Record deletedRecord = this.recordRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Record " + id + " was not found!"));
+
+        PDF deleted = this.pdfService.removePDFById(deletedRecord.getPdfId());
+
+        Long jobId = deletedRecord.getJobId();
+
+        Job job = this.jobRepo.findById(jobId)
+                .orElseThrow(() -> new ResourceNotFoundException("Record " + jobId + " was not found!"));
+
+        job.setSize(job.getSize() - 1);
+
+        this.jobRepo.save(job);
+
+        return ResponseEntity.ok(new String("PDF " + deleted.getId() + " has been removed!"));
     }
 }
