@@ -291,7 +291,7 @@ public class RecordController {
             throw new Exception("Already Approved!");
         }
         result.setApproved(true);
-        /*
+
         //Convert user_id from Long to long
         Long uId = result.getSubmittedBy();
         Optional<Long> temp = Optional.ofNullable(uId);
@@ -343,7 +343,7 @@ public class RecordController {
         } else {
             throw new Exception("No user linked to this record!");
         }
-        */
+
         return ResponseEntity.ok().body(this.recordRepo.save(result));
     }
 
