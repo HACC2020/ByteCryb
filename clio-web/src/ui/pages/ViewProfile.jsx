@@ -13,6 +13,7 @@ import { faEdit, faFile, faTrophy, faAward, faUserCircle } from '@fortawesome/fr
 import { AutoForm, SubmitField, TextField } from 'uniforms-bootstrap4';
 import { bridge as schema } from '../../api/EditProfile';
 import Swal from "sweetalert2";
+import  _  from 'lodash';
 
 class ViewProfile extends React.Component {
   constructor(props) {
@@ -28,6 +29,7 @@ class ViewProfile extends React.Component {
       last_name: '',
       loading: true,
       loggedIn: true,
+      recordName: [],
     };
     this.Auth = new AuthService();
   }
@@ -39,14 +41,24 @@ class ViewProfile extends React.Component {
       this.setState({ role: sessionStorage.getItem('role') });
       const options = {};
       let profile = await this.Auth.fetch('/api/v1/users/profile', options);
-      console.log(profile);
+      let allRecords = await this.Auth.fetch('/api/v1/records/all', options);
       let user = profile.user;
       const username = user.match(/(username=([Aa-zZ0-9]*))/g)[0].split('=')[1];
       const firstName = user.match(/(firstName=([Aa-zZ0-9]*))/g)[0].split('=')[1];
       const lastName = user.match(/(lastName=([Aa-zZ0-9]*))/g)[0].split('=')[1];
+      const userID = user.match(/(id=([0-9]*))/g)[0].split('=')[1];
+
       this.setState({ score: profile.score });
       this.setState({ username: username });
 
+      const records = _.filter(allRecords, {submittedBy: parseInt(userID)});
+
+      const jobName = [];
+      for (let i = 0; i < records.length; i++) {
+        let job = await this.Auth.fetch(`/api/v1/jobs/${records[i].jobId}`, options);
+        jobName.push(job.name)
+      }
+      this.setState({recordName: jobName});
       this.setState({ first_name: firstName });
       this.setState({ last_name: lastName });
 
@@ -121,6 +133,7 @@ class ViewProfile extends React.Component {
               size="lg"
               aria-labelledby="contained-modal-title-vcenter"
               centered
+              scrollable
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
@@ -169,32 +182,18 @@ class ViewProfile extends React.Component {
                 <thead>
                 <tr>
                   <th>#</th>
-                  <th>Category</th>
-                  <th>View Record</th>
+                  <th>Job</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Chinese Immigration</td>
-                  <td>
-                    <Button>View Record</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Chinese Immigration</td>
-                  <td>
-                    <Button>View Record</Button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Chinese Marriage</td>
-                  <td>
-                    <Button>View Record</Button>
-                  </td>
-                </tr>
+                {props.recordName.map((job, key) => {
+                  return (
+                      <tr>
+                        <td>{key+1}</td>
+                        <td>{job}</td>
+                      </tr>
+                  )
+                })}
                 </tbody>
               </Table>
             </Modal.Body>
@@ -248,6 +247,7 @@ class ViewProfile extends React.Component {
               </Button>
               <MoreRecords
                   show={this.state.showModal}
+                  recordName={this.state.recordName}
                   onHide={() => this.setState({ showModal: false })}
               />
               <br/>
