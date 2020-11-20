@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
-import bytecryb.clio.model.Score;
 import bytecryb.clio.repository.RoleRepository;
 import bytecryb.clio.repository.ScoreRepository;
 import bytecryb.clio.repository.UserRepository;

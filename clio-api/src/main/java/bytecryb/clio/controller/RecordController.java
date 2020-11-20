@@ -50,9 +50,6 @@ public class RecordController {
     private RecordRepository recordRepo;
 
     @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
     private AwardRepository awardRepo;
 
     @Autowired
@@ -283,15 +280,16 @@ public class RecordController {
     }
 
     @PostMapping("/records/approveBy")
-    public ResponseEntity<Record> approveRecord(@RequestBody Record input) throws Exception {
-        Record result = this.recordRepo.findById(input.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Record not found for id: " + input.getId()));
+    public ResponseEntity<Record> approveRecord(@RequestParam(value = "id") Long id,
+            @RequestParam(value= "json") String json) throws Exception {
+        Record result = this.recordRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Record not found for id: " + id));
 
         if (result.isApproved()) {
             throw new Exception("Already Approved!");
         }
         result.setApproved(true);
-
+        result.setJson(json);
         //Convert user_id from Long to long
         Long uId = result.getSubmittedBy();
         Optional<Long> temp = Optional.ofNullable(uId);
@@ -343,6 +341,7 @@ public class RecordController {
         } else {
             throw new Exception("No user linked to this record!");
         }
+
 
         return ResponseEntity.ok().body(this.recordRepo.save(result));
     }
