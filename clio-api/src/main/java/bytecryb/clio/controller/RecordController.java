@@ -46,322 +46,326 @@ import bytecryb.clio.model.Score;
 @RestController
 @RequestMapping("/api/v1")
 public class RecordController {
-    @Autowired
-    private RecordRepository recordRepo;
+  @Autowired
+  private RecordRepository recordRepo;
 
-    @Autowired
-    private AwardRepository awardRepo;
+  @Autowired
+  private AwardRepository awardRepo;
 
-    @Autowired
-    private BadgeRepository badgeRepo;
+  @Autowired
+  private BadgeRepository badgeRepo;
 
-    @Autowired
-    private ScoreRepository scoreRepo;
+  @Autowired
+  private ScoreRepository scoreRepo;
 
-    @Autowired
-    private PDFService pdfService;
+  @Autowired
+  private PDFService pdfService;
 
-    @Autowired
-    private PDFRepository pdfRepo;
+  @Autowired
+  private PDFRepository pdfRepo;
 
-    @Autowired
-    private JobRepository jobRepo;
+  @Autowired
+  private JobRepository jobRepo;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+  @Autowired
+  private JwtUtil jwtUtil;
 
-    // get all records
-    @GetMapping("/records/all")
-    public List<Record> getAll() {
-        return this.recordRepo.findAll();
+  @Autowired
+  private UserRepository userRepo;
+
+  // get all records
+  @GetMapping("/records/all")
+  public List<Record> getAll() {
+    return this.recordRepo.findAll();
+  }
+
+  @GetMapping("/records/{id}")
+  public ResponseEntity<Record> getById(@PathVariable Long id) throws ResourceNotFoundException {
+    Record result = this.recordRepo.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Record " + id + " was not found"));
+    return ResponseEntity.ok().body(result);
+  }
+
+  // get first incomplete record pdf link
+  @GetMapping("/records/pop")
+  @Transactional
+  public ResponseEntity<Record> popByJobId(@RequestParam(name = "job_id") Long jobId) {
+    // get a list of records with matching job id
+    List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
+
+    for (Record record : filteredRecords) {
+      System.out.println(record);
     }
 
-    @GetMapping("/records/{id}")
-    public ResponseEntity<Record> getById(@PathVariable Long id) throws ResourceNotFoundException {
-        Record result = this.recordRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Record " + id + " was not found"));
-        return ResponseEntity.ok().body(result);
+    Record result = null;
+
+    for (Record r : filteredRecords) {
+      // check if the record had been checked out for longer than 5 minutes
+      if (r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
+        if (System.currentTimeMillis() > r.getDue().getTime()) {
+          r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
+
+          result = r;
+
+          break;
+        }
+      }
+
+      // if record is incomplete (status == 0)
+      if (!r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
+        // change status to in progress
+        r.setCheckedOut(true);
+        r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
+        result = r;
+
+        break;
+      }
     }
 
-    // get first incomplete record pdf link
-    @GetMapping("/records/pop")
-    @Transactional
-    public ResponseEntity<Record> popByJobId(@RequestParam(name = "job_id") Long jobId) {
-        // get a list of records with matching job id
-        List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
-
-        for (Record record : filteredRecords) {
-            System.out.println(record);
-        }
-
-        Record result = null;
-
-        for (Record r : filteredRecords) {
-            // check if the record had been checked out for longer than 5 minutes
-            if (r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
-                if (System.currentTimeMillis() > r.getDue().getTime()) {
-                    r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
-
-                    result = r;
-
-                    break;
-                }
-            }
-
-            // if record is incomplete (status == 0)
-            if (!r.isCheckedOut() && !r.isSubmitted() && !r.isApproved()) {
-                // change status to in progress
-                r.setCheckedOut(true);
-                r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
-                result = r;
-
-                break;
-            }
-        }
-
-        if (result != null) {
-            result = this.recordRepo.save(result);
-        }
-
-        // No incomplete record available, invalid result record returned
-        return ResponseEntity.ok().body(result);
+    if (result != null) {
+      result = this.recordRepo.save(result);
     }
 
-    // get first incomplete record pdf link
-    @GetMapping("/records/approve")
-    @Transactional
-    public ResponseEntity<Record> approveByJobId(@RequestParam(name = "job_id") Long jobId) {
-        // get a list of records with matching job id
-        List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
+    // No incomplete record available, invalid result record returned
+    return ResponseEntity.ok().body(result);
+  }
 
-        for (Record record : filteredRecords) {
-            System.out.println(record);
-        }
+  // get first incomplete record pdf link
+  @GetMapping("/records/approve")
+  @Transactional
+  public ResponseEntity<Record> approveByJobId(@RequestParam(name = "job_id") Long jobId) {
+    // get a list of records with matching job id
+    List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
 
-        Record result = null;
-
-        for (Record r : filteredRecords) {
-            // check if the record had been checked out for longer than 5 minutes
-            if (r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
-                if (System.currentTimeMillis() > r.getDue().getTime()) {
-                    r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
-
-                    result = r;
-
-                    break;
-                }
-            }
-
-            // if record is incomplete (status == 0)
-            if (!r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
-                // change status to in progress
-                r.setCheckedOut(true);
-                r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
-                result = r;
-                break;
-            }
-        }
-
-        if (result != null) {
-            result = this.recordRepo.save(result);
-        }
-
-        // No incomplete record available, invalid result record returned
-        return ResponseEntity.ok().body(result);
+    for (Record record : filteredRecords) {
+      System.out.println(record);
     }
 
-    // get first incomplete record pdf link
-    @GetMapping("/records/job/{job_id}")
-    public ResponseEntity<List<Record>> getByJobId(@PathVariable Long jobId) {
-        // get a list of records with matching job id
-        List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
-        return ResponseEntity.ok().body(filteredRecords);
-    }
+    Record result = null;
 
-    // Get submitted but NOT approved records
-    @GetMapping("/records/unapproved")
-    public ResponseEntity<List<Record>> getUnapprovedRecords() {
-        // get list of records submitted
-        List<Record> unapprovedRecords = this.recordRepo.findBySubmittedUnapproved();
-        return ResponseEntity.ok().body(unapprovedRecords);
-    }
+    for (Record r : filteredRecords) {
+      // check if the record had been checked out for longer than 5 minutes
+      if (r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
+        if (System.currentTimeMillis() > r.getDue().getTime()) {
+          r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
 
-    // Get submitted but NOT approved records FILTERED by jobs
-    @GetMapping("/records/unapproved/{job_id}")
-    public ResponseEntity<List<Record>> getUnapprovedRecordsByJob(@PathVariable(name = "job_id") Long jobId) {
-        // check if job exists
-        if (!this.jobRepo.existsById(jobId)) throw new IllegalArgumentException("Job with job_id: " + jobId + " does not exist!");
-        // get list of records submitted by job id
-        List<Record> unapprovedRecords = this.recordRepo.findBySubmittedUnapprovedJobId(jobId);
-        return ResponseEntity.ok().body(unapprovedRecords);
-    }
+          result = r;
 
-    @PostMapping("/records")
-    public ResponseEntity<String> push(@RequestBody Record input) {
-        Record result = this.recordRepo.save(input);
-        return ResponseEntity.ok().body(new String("Successfully Created Record: " + result.getId()));
-    }
-
-    @PostMapping("/jobs/record")
-    public ResponseEntity<List<Record>> pushRecords(@RequestParam(name = "job_id") Long id,
-            @RequestParam(name = "files") MultipartFile[] files) throws Exception {
-        // check job exits
-        Job job = this.jobRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Job " + id + " does not exist!"));
-
-        // example for path
-        Record record = this.recordRepo.findFirstByJobId(id);
-        PDF example = null;
-        UUID folder = null;
-        if (record == null) {
-            folder = UUID.randomUUID();
-        } else {
-            example = this.pdfRepo.findById(record.getPdfId()).orElse(null);
-            System.out.println(example.toString());
-            String path = example.getPath();
-            System.out.println(path);
-            String[] pathDivided = path.split("/");
-            System.out.println(pathDivided[pathDivided.length - 2]);
-            folder = UUID.fromString(pathDivided[pathDivided.length - 2]);
+          break;
         }
+      }
 
-        List<PDF> filesUploaded = new ArrayList<>();
-        List<Record> records = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            System.out.println(file.toString());
-            filesUploaded.add(this.pdfService.uploadToLocal(file, folder));
-        }
-
-        int recordCount = 0;
-
-        for (PDF file : filesUploaded) {
-            records.add(this.recordRepo.save(new Record(id, file.getId(), false, false, false, "{}")));
-            recordCount += 1;
-        }
-
-        job.setSize(job.getSize() + recordCount);
-
-        this.jobRepo.save(job);
-
-        return ResponseEntity.ok(records);
+      // if record is incomplete (status == 0)
+      if (!r.isCheckedOut() && r.isSubmitted() && !r.isApproved()) {
+        // change status to in progress
+        r.setCheckedOut(true);
+        r.setDue(new Timestamp(System.currentTimeMillis() + 300000));
+        result = r;
+        break;
+      }
     }
 
-    @PutMapping("/records/submit")
-    @Transactional
-    public ResponseEntity<Record> submit(HttpServletRequest request, @RequestParam(value = "id") Long id,
-            @RequestParam(value = "json") String json) throws Exception {
-        Record result = this.recordRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Record " + id + " was not found!"));
-
-        if (result.isSubmitted()) {
-            throw new Exception("Already Submitted!");
-        }
-        String token = jwtUtil.extractJwtFromRequest(request);
-        String username = jwtUtil.getUsernameFromToken(token);
-
-        CustomUser user = this.userRepo.findByUsername(username);
-
-        result.setCheckedOut(false);
-        result.setSubmitted(true);
-        result.setApproved(false);
-        result.setJson(json);
-        result.setSubmittedBy(user.getId());
-        result.setSubmittedOn(new Timestamp(System.currentTimeMillis()));
-
-        Job job = this.jobRepo.findById(result.getJobId())
-                .orElseThrow(() -> new ResourceNotFoundException("Job " + result.getJobId() + "  was not found!"));
-
-        job.setIndexed(job.getIndexed() + 1);
-
-        this.jobRepo.save(job);
-
-        return ResponseEntity.ok().body(this.recordRepo.save(result));
+    if (result != null) {
+      result = this.recordRepo.save(result);
     }
 
-    @PostMapping("/records/approveBy")
-    public ResponseEntity<Record> approveRecord(@RequestParam(value = "id") Long id,
-            @RequestParam(value= "json") String json) throws Exception {
-        Record result = this.recordRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Record not found for id: " + id));
+    // No incomplete record available, invalid result record returned
+    return ResponseEntity.ok().body(result);
+  }
 
-        if (result.isApproved()) {
-            throw new Exception("Already Approved!");
-        }
-        result.setApproved(true);
-        result.setJson(json);
-        //Convert user_id from Long to long
-        Long uId = result.getSubmittedBy();
-        Optional<Long> temp = Optional.ofNullable(uId);
-        // Sets userId to -1 if it is NULL
-        long userId = temp.orElse(-1L);
+  // get first incomplete record pdf link
+  @GetMapping("/records/job/{job_id}")
+  public ResponseEntity<List<Record>> getByJobId(@PathVariable Long jobId) {
+    // get a list of records with matching job id
+    List<Record> filteredRecords = this.recordRepo.findByJobId(jobId);
+    return ResponseEntity.ok().body(filteredRecords);
+  }
 
-        if (userId != -1) {
-            //set record to approved
-            result.setApproved(true);
+  // Get submitted but NOT approved records
+  @GetMapping("/records/unapproved")
+  public ResponseEntity<List<Record>> getUnapprovedRecords() {
+    // get list of records submitted
+    List<Record> unapprovedRecords = this.recordRepo.findBySubmittedUnapproved();
+    return ResponseEntity.ok().body(unapprovedRecords);
+  }
 
-            //Update user score and awards
-            //grab points user earned from submitting an approved record
-            CustomUser user = this.userRepo.findById(userId);
-            Job relatedJob = this.jobRepo.findById(result.getJobId())
-                .orElseThrow(() -> new ResourceNotFoundException("Job" + result.getJobId() + " was not found!"));
-            int pointsToAdd = relatedJob.getPoints();
-            Score newUserScore = new Score(userId, new Date(), pointsToAdd);
-            //save new earned points into scores table
-            this.scoreRepo.save(newUserScore);
+  // Get submitted but NOT approved records FILTERED by jobs
+  @GetMapping("/records/unapproved/{job_id}")
+  public ResponseEntity<List<Record>> getUnapprovedRecordsByJob(@PathVariable(name = "job_id") Long jobId) {
+    // check if job exists
+    if (!this.jobRepo.existsById(jobId))
+      throw new IllegalArgumentException("Job with job_id: " + jobId + " does not exist!");
+    // get list of records submitted by job id
+    List<Record> unapprovedRecords = this.recordRepo.findBySubmittedUnapprovedJobId(jobId);
+    return ResponseEntity.ok().body(unapprovedRecords);
+  }
 
-            //grab total scores earned by user
-            int userScore = this.scoreRepo.findTotalScoreByUserId(userId);
+  @PostMapping("/records")
+  public ResponseEntity<String> push(@RequestBody Record input) {
+    Record result = this.recordRepo.save(input);
+    return ResponseEntity.ok().body(new String("Successfully Created Record: " + result.getId()));
+  }
 
-            //grab all awards associated with user and badge ids
-            List<Award> userAwards = this.awardRepo.findByUserId(userId);
-            Set<Long> currBadges = new HashSet<>();
+  @PostMapping("/jobs/record")
+  public ResponseEntity<List<Record>> pushRecords(@RequestParam(name = "job_id") Long id,
+                                                  @RequestParam(name = "files") MultipartFile[] files) throws Exception {
+    // check job exits
+    Job job = this.jobRepo.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Job " + id + " does not exist!"));
 
-            for (Award a : userAwards) {
-                currBadges.add(a.getBadge().getId());
-            }
-
-            //get all badges
-            List<Badge> allBadges = this.badgeRepo.findAll();
-
-            //check if user has a badge, if not check if their score is greater than or equal to badge's required score
-            //if requirements are met, give them a new award
-            for (Badge b : allBadges) {
-                long badgeId = b.getId();
-                int badgeScore = b.getScore();
-
-                if (currBadges.contains(badgeId)) {
-                    continue;
-                } else if (!currBadges.contains(badgeId) && badgeScore >= userScore) {
-                    Award newAward = new Award(user, b);
-                    this.awardRepo.save(newAward);
-                }
-            }
-
-        } else {
-            throw new Exception("No user linked to this record!");
-        }
-
-
-        return ResponseEntity.ok().body(this.recordRepo.save(result));
+    // example for path
+    Record record = this.recordRepo.findFirstByJobId(id);
+    PDF example = null;
+    UUID folder = null;
+    if (record == null) {
+      folder = UUID.randomUUID();
+    } else {
+      example = this.pdfRepo.findById(record.getPdfId()).orElse(null);
+      System.out.println(example.toString());
+      String path = example.getPath();
+      System.out.println(path);
+      String[] pathDivided = path.split("/");
+      System.out.println(pathDivided[pathDivided.length - 2]);
+      folder = UUID.fromString(pathDivided[pathDivided.length - 2]);
     }
 
-    @DeleteMapping("/records/{id}")
-    public ResponseEntity<String> removeRecord(@PathVariable(value = "id") Long id) throws Exception {
-        Record deletedRecord = this.recordRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Record " + id + " was not found!"));
+    List<PDF> filesUploaded = new ArrayList<>();
+    List<Record> records = new ArrayList<>();
 
-        PDF deleted = this.pdfService.removePDFById(deletedRecord.getPdfId());
-
-        Long jobId = deletedRecord.getJobId();
-
-        Job job = this.jobRepo.findById(jobId)
-                .orElseThrow(() -> new ResourceNotFoundException("Record " + jobId + " was not found!"));
-
-        job.setSize(job.getSize() - 1);
-
-        this.jobRepo.save(job);
-
-        return ResponseEntity.ok(new String("PDF " + deleted.getId() + " has been removed!"));
+    for (MultipartFile file : files) {
+      System.out.println(file.toString());
+      filesUploaded.add(this.pdfService.uploadToLocal(file, folder));
     }
+
+    int recordCount = 0;
+
+    for (PDF file : filesUploaded) {
+      records.add(this.recordRepo.save(new Record(id, file.getId(), false, false, false, "{}")));
+      recordCount += 1;
+    }
+
+    job.setSize(job.getSize() + recordCount);
+
+    this.jobRepo.save(job);
+
+    return ResponseEntity.ok(records);
+  }
+
+  @PutMapping("/records/submit")
+  @Transactional
+  public ResponseEntity<Record> submit(HttpServletRequest request, @RequestParam(value = "id") Long id,
+                                       @RequestParam(value = "json") String json) throws Exception {
+    Record result = this.recordRepo.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Record " + id + " was not found!"));
+
+    if (result.isSubmitted()) {
+      throw new Exception("Already Submitted!");
+    }
+    String token = jwtUtil.extractJwtFromRequest(request);
+    String username = jwtUtil.getUsernameFromToken(token);
+
+    CustomUser user = this.userRepo.findByUsername(username);
+
+    result.setCheckedOut(false);
+    result.setSubmitted(true);
+    result.setApproved(false);
+    result.setJson(json);
+    result.setSubmittedBy(user.getId());
+    result.setSubmittedOn(new Timestamp(System.currentTimeMillis()));
+
+    Job job = this.jobRepo.findById(result.getJobId())
+        .orElseThrow(() -> new ResourceNotFoundException("Job " + result.getJobId() + "  was not found!"));
+
+    job.setIndexed(job.getIndexed() + 1);
+
+    this.jobRepo.save(job);
+
+    return ResponseEntity.ok().body(this.recordRepo.save(result));
+  }
+
+  @PostMapping("/records/approveBy")
+  public ResponseEntity<Record> approveRecord(@RequestParam(value = "id") Long id,
+                                              @RequestParam(value = "json") String json) throws Exception {
+    Record result = this.recordRepo.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Record not found for id: " + id));
+
+    if (result.isApproved()) {
+      throw new Exception("Already Approved!");
+    }
+    result.setApproved(true);
+    result.setJson(json);
+    //Convert user_id from Long to long
+    Long uId = result.getSubmittedBy();
+    Optional<Long> temp = Optional.ofNullable(uId);
+    // Sets userId to -1 if it is NULL
+    long userId = temp.orElse(-1L);
+
+    if (userId != -1) {
+      //set record to approved
+      result.setApproved(true);
+
+      //Update user score and awards
+      //grab points user earned from submitting an approved record
+      CustomUser user = this.userRepo.findById(userId);
+      Job relatedJob = this.jobRepo.findById(result.getJobId())
+          .orElseThrow(() -> new ResourceNotFoundException("Job" + result.getJobId() + " was not found!"));
+      int pointsToAdd = relatedJob.getPoints();
+      Score newUserScore = new Score(userId, new Date(), pointsToAdd);
+      //save new earned points into scores table
+      this.scoreRepo.save(newUserScore);
+
+      //grab total scores earned by user
+      int userScore = this.scoreRepo.findTotalScoreByUserId(userId);
+
+      //grab all awards associated with user and badge ids
+      List<Award> userAwards = this.awardRepo.findByUserId(userId);
+      Set<Long> currBadges = new HashSet<>();
+
+      for (Award a : userAwards) {
+        currBadges.add(a.getBadge().getId());
+      }
+
+      //get all badges
+      List<Badge> allBadges = this.badgeRepo.findAll();
+
+      //check if user has a badge, if not check if their score is greater than or equal to badge's required score
+      //if requirements are met, give them a new award
+      for (Badge b : allBadges) {
+        long badgeId = b.getId();
+        int badgeScore = b.getScore();
+
+        if (currBadges.contains(badgeId)) {
+          continue;
+        } else if (!currBadges.contains(badgeId) && badgeScore >= userScore) {
+          Award newAward = new Award(user, b);
+          this.awardRepo.save(newAward);
+        }
+      }
+
+    } else {
+      throw new Exception("No user linked to this record!");
+    }
+
+
+    return ResponseEntity.ok().body(this.recordRepo.save(result));
+  }
+
+  @DeleteMapping("/records/{id}")
+  public ResponseEntity<String> removeRecord(@PathVariable(value = "id") Long id) throws Exception {
+    Record deletedRecord = this.recordRepo.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Record " + id + " was not found!"));
+
+    PDF deleted = this.pdfService.removePDFById(deletedRecord.getPdfId());
+
+    Long jobId = deletedRecord.getJobId();
+
+    Job job = this.jobRepo.findById(jobId)
+        .orElseThrow(() -> new ResourceNotFoundException("Record " + jobId + " was not found!"));
+
+    job.setSize(job.getSize() - 1);
+
+    this.jobRepo.save(job);
+
+    return ResponseEntity.ok(new String("PDF " + deleted.getId() + " has been removed!"));
+  }
 }

@@ -44,8 +44,9 @@ class Proofer extends React.Component {
     };
 
     const record = await this.Auth.fetch(`/api/v1/records/approve?job_id=${jobID}`, requestOptions);
-
-    console.log(record);
+    const test = await this.Auth.fetch(`/records/job/${jobID}`, requestOptions);
+    console.log(test);
+    // console.log(record);
 
     if (record.length !== 0) {
       this.setState({ id: record.id });
@@ -80,37 +81,25 @@ class Proofer extends React.Component {
 
       let stringInfo = JSON.stringify(this.state.info);
 
-      let jsonBody = {
-        id: this.state.id,
-        pdfId: this.state.pdfID,
-        checkedOut: false,
-        submitted: true,
-        approved: true,
-        json: stringInfo,
-      };
 
-      const raw = JSON.stringify(jsonBody);
+
+      const formData = new FormData();
+
+      formData.append("id", this.state.id);
+      formData.append("json", stringInfo);
 
       const approveRecord = {
         method: 'POST',
-        body: raw,
+        body: formData,
+        redirect: 'follow',
       };
 
-      const approvedRecord = await this.Auth.approveRecord('/api/v1/records/approveBy', approveRecord);
-      console.log(approvedRecord);
-      if (approvedRecord.status === 200) {
+      const approvedRecord = await this.Auth.putPDF('/api/v1/records/approveBy', approveRecord);
         Swal.fire({
           icon: 'success',
           title: 'Record approved!',
           footer: 'Loading next record...'
         });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: `${approvedRecord.text()}`,
-        });
-        return;
-      }
 
       this.setState({ loading: true });
 
