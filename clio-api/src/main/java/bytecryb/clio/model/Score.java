@@ -46,7 +46,9 @@ public class Score {
 	@Column(name = "score")
 	private int score;
 
-	public Score(long userId, Date date, int day, int month, int year, int score) {
+	
+
+	public Score(long userId, Date date, int score) {
 		super();
 		this.userId = userId;
 		this.date = date;

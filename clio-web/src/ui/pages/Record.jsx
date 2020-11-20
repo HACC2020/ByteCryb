@@ -3,18 +3,15 @@ import { Container, Row, Col, Button, Accordion, Card, Spinner } from "react-boo
 import { withRouter } from "react-router-dom";
 import {
   AutoForm,
-  AutoField,
   TextField,
   SelectField,
   SubmitField, ErrorsField,
 } from "uniforms-bootstrap4";
-import { bridge as schema } from "../../api/RookieTraining";
 import AuthService from '../../api/AuthService';
 import { xmlToJSON } from '../../xmlParser';
 import Swal from "sweetalert2";
 import { JSONBridge } from '../../api/XMLValidation';
 import _ from 'lodash';
-import { cleanup } from '@testing-library/react';
 
 class Record extends React.Component {
   constructor() {
@@ -31,6 +28,7 @@ class Record extends React.Component {
     };
     this.Auth = new AuthService();
   }
+
 
   async componentDidMount() {
     const urls = window.location.href.split('/');
@@ -51,21 +49,35 @@ class Record extends React.Component {
     this.setState({pdfID: record.pdfId});
 
     const pdfID = record.pdfId;
-    // console.log(pdfID)
 
-    const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
-    this.setState({ pdfFile: pdfFile });
+    if (pdfID === undefined) {
+      this.setState({ loading: false });
 
-    const XML = await this.Auth.fetchXML(`/api/v1/xml/${xmlID}`, requestOptions);
+    } else {
+      const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${pdfID}`, requestOptions);
+      this.setState({ pdfFile: pdfFile });
 
-    try {
-      this.setState({xmlJSON: xmlToJSON(XML)});
+      const XML = await this.Auth.fetchXML(`/api/v1/xml/${xmlID}`, requestOptions);
 
-    } catch (e) {
+      try {
+        this.setState({xmlJSON: xmlToJSON(XML)});
+
+      } catch (e) {
+      }
+
+      this.setState({ loading: false });
+
     }
 
-    this.setState({ loading: false });
+    setTimeout(() =>
+            alert('Session timed out. Please refresh.'),
+        50000);
   }
+
+  componentWillUnmount() {
+    clearTimeout(this.state.timer);
+  }
+
 
   render() {
 
@@ -73,29 +85,27 @@ class Record extends React.Component {
       this.setState({ info: info });
 
       let stringInfo = JSON.stringify(info);
+      
+      const formData = new FormData();
 
-      let jsonBody = {
-        id: this.state.id,
-        pdfId: this.state.pdfID,
-        checkedOut: false,
-        submitted: true,
-        approved: false,
-        json: stringInfo,
-      };
+      formData.append("id", this.state.id);
+      formData.append("json", stringInfo);
 
-      const raw = JSON.stringify(jsonBody);
+
+      // const raw = JSON.stringify(jsonBody);
 
       // console.log(raw);
 
       const updateRecord = {
         method: 'PUT',
-        body: raw,
+        body: formData,
+        redirect: 'follow',
       };
 
-      const response = await this.Auth.putPDF('/api/v1/records', updateRecord);
-      // console.log(response);
+      const response = await this.Auth.putPDF('/api/v1/records/submit', updateRecord);
+      console.log(response);
 
-      if (response.includes('JSON parse error')) {
+      if (response.message) {
         Swal.fire({
           icon: 'error',
           title: 'Error indexing',
@@ -185,7 +195,7 @@ class Record extends React.Component {
       )
     }
 
-    if (this.state.pdfFile === false) {
+    if (this.state.pdfID === undefined) {
       return (
           <Container align={'center'}>
             <h3>Sorry, this category has no available records!</h3>
@@ -200,7 +210,6 @@ class Record extends React.Component {
       e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
       return e.returnValue = 'Are you sure you want to close?';
     });
-
 
     const sticky = {
       position: "-webkit-sticky",

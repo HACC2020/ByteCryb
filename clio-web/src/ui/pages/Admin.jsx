@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Nav, Form, Tab, Row, Col, Table, Button, Spinner } from 'react-bootstrap';
+import { Container, Nav, Form, Tab, Row, Col, Table, Button, Spinner, Modal } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { JSONBridge } from '../../api/XMLValidation';
 import Swal from "sweetalert2";
@@ -8,7 +8,6 @@ import _ from 'lodash';
 import { xmlToJSON } from '../../xmlParser';
 import AuthService from '../../api/AuthService';
 import AdminTable from '../components/AdminTable';
-import CategoriesCard from '../components/CategoriesCard';
 
 class Admin extends React.Component {
   constructor(props) {
@@ -24,6 +23,7 @@ class Admin extends React.Component {
       XMLSpan: 'A preview of the job fields will be shown below once a XML file is uploaded.',
       categories: [],
       loadingButton: false,
+      points: 0,
     };
     this.Auth = new AuthService();
   }
@@ -154,6 +154,10 @@ class Admin extends React.Component {
       this.setState({ jobName: value });
     };
 
+    const getScore = (value) => {
+      this.setState({points: value});
+    };
+
     const exportCSV = async () => {
       const options = {
         method: 'GET',
@@ -164,7 +168,27 @@ class Admin extends React.Component {
     };
 
     const onCreateJob = async () => {
-      this.setState({loadingButton: true});
+
+      let isNum = /^\d+$/.test(this.state.points);
+
+      if (isNum === false) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid input',
+          text: `${this.state.points} is not a valid number`
+        });
+        return;
+      }
+
+      if (this.state.jobName.length === 0) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Sorry, category field is empty!',
+        });
+        return;
+      }
+
+      const points = parseInt(this.state.points);
 
       const formdata = new FormData();
       formdata.append("name", this.state.jobName);
@@ -176,7 +200,17 @@ class Admin extends React.Component {
       };
 
       let category = await this.Auth.fetch('/api/v1/categories', requestOptions);
-      const catID = category.match(/(\d+)/g);
+      let catID = '';
+
+      try {
+        catID = category.match(/(\d+)/g);
+      } catch (e) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Sorry, category field is empty!',
+        });
+        return;
+      }
 
       if (category.message) {
         Swal.fire({
@@ -185,6 +219,8 @@ class Admin extends React.Component {
         });
         return;
       }
+
+      this.setState({loadingButton: true});
 
       const formData = new FormData();
 
@@ -266,6 +302,7 @@ class Admin extends React.Component {
                         <th>Percentage Completed</th>
                         <th>Export as CSV</th>
                         <th>View Job</th>
+                        <th>Edit Job</th>
                       </tr>
                       </thead>
                       <tbody>
@@ -282,6 +319,10 @@ class Admin extends React.Component {
                           <Form.Group onChange={(e) => getJobName(e.target.value)}>
                             <Form.Label>Job Name</Form.Label>
                             <Form.Control placeholder="Eg. Chinese Arrivals"/>
+                          </Form.Group>
+                          <Form.Group onChange={(e) => getScore(e.target.value)}>
+                            <Form.Label>Points per Record</Form.Label>
+                            <Form.Control placeholder="5"/>
                           </Form.Group>
                           <Form.Group>
                             <Form.File id="exampleFormControlFile1" label="Upload XML File"

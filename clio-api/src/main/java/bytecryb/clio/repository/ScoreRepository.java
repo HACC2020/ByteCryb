@@ -13,6 +13,10 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
 
     List<Score> findByUserId(long userId);
 
+    // finds total score of a given user
+    @Query(value = "SELECT SUM(s.score) FROM Scores s WHERE s.user_id = ?1", nativeQuery = true)
+    int findTotalScoreByUserId(long userId);
+
     @Query(value = "SELECT s.user_id, SUM(s.score) FROM Scores s WHERE s.date = CURRENT_DATE GROUP BY s.user_id ORDER BY SUM(s.score) DESC", nativeQuery = true)
     List<Object[]> findAllDailyScores();
 

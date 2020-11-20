@@ -98,7 +98,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
+    const response = await fetch(url, {
       headers,
       ...options,
     });
@@ -126,7 +126,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
+    const response = await fetch(url, {
       headers,
       ...options,
     });
@@ -152,7 +152,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
+    const response = await fetch(url, {
       headers,
       ...options,
     });
@@ -179,7 +179,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
+    const response = await fetch(url, {
       headers,
       ...options,
     });
@@ -203,11 +203,10 @@ export default class AuthService {
     if (this.loggedIn()) {
       headers['Authorization'] = 'Bearer ' + this.getToken();
     }
-    headers['Content-Type'] = 'application/json';
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
+    const response = await fetch(url, {
       headers,
       ...options,
     });
@@ -215,6 +214,25 @@ export default class AuthService {
     console.log(response);
     let text = await response.text();
     return text;
+  }
+
+  async approveRecord(url, options) {
+    // performs api calls sending the required authentication headers
+    const headers = {};
+
+    if (this.loggedIn()) {
+      headers['Authorization'] = 'Bearer ' + this.getToken();
+    }
+    headers['Content-Type'] = 'application/json';
+
+    // console.log(headers);
+    // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
+    const response = await fetch(url, {
+      headers,
+      ...options,
+    });
+    // .then(this._checkStatus)
+    return await response;
   }
 
   _checkStatus(response) {
