@@ -185,7 +185,7 @@ class Proofer extends React.Component {
     if (this.state.id === false) {
       return (
           <Container align={'center'}>
-            <h3>Sorry, this category has no available records!</h3>
+            <h3>Sorry, this job has no available records!</h3>
             <a href={'/review-records'}>Go back</a>
           </Container>
       )
@@ -233,11 +233,11 @@ class Proofer extends React.Component {
                   </Button>
                 </Col>
 
-                <Col>
-                  <Button variant="danger" size="lg" block>
-                    Deny
-                  </Button>
-                </Col>
+                {/*<Col>*/}
+                {/*  <Button variant="danger" size="lg" block>*/}
+                {/*    Deny*/}
+                {/*  </Button>*/}
+                {/*</Col>*/}
                 <a style={{ marginLeft: ".5rem" }}/>
               </Row>
 
