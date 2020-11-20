@@ -118,22 +118,22 @@ class Landing extends React.Component {
                 </ListGroup>
               </Card.Body>
             </Card>
-            <Card className="text-center" style={{ marginTop: "3rem" }}>
-              <Card.Header>
-                <Card.Title>Activity</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                <ListGroup variant="flush">
-                  <ListGroup.Item>
-                    John Foo recently indexed 5 files
-                  </ListGroup.Item>
-                  <ListGroup.Item>Jane Foo approved 2 indexes </ListGroup.Item>
-                  <ListGroup.Item>
-                    Chinese Marriage records have been completed!{" "}
-                  </ListGroup.Item>
-                </ListGroup>
-              </Card.Body>
-            </Card>
+            {/*<Card className="text-center" style={{ marginTop: "3rem" }}>*/}
+            {/*  <Card.Header>*/}
+            {/*    <Card.Title>Activity</Card.Title>*/}
+            {/*  </Card.Header>*/}
+            {/*  <Card.Body>*/}
+            {/*    <ListGroup variant="flush">*/}
+            {/*      <ListGroup.Item>*/}
+            {/*        John Foo recently indexed 5 files*/}
+            {/*      </ListGroup.Item>*/}
+            {/*      <ListGroup.Item>Jane Foo approved 2 indexes </ListGroup.Item>*/}
+            {/*      <ListGroup.Item>*/}
+            {/*        Chinese Marriage records have been completed!{" "}*/}
+            {/*      </ListGroup.Item>*/}
+            {/*    </ListGroup>*/}
+            {/*  </Card.Body>*/}
+            {/*</Card>*/}
           </Col>
         </Row>
       </Container>
