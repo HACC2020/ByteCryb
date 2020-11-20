@@ -25,7 +25,7 @@ class Proofer extends React.Component {
       xmlID: '',
       id: '',
       pdfID: '',
-      loading: true,
+      loading: true
     };
     this.Auth = new AuthService();
   }
@@ -103,6 +103,12 @@ class Proofer extends React.Component {
           title: 'Record approved!',
           footer: 'Loading next record...'
         });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: `${record.text()}`,
+        });
+        return;
       }
 
     };

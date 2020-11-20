@@ -41,7 +41,7 @@ class ProoferCategories extends React.Component {
         <Container>
           <h2 align={"center"} style={{ marginBottom: "2rem" }}>
             {" "}
-            Categories to Review{" "}
+            Jobs to Review{" "}
           </h2>
           {this.state.categories.map((category, key) => {
             return <ProoferCard category={category} key={key}/>;

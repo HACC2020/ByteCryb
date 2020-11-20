@@ -1,11 +1,28 @@
 import React from 'react';
 import { Row, Col, Card, Button, ProgressBar } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import AuthService from '../../api/AuthService';
 
 class ProoferCard extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      unapprovedRecords: 0
+    };
+    this.Auth = new AuthService();
+  }
+
+  async componentDidMount() {
+    let requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    const record = await this.Auth.fetch(`/api/v1/records/unapproved/${this.props.category.id}`, requestOptions);
+    this.setState({unapprovedRecords: record.length})
+
+  }
 
   render() {
-    console.log(this.props.category)
     return (
         <Card style={{ marginBottom: '2rem' }} className='category'>
           <Card.Body>
@@ -15,12 +32,12 @@ class ProoferCard extends React.Component {
                   {this.props.category.name}
                 </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">
-                  0 record(s) to review
+                  {this.state.unapprovedRecords} record(s) to review
                 </Card.Subtitle>
                 <Card.Subtitle className="mb-2 text-muted">
                   <ProgressBar animated
-                               now={((this.props.category.indexed / this.props.category.size) * 100).toFixed(2)}
-                               label={`${((this.props.category.indexed / this.props.category.size) * 100).toFixed(2)}% complete`}/>
+                               now={((this.state.unapprovedRecords / this.props.category.size) * 100).toFixed(2)}
+                               label={`${((this.state.unapprovedRecords / this.props.category.size) * 100).toFixed(2)}% complete`}/>
                 </Card.Subtitle>
               </Col>
               <Col xs={2}>

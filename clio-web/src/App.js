@@ -68,8 +68,8 @@ import MyJob from './ui/pages/MyJob';
 import Proofer from './ui/pages/Proofer';
 import TestPage from './ui/pages/TestPage';
 import Record from './ui/pages/Record';
-import testFile from './ui/pages/testFile';
-
+import ProoferCategories from './ui/pages/ProoferCategories';
+import EditJobPage from './ui/pages/EditJobPage';
 
 class App extends React.Component {
   //<NavBar/>
@@ -82,15 +82,16 @@ class App extends React.Component {
             <Route exact path='/testPage' component={TestPage}/>
             <Route exact path='/' component={Login}/>
             <Route exact path='/signup' component={SignUp}/>
-            <Route exact path='/testfile' component={testFile}/>
-            <Route exact path='/record' component={Record}/>
+            <Route exact path='/record/:job_id' component={Record}/>
             <Route exact path='/my-job' component={MyJob}/>
             <Route exact path='/landing' component={Landing}/>
             <Route exact path='/leaderboard' component={Leaderboard}/>
             <Route exact path='/admin' component={Admin}/>
             <Route exact path='/view-profile' component={ViewProfile}/>
             <Route exact path='/training' component={RookieTraining}/>
-            <Route exact path='/proofer' component={Proofer}/>
+            <Route exact path='/review-records' component={ProoferCategories}/>
+            <Route exact path='/review/:job_id' component={Proofer}/>
+            <Route exact path='/edit-job/:job_id' component={EditJobPage}/>
           </Switch>
           <Footer/>
           

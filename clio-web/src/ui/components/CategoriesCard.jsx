@@ -15,6 +15,9 @@ class CategoriesCard extends React.Component {
                   {this.props.category.name}
                 </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">
+                  {this.props.category.size - this.props.category.indexed} record(s) left to index
+                </Card.Subtitle>
+                <Card.Subtitle className="mb-2 text-muted">
                   <ProgressBar animated now={((this.props.category.indexed / this.props.category.size) * 100).toFixed(2)}
                                label={`${((this.props.category.indexed / this.props.category.size) * 100).toFixed(2)}% complete`}/>
                 </Card.Subtitle>
