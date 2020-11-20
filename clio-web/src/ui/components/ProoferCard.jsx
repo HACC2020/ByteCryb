@@ -35,7 +35,7 @@ class ProoferCard extends React.Component {
                   {this.state.unapprovedRecords} record(s) to review
                 </Card.Subtitle>
                 <Card.Subtitle className="mb-2 text-muted">
-                  <ProgressBar animated
+                  <ProgressBar animated variant="success"
                                now={((this.state.unapprovedRecords / this.props.category.size) * 100).toFixed(2)}
                                label={`${((this.state.unapprovedRecords / this.props.category.size) * 100).toFixed(2)}% complete`}/>
                 </Card.Subtitle>

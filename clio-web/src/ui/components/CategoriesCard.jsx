@@ -18,12 +18,13 @@ class CategoriesCard extends React.Component {
                   {this.props.category.size - this.props.category.indexed} record(s) left to index
                 </Card.Subtitle>
                 <Card.Subtitle className="mb-2 text-muted">
-                  <ProgressBar animated now={((this.props.category.indexed / this.props.category.size) * 100).toFixed(2)}
+                  <ProgressBar variant="success"
+                      animated now={((this.props.category.indexed / this.props.category.size) * 100).toFixed(2)}
                                label={`${((this.props.category.indexed / this.props.category.size) * 100).toFixed(2)}% complete`}/>
                 </Card.Subtitle>
               </Col>
               <Col xs={2}>
-                <Button>
+                <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }}>
                   <Link to={{
                     pathname: `/record/${this.props.category.id}-${this.props.category.xmlId}`,
                     category: this.props.category,

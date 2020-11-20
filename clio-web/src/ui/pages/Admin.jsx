@@ -257,13 +257,13 @@ class Admin extends React.Component {
     const renderButton = () => {
       if (this.state.loadingButton === false) {
         return (
-            <Button variant="primary" onClick={onCreateJob}>
+            <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }} onClick={onCreateJob}>
               Submit
             </Button>
         )
       }
       return (
-          <Button variant="primary" disabled>
+          <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }} disabled>
             <Spinner
                 as="span"
                 animation="border"

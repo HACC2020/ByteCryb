@@ -56,7 +56,7 @@ class RookieTraining extends React.Component {
             Upon completion of the guide, you'll be granted access to the rest
             of the site.
           </p>
-          <Button variant="primary" onClick={onClickNext}>
+          <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }} onClick={onClickNext}>
             Press Next to Continue
           </Button>
         </Container>

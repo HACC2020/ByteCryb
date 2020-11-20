@@ -144,7 +144,8 @@ class ViewProfile extends React.Component {
               </AutoForm>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={props.onHide}>Close</Button>
+              <Button onClick={props.onHide}
+                      style={{ backgroundColor: '#52B788', borderColor: '#52B788' }}>Close</Button>
             </Modal.Footer>
           </Modal>
       )
@@ -240,7 +241,8 @@ class ViewProfile extends React.Component {
               </OverlayTrigger>
               <br/>
               <hr/>
-              <Button onClick={() => this.setState({ showModal: true })}>
+              <Button onClick={() => this.setState({ showModal: true })}
+                      style={{ backgroundColor: '#52B788', borderColor: '#52B788' }}>
                 <FontAwesomeIcon icon={faFile} style={{ marginRight: '0.5rem' }}/>
                 View Past Records
               </Button>
@@ -250,7 +252,8 @@ class ViewProfile extends React.Component {
               />
               <br/>
               <Button onClick={() => this.setState({ showEdit: true })}
-                      style={{ marginTop: '1rem' }}>
+                      style={{ backgroundColor: '#52B788', borderColor: '#52B788',
+                      marginTop: '1rem'}}>
                 <FontAwesomeIcon icon={faEdit} style={{ marginRight: '0.5rem' }}/>
                 Edit Profile
               </Button>

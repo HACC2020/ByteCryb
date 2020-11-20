@@ -51,13 +51,13 @@ class AdminTable extends React.Component {
     const renderExportButton = () => {
       if (this.state.loadingExport === false) {
         return (
-            <Button variant="primary" onClick={exportCSV}>
+            <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }} onClick={exportCSV}>
               Export
             </Button>
         )
       }
       return (
-          <Button variant="primary" disabled>
+          <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }} disabled>
             <Spinner
                 as="span"
                 animation="border"
@@ -114,10 +114,11 @@ class AdminTable extends React.Component {
             {renderExportButton()}
           </td>
           <td>
-            <Button variant="primary">View</Button>
+            <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }}>View</Button>
           </td>
           <td>
-            <Button variant="primary" onClick={() => this.setState({onShow: true})}>
+            <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }}
+                    onClick={() => this.setState({onShow: true})}>
               <Link to={{
                 pathname: `/edit-job/${this.props.category.id}`,
                 category: this.props.category,
