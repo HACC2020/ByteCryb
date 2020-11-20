@@ -10,9 +10,11 @@ class EditJobPage extends React.Component {
     this.state = {
       loading: true,
       job: [],
-      points: 0,
+      points: 5,
       pdfFiles: [],
       loadingButton: false,
+      jobID: 0,
+      currentPoints: 0,
     };
     this.Auth = new AuthService();
   }
@@ -20,8 +22,10 @@ class EditJobPage extends React.Component {
   async componentDidMount() {
     const options = {};
     const id = this.props.match.params.job_id;
+    this.setState({jobID: id});
     let job = await this.Auth.fetch(`/api/v1/jobs/${id}`, options);
     this.setState({ job: job });
+    this.setState({ currentPoints: job.points });
     this.setState({ loading: false });
   }
 
@@ -72,17 +76,17 @@ class EditJobPage extends React.Component {
 
       const points = {
         id: this.state.jobID,
-        points: this.state.points,
+        points: parseInt(this.state.points),
       };
 
       const addPointsOption = {
         method: 'PUT',
-        body: points,
+        body: JSON.stringify(points),
         redirect: 'follow',
       };
 
       let addPoints = await this.Auth.fetch('/api/v1/jobs/points', addPointsOption);
-      console.log(addPoints);
+
 
       if (this.state.pdfFiles.length !== 0) {
         const formData = new FormData();
@@ -106,6 +110,7 @@ class EditJobPage extends React.Component {
           Swal.fire({
             icon: 'success',
             title: `Successfully uploaded ${this.state.pdfFiles.length} records`,
+            footer: `Updated from ${this.state.currentPoints} to ${this.state.points} point(s) per record`
           })
         } else {
           Swal.fire({
@@ -114,8 +119,13 @@ class EditJobPage extends React.Component {
             text: job.message,
           })
         }
+      } else {
+        Swal.fire({
+          icon: 'success',
+          title: `Updated from ${this.state.currentPoints} to ${this.state.points} point(s) per record`,
+        });
       }
-
+      this.setState({currentPoints: this.state.points});
       this.setState({ loadingButton: false });
     };
 
@@ -147,7 +157,7 @@ class EditJobPage extends React.Component {
           <Form>
             <Form.Group onChange={(e) => getScore(e.target.value)}>
               <Form.Label>Points per Record</Form.Label>
-              <Form.Control placeholder="5"/>
+              <Form.Control placeholder={`Current Points: ${this.state.currentPoints}`}/>
             </Form.Group>
             <Form.Group>
               <Form.File id="exampleFormControlFile1" label="Upload PDF File(s)"

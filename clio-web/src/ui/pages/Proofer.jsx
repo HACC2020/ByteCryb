@@ -44,9 +44,6 @@ class Proofer extends React.Component {
     };
 
     const record = await this.Auth.fetch(`/api/v1/records/approve?job_id=${jobID}`, requestOptions);
-    const test = await this.Auth.fetch(`/records/job/${jobID}`, requestOptions);
-    console.log(test);
-    // console.log(record);
 
     if (record.length !== 0) {
       this.setState({ id: record.id });

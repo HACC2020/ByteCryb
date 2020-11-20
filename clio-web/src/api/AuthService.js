@@ -232,8 +232,7 @@ export default class AuthService {
       ...options,
     });
     // .then(this._checkStatus)
-
-    return response;
+    return await response;
   }
 
   _checkStatus(response) {
