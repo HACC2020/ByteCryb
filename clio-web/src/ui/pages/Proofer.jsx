@@ -96,8 +96,9 @@ class Proofer extends React.Component {
         body: raw,
       };
 
-      const record = await this.Auth.approveRecord('/api/v1/records/approveBy', approveRecord);
-      if (record.status === 200) {
+      const approvedRecord = await this.Auth.approveRecord('/api/v1/records/approveBy', approveRecord);
+      console.log(approvedRecord);
+      if (approvedRecord.status === 200) {
         Swal.fire({
           icon: 'success',
           title: 'Record approved!',
@@ -106,10 +107,42 @@ class Proofer extends React.Component {
       } else {
         Swal.fire({
           icon: 'error',
-          title: `${record.text()}`,
+          title: `${approvedRecord.text()}`,
         });
         return;
       }
+
+      this.setState({ loading: true });
+
+      let requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+
+      const record = await this.Auth.fetch(`/api/v1/records/approve?job_id=${this.state.jobID}`, requestOptions);
+
+      console.log(record);
+
+      if (record.length !== 0) {
+        this.setState({ id: record.id });
+        this.setState({ pdfID: record.pdfId });
+        this.setState({ info: JSON.parse(record.json) });
+        const pdfID = record.pdfId;
+
+        const pdfFile = await this.Auth.fetchPDF(`/api/v1/pdf/${this.state.pdfID}`, requestOptions);
+        this.setState({ pdfFile: pdfFile });
+
+        const XML = await this.Auth.fetchXML(`/api/v1/xml/${this.state.xmlID}`, requestOptions);
+
+        try {
+          this.setState({ xmlJSON: xmlToJSON(XML) });
+
+        } catch (e) {
+        }
+      } else {
+        this.setState({id: false})
+      }
+      this.setState({ loading: false });
 
     };
 
