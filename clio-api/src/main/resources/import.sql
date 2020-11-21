@@ -16,3 +16,13 @@ INSERT INTO scores (id, user_id, date, score) VALUES (5, 1, CURRENT_DATE + 1, 55
 
 INSERT INTO jobs (id, name, category_id, status, xml_id, num_indexed, size, points) VALUES (1, 'test1', 1, 1, 1, 0, 2, 3);
 INSERT INTO jobs (id, name, category_id, status, xml_id, num_indexed, size, points) VALUES (2, 'test2', 1, 1, 2, 0, 3, 5);
+
+INSERT INTO badges (id, name, score, description, color) VALUES (1, 'First Index', 1, 'Indexed first record', 'Blue');
+INSERT INTO badges (id, name, score, description, color) VALUES (2, 'Baby Steps', 50, '50 Points', 'Blue');
+INSERT INTO badges (id, name, score, description, color) VALUES (3, 'Bronze', 100, '100 Points', 'Blue');
+INSERT INTO badges (id, name, score, description, color) VALUES (4, 'Copper', 200, '200 Points', 'Blue');
+INSERT INTO badges (id, name, score, description, color) VALUES (5, 'Gold', 1000, '1000 Points', 'Blue');
+INSERT INTO badges (id, name, score, description, color) VALUES (6, 'Platinum', 5000, '5000 Points', 'Blue');
+INSERT INTO badges (id, name, score, description, color) VALUES (7, 'Diamond', 10000, '10000 Points', 'Blue');
+INSERT INTO badges (id, name, score, description, color) VALUES (8, 'Neverending Supporter', 50000, '50000 Points', 'Blue');
+INSERT INTO badges (id, name, score, description, color) VALUES (9, 'Are you retired or something?', 100000, '100000 Points', 'Blue');
