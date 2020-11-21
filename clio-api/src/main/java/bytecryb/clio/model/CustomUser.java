@@ -64,6 +64,11 @@ public class CustomUser {
     @Column(name = "last_name")
     private String lastName;
 
+    @Getter
+    @Setter
+    @Column(name = "profile_pic_id")
+    private Long picId;
+
     @OneToMany(mappedBy = "user")
     Set<Award> awards;
 

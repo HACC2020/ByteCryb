@@ -16,17 +16,23 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import bytecryb.clio.exception.ResourceNotFoundException;
 import bytecryb.clio.model.CustomUser;
+import bytecryb.clio.model.ProfilePic;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
 import bytecryb.clio.model.Score;
@@ -34,6 +40,7 @@ import bytecryb.clio.repository.RoleRepository;
 import bytecryb.clio.repository.ScoreRepository;
 import bytecryb.clio.repository.UserRepository;
 import bytecryb.clio.service.CustomUserDetailsService;
+import bytecryb.clio.service.ProfilePicService;
 import bytecryb.clio.util.JwtUtil;
 
 @RestController
@@ -60,6 +67,9 @@ public class UserController {
 
 	@Autowired
 	private CustomUserDetailsService userDetailsService;
+
+	@Autowired
+	private ProfilePicService profilePicService;
 
 	@Autowired
 	private JwtUtil jwtTokenUtil;
@@ -239,5 +249,50 @@ public class UserController {
 			return bearerToken.substring(7, bearerToken.length());
 		}
 		return null;
+	}
+
+	@GetMapping("/users/profile/pic")
+	public ResponseEntity<Resource> getPic(HttpServletRequest request) throws ResourceNotFoundException {
+		// get username
+		String jwtToken = extractJwtFromRequest(request);
+		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
+
+		// create CustomUser object to find role, scores, and badges
+		CustomUser currUser = this.userRepo.findByUsername(currUsername);
+
+		return ResponseEntity.ok(this.profilePicService.getProfilePicById(currUser.getPicId()));
+	}
+
+	@DeleteMapping("/users/profile/pic")
+	public ResponseEntity<String> deletePic(HttpServletRequest request) throws ResourceNotFoundException {
+		// get username
+		String jwtToken = extractJwtFromRequest(request);
+		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
+
+		// create CustomUser object to find role, scores, and badges
+		CustomUser currUser = this.userRepo.findByUsername(currUsername);
+
+		this.profilePicService.removeProfilePic(currUser.getPicId());
+
+		return ResponseEntity.ok(new String("Profile picture has been removed!"));
+	}
+
+	@PostMapping("/users/profile/pic")
+	public ResponseEntity<String> uploadPic(@RequestBody MultipartFile pic, HttpServletRequest request)
+			throws Exception {
+		// get username
+		String jwtToken = extractJwtFromRequest(request);
+		String currUsername = jwtUtil.getUsernameFromToken(jwtToken);
+
+		// create CustomUser object to find role, scores, and badges
+		CustomUser currUser = this.userRepo.findByUsername(currUsername);
+
+		ProfilePic result = this.profilePicService.uploadProfilePic(pic);
+
+		currUser.setPicId(result.getId());
+
+		this.userRepo.save(currUser);
+
+		return ResponseEntity.ok(new String("Profile Picture Added!"));
 	}
 }
