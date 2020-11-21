@@ -19,6 +19,20 @@ class AdminTable extends React.Component {
 
   render() {
 
+    function renderDate(props) {
+      if (props.lastIndexed === null) {
+        return (
+            'Never indexed yet'
+        )
+      }
+
+      const date = new Date(props.lastIndexed);
+      const text = date.toLocaleString('en-US');
+      return (
+          `${text}`
+      )
+    };
+
     function saveAs(url, fileName) {
 
       var anchorElem = document.createElement("a");
@@ -104,11 +118,12 @@ class AdminTable extends React.Component {
     //   );
     // }
 
+
     return (
         <tr>
           <td>{this.props.category.id}</td>
           <td>{this.props.category.name}</td>
-          <td>Nov 2 2020 at 7:21am</td>
+          <td>{renderDate(this.props.category)}</td>
           <td>{((this.props.category.indexed / this.props.category.size) * 100).toFixed(2)}%</td>
           <td>
             {renderExportButton()}
