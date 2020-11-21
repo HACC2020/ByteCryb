@@ -301,7 +301,6 @@ class Admin extends React.Component {
                         <th>Last Updated</th>
                         <th>Percentage Completed</th>
                         <th>Export as CSV</th>
-                        <th>View Job</th>
                         <th>Edit Job</th>
                       </tr>
                       </thead>

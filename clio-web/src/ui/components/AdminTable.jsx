@@ -129,9 +129,6 @@ class AdminTable extends React.Component {
             {renderExportButton()}
           </td>
           <td>
-            <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }}>View</Button>
-          </td>
-          <td>
             <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }}
                     onClick={() => this.setState({onShow: true})}>
               <Link to={{
