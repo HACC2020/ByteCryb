@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -61,7 +63,9 @@ public class UserAuthentication {
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
-		return ResponseEntity.ok(new AuthenticationResponse(token));
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Authorization", "Bearer " + token);
+		return new ResponseEntity<String>(token, responseHeaders, HttpStatus.OK);
 	}
 	
 	// {username, email, password}
@@ -83,7 +87,9 @@ public class UserAuthentication {
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		resUser.setAuthToken(token);
-		return ResponseEntity.ok(resUser);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Authorization", "Bearer " + token);
+		return new ResponseEntity<ResultUser>(resUser, responseHeaders, HttpStatus.OK);
 	}
 
 	@RequestMapping(value="/login/google")
