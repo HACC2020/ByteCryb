@@ -18,24 +18,28 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FileException.class)
     public ResponseEntity<?> relayFileException(FileException e, WebRequest request) {
+        // e.printStackTrace();
         HttpError error = new HttpError(new Date(), e.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> relayResourceNotFoundException(ResourceNotFoundException e, WebRequest request) {
+        // e.printStackTrace();
         HttpError error = new HttpError(new Date(), e.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UnsupportedFileException.class)
     public ResponseEntity<?> relayUnsupportedFileException(UnsupportedFileException e, WebRequest request) {
+        // e.printStackTrace();
         HttpError error = new HttpError(new Date(), e.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(error, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> relayException(Exception e, WebRequest request) {
+        // e.printStackTrace();
         HttpError error = new HttpError(new Date(), e.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
