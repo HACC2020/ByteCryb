@@ -100,7 +100,7 @@ export default class AuthService {
 
     // console.log(headers);
     // 'https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
@@ -128,7 +128,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
@@ -154,7 +154,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
@@ -181,7 +181,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
@@ -208,7 +208,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
@@ -229,7 +229,7 @@ export default class AuthService {
 
     // console.log(headers);
     // https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url
-    const response = await fetch(url, {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://164.90.149.100:8080'+ url, {
       headers,
       ...options,
     });
