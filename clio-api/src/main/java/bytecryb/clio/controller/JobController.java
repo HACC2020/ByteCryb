@@ -95,12 +95,12 @@ public class JobController {
 
     // Get time stamp of when a Job was last updated/indexed
     @GetMapping("/jobs/lastUpdated/{job_id}")
-    public ResponseEntity<Timestamp> getLastUpdatedTime(@PathVariable(name = "job_id") long jobId) throws ResourceNotFoundException {
+    public ResponseEntity<String> getLastUpdatedTime(@PathVariable(name = "job_id") long jobId) throws ResourceNotFoundException {
         Job job = this.jobRepo.findById(jobId)
                 .orElseThrow(() -> new ResourceNotFoundException("Job" + jobId + " was not found!"));
         
         Timestamp result = job.getLastIndexed();
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(result.toString());
     }
 
     @PostMapping("/jobs")
