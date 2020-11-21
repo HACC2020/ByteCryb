@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -20,8 +21,8 @@ import lombok.ToString;
 @Table(name = "profile_pic")
 public class ProfilePic {
 
+    @Id
     @Getter
-    @Setter
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pic_id_generator")
     @SequenceGenerator(name = "pic_id_generator", sequenceName = "pic_id_seq")
     @Column(name = "id", updatable = false, nullable = false)
