@@ -17,6 +17,7 @@ class LeaderboardRanking extends React.Component {
     };
 
     const numberOne = () => {
+
       return (
           <div align={'center'}>
             <Card style={{ width: '15rem' }} className={'leaderboardTopThree'}>

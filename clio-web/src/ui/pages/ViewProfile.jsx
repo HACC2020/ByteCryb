@@ -13,7 +13,7 @@ import { faEdit, faFile, faTrophy, faAward, faUserCircle } from '@fortawesome/fr
 import { AutoForm, SubmitField, TextField } from 'uniforms-bootstrap4';
 import { bridge as schema } from '../../api/EditProfile';
 import Swal from "sweetalert2";
-import  _  from 'lodash';
+import _ from 'lodash';
 
 class ViewProfile extends React.Component {
   constructor(props) {
@@ -31,6 +31,7 @@ class ViewProfile extends React.Component {
       loggedIn: true,
       recordName: [],
       badges: [],
+      profilePic: '',
     };
     this.Auth = new AuthService();
   }
@@ -38,7 +39,6 @@ class ViewProfile extends React.Component {
   async componentDidMount() {
     const token = this.Auth.getToken();
     if (token) {
-
 
       this.setState({ token: token });
       this.setState({ role: sessionStorage.getItem('role') });
@@ -54,14 +54,14 @@ class ViewProfile extends React.Component {
       this.setState({ score: profile.score });
       this.setState({ username: username });
 
-      const records = _.filter(allRecords, {submittedBy: parseInt(userID)});
+      const records = _.filter(allRecords, { submittedBy: parseInt(userID) });
 
       const jobName = [];
       for (let i = 0; i < records.length; i++) {
         let job = await this.Auth.fetch(`/api/v1/jobs/${records[i].jobId}`, options);
         jobName.push(job.name)
       }
-      this.setState({recordName: jobName});
+      this.setState({ recordName: jobName });
       this.setState({ first_name: firstName });
       this.setState({ last_name: lastName });
 
@@ -73,7 +73,14 @@ class ViewProfile extends React.Component {
           badges.push(allBadges[i])
         }
       }
-      this.setState({badges: badges});
+      this.setState({ badges: badges });
+
+      const profilePic = await this.Auth.fetchProfilePic('/api/v1/users/profile/pic', {});
+      if (!profilePic.message) {
+        this.setState({ profilePic: profilePic })
+      } else {
+        this.setState({ profilePic: 'https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg' })
+      }
 
       this.setState({ loading: false });
     } else {
@@ -110,6 +117,7 @@ class ViewProfile extends React.Component {
     const iconStyle = {
       height: '15rem',
       width: 'auto',
+      border: 'solid'
     };
 
     const renderTooltip = (props) => (
@@ -125,7 +133,6 @@ class ViewProfile extends React.Component {
       profilePic = pic[0];
     };
 
-
     const onSubmit = async (data) => {
       const updateRecord = {
         method: 'PUT',
@@ -134,13 +141,13 @@ class ViewProfile extends React.Component {
       let response = await this.Auth.fetch('/api/v1/users/updateNames', updateRecord);
       sessionStorage.setItem('id_token', response.token);
 
-      this.setState({showEdit: false});
+      this.setState({ showEdit: false });
 
       console.log(profilePic);
 
       const formData = new FormData();
 
-      formData.append('file.png', profilePic);
+      formData.append('file', profilePic);
 
       const profileOption = {
         method: 'POST',
@@ -149,16 +156,31 @@ class ViewProfile extends React.Component {
       };
 
       let profilePicture = await this.Auth.fetch('/api/v1/users/profile/pic', profileOption);
-      console.log(profilePicture);
+
+      if (profilePicture.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Failed to upload picture",
+          text: `${profilePicture.message}`
+        });
+        return;
+      }
+
+      const fetchPic = await this.Auth.fetchProfilePic('/api/v1/users/profile/pic', {});
+      if (!fetchPic.message) {
+        this.setState({ profilePic: fetchPic })
+      } else {
+        this.setState({ profilePic: 'https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg' })
+      }
 
       Swal.fire({
         icon: "success",
         title: "Profile updated!",
       });
 
-      this.setState({first_name: data.first_name});
-      this.setState({last_name: data.last_name});
-      this.setState({username: data.username});
+      this.setState({ first_name: data.first_name });
+      this.setState({ last_name: data.last_name });
+      this.setState({ username: data.username });
 
     };
 
@@ -189,7 +211,7 @@ class ViewProfile extends React.Component {
                 <TextField name={'first_name'}/>
                 <TextField name={'last_name'}/>
                 <TextField name={'username'}/>
-                <Form style={{marginBottom: '1rem'}}>
+                <Form style={{ marginBottom: '1rem' }}>
                   <Form.File
                       id="custom-file"
                       label="Upload Profile Picture"
@@ -233,7 +255,7 @@ class ViewProfile extends React.Component {
                 {props.recordName.map((job, key) => {
                   return (
                       <tr>
-                        <td>{key+1}</td>
+                        <td>{key + 1}</td>
                         <td>{job}</td>
                       </tr>
                   )
@@ -257,7 +279,7 @@ class ViewProfile extends React.Component {
             <Col xs={6}>
               <Container align={'center'}>
                 <Image
-                    src="https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg"
+                    src={this.state.profilePic}
                     roundedCircle
                     style={iconStyle}
                 />
@@ -301,8 +323,10 @@ class ViewProfile extends React.Component {
               />
               <br/>
               <Button onClick={() => this.setState({ showEdit: true })}
-                      style={{ backgroundColor: '#52B788', borderColor: '#52B788',
-                      marginTop: '1rem'}}>
+                      style={{
+                        backgroundColor: '#52B788', borderColor: '#52B788',
+                        marginTop: '1rem'
+                      }}>
                 <FontAwesomeIcon icon={faEdit} style={{ marginRight: '0.5rem' }}/>
                 Edit Profile
               </Button>
