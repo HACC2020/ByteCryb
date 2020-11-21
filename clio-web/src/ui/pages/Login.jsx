@@ -93,6 +93,7 @@ class Login extends React.Component {
             <Image src={"./hsa-logo.png"} style={imgStyle} />
             <div>
               <p
+                className={"animate__animated animate__fadeInLeft"}
                 style={{
                   fontSize: 35,
                   fontWeight: 900,
@@ -104,7 +105,11 @@ class Login extends React.Component {
               >
                 WE NEED YOUR HELP
               </p>
-              <p style={{ paddingTop: "1rem" }} class="paragraph">
+              <p
+                style={{ paddingTop: "1rem", animationDelay: "1s" }}
+                class="paragraph"
+                className={"animate__animated animate__fadeInLeft"}
+              >
                 The Public Archives of Hawai'i are the keepers of public memory.
                 As such, they hold millions of records that protect your rights,
                 identity, property and history. Given the volume and varying
@@ -112,7 +117,11 @@ class Login extends React.Component {
                 difficult or time consuming to find. With your help, we can make
                 finding records a much easier and straightforward process..
               </p>
-              <p class="paragraph">
+              <p
+                class="paragraph"
+                className={"animate__animated animate__fadeInLeft"}
+                style={{ animationDelay: "1s" }}
+              >
                 Volunteer today to help us index these records and join us in
                 connecting the people of Hawaiʻi with their past, their
                 heritage, and their culture!
