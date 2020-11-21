@@ -316,4 +316,9 @@ public class UserController {
 
 		return ResponseEntity.ok(new String("Profile Picture Added!"));
 	}
+
+	@GetMapping("/users/profile/pic/{id}")
+	public ResponseEntity<Resource> getPic(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+		return ResponseEntity.ok(this.profilePicService.getProfilePicById(id));
+	}
 }
