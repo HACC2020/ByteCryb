@@ -26,3 +26,6 @@ INSERT INTO badges (id, name, score, description, color) VALUES (6, 'Platinum', 
 INSERT INTO badges (id, name, score, description, color) VALUES (7, 'Diamond', 10000, '10000 Points', 'Blue');
 INSERT INTO badges (id, name, score, description, color) VALUES (8, 'Neverending Supporter', 50000, '50000 Points', 'Blue');
 INSERT INTO badges (id, name, score, description, color) VALUES (9, 'Are you retired or something?', 100000, '100000 Points', 'Blue');
+
+INSERT INTO awards (id, user_id, badge_id) VALUES (1, 1, 1);
+INSERT INTO awards (id, user_id, badge_id) VALUES (2, 1, 3);
