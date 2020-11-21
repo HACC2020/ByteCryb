@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bytecryb.clio.exception.SignupTakenException;
 import bytecryb.clio.model.AuthenticationRequest;
+import bytecryb.clio.model.AuthenticationResponse;
 import bytecryb.clio.model.CustomUser;
 import bytecryb.clio.model.ResultUser;
 import bytecryb.clio.model.Role;
@@ -64,7 +65,7 @@ public class UserAuthentication {
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Authorization", "Bearer " + token);
-		return new ResponseEntity<String>("User authenticated!", responseHeaders, HttpStatus.OK);
+		return new ResponseEntity<String>(token, responseHeaders, HttpStatus.OK);
 	}
 	
 	// {username, email, password}
@@ -85,6 +86,7 @@ public class UserAuthentication {
 		ResultUser resUser = new ResultUser(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), "rookie");
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(resUser.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
+		resUser.setAuthToken(token);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Authorization", "Bearer " + token);
 		return new ResponseEntity<ResultUser>(resUser, responseHeaders, HttpStatus.OK);
