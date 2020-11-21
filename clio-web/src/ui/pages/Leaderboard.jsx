@@ -37,6 +37,48 @@ class Leaderboard extends React.Component {
     this.setState({ current: data });
     this.setState({ loading: false });
 
+    let users = await this.Auth.fetch("/api/v1/users", options);
+    console.log(users);
+
+    const dailyID = [];
+    const monthlyID = [];
+    const allTimeID = [];
+
+    for (let i = 0; i < daily.length; i++) {
+      for (let j = 0; j < users.length; j++) {
+        if (daily[i].username === users[j].username) {
+          dailyID.push(users[j].id)
+        }
+      }
+    }
+
+    for (let i = 0; i < daily.length; i++) {
+      for (let j = 0; j < users.length; j++) {
+        if (month[i].username === users[j].username) {
+          monthlyID.push(users[j].id)
+        }
+      }
+    }
+
+    for (let i = 0; i < daily.length; i++) {
+      for (let j = 0; j < users.length; j++) {
+        if (allTime[i].username === users[j].username) {
+          allTimeID.push(users[j].id)
+        }
+      }
+    }
+
+    const dailyPic = [];
+    for (let i = 0; i < dailyID.length; i++) {
+      const profilePic = await this.Auth.fetchProfilePic(`/api/v1/users/profile/pic/${dailyID[i]}`, {});
+      if (profilePic === false) {
+        dailyPic.push('https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg')
+      } else {
+        dailyPic.push(profilePic);
+      }
+    }
+    console.log(dailyPic)
+
   }
 
   render() {

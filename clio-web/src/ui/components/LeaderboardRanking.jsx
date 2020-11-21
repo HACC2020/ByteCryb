@@ -9,7 +9,7 @@ class LeaderboardRanking extends React.Component {
 
   render() {
 
-    console.log(this.props.users)
+    console.log(this.props.users);
 
     const profileImg = {
       width: '5rem',

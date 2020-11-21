@@ -76,7 +76,7 @@ class ViewProfile extends React.Component {
       this.setState({ badges: badges });
 
       const profilePic = await this.Auth.fetchProfilePic('/api/v1/users/profile/pic', {});
-      if (!profilePic.message) {
+      if (profilePic !== false) {
         this.setState({ profilePic: profilePic })
       } else {
         this.setState({ profilePic: 'https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg' })

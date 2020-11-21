@@ -236,6 +236,10 @@ export default class AuthService {
     // .then(this._checkStatus)
     console.log(response);
 
+    if (response.status === 404) {
+      return false;
+    }
+
     let text = await response.blob();
     var objectURL = window.URL.createObjectURL(text);
     return objectURL;

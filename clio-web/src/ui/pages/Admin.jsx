@@ -31,6 +31,8 @@ class Admin extends React.Component {
   async componentDidMount() {
     const options = {};
     let categories = await this.Auth.fetch("/api/v1/jobs", options);
+
+    // let photos = await this.Auth.fetch("/users/profile/pic/{id}", options);
     this.setState({ categories: categories });
     this.setState({loading: false});
   }
