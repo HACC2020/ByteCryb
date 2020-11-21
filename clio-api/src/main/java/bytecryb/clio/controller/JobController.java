@@ -8,8 +8,6 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
-import com.nimbusds.oauth2.sdk.Response;
-
 import org.json.CDL;
 import org.json.JSONArray;
 import org.json.JSONObject;
