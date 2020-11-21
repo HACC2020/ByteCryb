@@ -290,7 +290,7 @@ public class UserController {
 	}
 
 	@PostMapping("/users/profile/pic")
-	public ResponseEntity<String> uploadPic(@RequestParam("pic") MultipartFile pic, HttpServletRequest request)
+	public ResponseEntity<String> uploadPic(@RequestParam("file") MultipartFile pic, HttpServletRequest request)
 			throws Exception {
 		// get username
 		String jwtToken = extractJwtFromRequest(request);
