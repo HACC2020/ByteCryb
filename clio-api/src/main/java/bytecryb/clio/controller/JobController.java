@@ -1,11 +1,14 @@
 package bytecryb.clio.controller;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
+
+import com.nimbusds.oauth2.sdk.Response;
 
 import org.json.CDL;
 import org.json.JSONArray;
@@ -87,6 +90,16 @@ public class JobController {
         if (!this.categoryRepo.existsById(categoryId)) throw new IllegalArgumentException("Category with category_id: " + categoryId + " does not exist!");
 
         List<Job> result = this.jobRepo.findByCategoryId(categoryId);
+        return ResponseEntity.ok().body(result);
+    }
+
+    // Get time stamp of when a Job was last updated/indexed
+    @GetMapping("/jobs/lastUpdated/{job_id}")
+    public ResponseEntity<Timestamp> getLastUpdatedTime(@PathVariable(name = "job_id") long jobId) throws ResourceNotFoundException {
+        Job job = this.jobRepo.findById(jobId)
+                .orElseThrow(() -> new ResourceNotFoundException("Job" + jobId + " was not found!"));
+        
+        Timestamp result = job.getLastIndexed();
         return ResponseEntity.ok().body(result);
     }
 

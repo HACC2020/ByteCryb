@@ -1,5 +1,7 @@
 package bytecryb.clio.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -60,6 +62,11 @@ public class Job {
 	@Setter
 	@Column(name = "points")
 	private int points;
+
+	@Getter
+	@Setter
+	@Column(name = "last_indexed")
+	private Timestamp lastIndexed;
 
 	public Job(String name, long categoryId, int status, long xmlId, int indexed, int size, int points) {
 		super();
