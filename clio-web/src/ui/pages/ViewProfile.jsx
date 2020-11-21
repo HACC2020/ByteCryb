@@ -30,7 +30,7 @@ class ViewProfile extends React.Component {
       loading: true,
       loggedIn: true,
       recordName: [],
-      profilePic: null,
+      badges: [],
     };
     this.Auth = new AuthService();
   }
@@ -64,6 +64,16 @@ class ViewProfile extends React.Component {
       this.setState({recordName: jobName});
       this.setState({ first_name: firstName });
       this.setState({ last_name: lastName });
+
+      const allBadges = await this.Auth.fetch('/api/v1/badges', options);
+      const badges = [];
+
+      for (let i = 0; i < allBadges.length; i++) {
+        if (allBadges[i].score <= profile.score) {
+          badges.push(allBadges[i])
+        }
+      }
+      this.setState({badges: badges});
 
       this.setState({ loading: false });
     } else {
@@ -103,21 +113,20 @@ class ViewProfile extends React.Component {
     };
 
     const renderTooltip = (props) => (
+
         <Tooltip id="button-tooltip" {...props}>
-          Indexed 1 record
+          {props.description}
         </Tooltip>
     );
 
     let profilePic = '';
 
     const savePic = (pic) => {
-      console.log(pic)
       profilePic = pic[0];
     };
 
 
     const onSubmit = async (data) => {
-      console.log('pic', profilePic, data)
       const updateRecord = {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -127,7 +136,7 @@ class ViewProfile extends React.Component {
 
       this.setState({showEdit: false});
 
-      console.log(profilePic)
+      console.log(profilePic);
 
       const formData = new FormData();
 
@@ -140,7 +149,7 @@ class ViewProfile extends React.Component {
       };
 
       let profilePicture = await this.Auth.fetch('/api/v1/users/profile/pic', profileOption);
-      console.log(profilePicture)
+      console.log(profilePicture);
 
       Swal.fire({
         icon: "success",
@@ -264,15 +273,20 @@ class ViewProfile extends React.Component {
                 <FontAwesomeIcon icon={faTrophy} style={{ marginRight: '0.5rem' }}/>
                 Badges
               </h4>
-              <OverlayTrigger
-                  placement="top"
-                  delay={{ show: 250, hide: 400 }}
-                  overlay={renderTooltip}
-              >
-                <Badge pill variant="primary" style={{ marginBottom: '5rem' }}>
-                  1st index!
-                </Badge>
-              </OverlayTrigger>
+              {this.state.badges.map((badge, key) => {
+                return (
+                    <OverlayTrigger
+                        key={key}
+                        placement="top"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={renderTooltip(badge)}
+                    >
+                      <Badge style={{ marginBottom: '5rem', backgroundColor: `${badge.color}` }}>
+                        {badge.name}
+                      </Badge>
+                    </OverlayTrigger>
+                )
+              })}
               <br/>
               <hr/>
               <Button onClick={() => this.setState({ showModal: true })}
