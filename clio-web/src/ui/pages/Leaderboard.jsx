@@ -46,7 +46,7 @@ class Leaderboard extends React.Component {
 
     for (let i = 0; i < daily.length; i++) {
       for (let j = 0; j < users.length; j++) {
-        if (daily[i].username === users[j].username) {
+        if (users[i].username === daily[j].username) {
           dailyID.push(users[j].id)
         }
       }
@@ -77,7 +77,34 @@ class Leaderboard extends React.Component {
         dailyPic.push(profilePic);
       }
     }
-    console.log(dailyPic)
+
+    const monthPic = [];
+    for (let i = 0; i < monthlyID.length; i++) {
+      const profilePic = await this.Auth.fetchProfilePic(`/api/v1/users/profile/pic/${dailyID[i]}`, {});
+      if (profilePic === false) {
+        monthPic.push('https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg')
+      } else {
+        monthPic.push(profilePic);
+      }
+    }
+
+    const alltimePic = [];
+    for (let i = 0; i < allTimeID.length; i++) {
+      const profilePic = await this.Auth.fetchProfilePic(`/api/v1/users/profile/pic/${dailyID[i]}`, {});
+      if (profilePic === false) {
+        alltimePic.push('https://st2.depositphotos.com/4111759/12123/v/950/depositphotos_121232794-stock-illustration-male-default-placeholder-avatar-profile.jpg')
+      } else {
+        alltimePic.push(profilePic);
+      }
+    }
+
+    const allPic = [];
+
+    allPic.push(dailyPic);
+    allPic.push(monthPic);
+    allPic.push(alltimePic);
+
+    console.log(allPic)
 
   }
 
