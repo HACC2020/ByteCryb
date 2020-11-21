@@ -4,7 +4,7 @@ import {
   Container,
   Tooltip,
   Button,
-  OverlayTrigger, Row, Col, Table, Badge, Modal, Spinner
+  OverlayTrigger, Row, Col, Table, Badge, Modal, Spinner, Form
 } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
@@ -30,6 +30,7 @@ class ViewProfile extends React.Component {
       loading: true,
       loggedIn: true,
       recordName: [],
+      badges: [],
     };
     this.Auth = new AuthService();
   }
@@ -37,6 +38,8 @@ class ViewProfile extends React.Component {
   async componentDidMount() {
     const token = this.Auth.getToken();
     if (token) {
+
+
       this.setState({ token: token });
       this.setState({ role: sessionStorage.getItem('role') });
       const options = {};
@@ -61,6 +64,16 @@ class ViewProfile extends React.Component {
       this.setState({recordName: jobName});
       this.setState({ first_name: firstName });
       this.setState({ last_name: lastName });
+
+      const allBadges = await this.Auth.fetch('/api/v1/badges', options);
+      const badges = [];
+
+      for (let i = 0; i < allBadges.length; i++) {
+        if (allBadges[i].score <= profile.score) {
+          badges.push(allBadges[i])
+        }
+      }
+      this.setState({badges: badges});
 
       this.setState({ loading: false });
     } else {
@@ -100,10 +113,18 @@ class ViewProfile extends React.Component {
     };
 
     const renderTooltip = (props) => (
+
         <Tooltip id="button-tooltip" {...props}>
-          Indexed 1 record
+          {props.description}
         </Tooltip>
     );
+
+    let profilePic = '';
+
+    const savePic = (pic) => {
+      profilePic = pic[0];
+    };
+
 
     const onSubmit = async (data) => {
       const updateRecord = {
@@ -114,6 +135,21 @@ class ViewProfile extends React.Component {
       sessionStorage.setItem('id_token', response.token);
 
       this.setState({showEdit: false});
+
+      console.log(profilePic);
+
+      const formData = new FormData();
+
+      formData.append('file.png', profilePic);
+
+      const profileOption = {
+        method: 'POST',
+        body: formData,
+        redirect: 'follow',
+      };
+
+      let profilePicture = await this.Auth.fetch('/api/v1/users/profile/pic', profileOption);
+      console.log(profilePicture);
 
       Swal.fire({
         icon: "success",
@@ -153,6 +189,14 @@ class ViewProfile extends React.Component {
                 <TextField name={'first_name'}/>
                 <TextField name={'last_name'}/>
                 <TextField name={'username'}/>
+                <Form style={{marginBottom: '1rem'}}>
+                  <Form.File
+                      id="custom-file"
+                      label="Upload Profile Picture"
+                      type="file"
+                      onChange={(e) => savePic(e.target.files)}
+                  />
+                </Form>
                 <SubmitField/>
               </AutoForm>
             </Modal.Body>
@@ -229,15 +273,20 @@ class ViewProfile extends React.Component {
                 <FontAwesomeIcon icon={faTrophy} style={{ marginRight: '0.5rem' }}/>
                 Badges
               </h4>
-              <OverlayTrigger
-                  placement="top"
-                  delay={{ show: 250, hide: 400 }}
-                  overlay={renderTooltip}
-              >
-                <Badge pill variant="primary" style={{ marginBottom: '5rem' }}>
-                  1st index!
-                </Badge>
-              </OverlayTrigger>
+              {this.state.badges.map((badge, key) => {
+                return (
+                    <OverlayTrigger
+                        key={key}
+                        placement="top"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={renderTooltip(badge)}
+                    >
+                      <Badge style={{ marginBottom: '5rem', backgroundColor: `${badge.color}` }}>
+                        {badge.name}
+                      </Badge>
+                    </OverlayTrigger>
+                )
+              })}
               <br/>
               <hr/>
               <Button onClick={() => this.setState({ showModal: true })}

@@ -48,6 +48,7 @@ class Login extends React.Component {
 
       if (!loginBody.message) {
         const options = {};
+        sessionStorage.setItem("id_token", loginBody);
         let profile = await this.Auth.fetch("/api/v1/users/profile", options);
         sessionStorage.setItem("role", profile.role);
         this.props.history.push("/landing/");
