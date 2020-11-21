@@ -4,7 +4,7 @@ import {
   Container,
   Tooltip,
   Button,
-  OverlayTrigger, Row, Col, Table, Badge, Modal, Spinner
+  OverlayTrigger, Row, Col, Table, Badge, Modal, Spinner, Form
 } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import AuthService from '../../api/AuthService';
@@ -30,6 +30,7 @@ class ViewProfile extends React.Component {
       loading: true,
       loggedIn: true,
       recordName: [],
+      profilePic: null,
     };
     this.Auth = new AuthService();
   }
@@ -37,6 +38,8 @@ class ViewProfile extends React.Component {
   async componentDidMount() {
     const token = this.Auth.getToken();
     if (token) {
+
+
       this.setState({ token: token });
       this.setState({ role: sessionStorage.getItem('role') });
       const options = {};
@@ -105,7 +108,16 @@ class ViewProfile extends React.Component {
         </Tooltip>
     );
 
+    let profilePic = '';
+
+    const savePic = (pic) => {
+      console.log(pic)
+      profilePic = pic[0];
+    };
+
+
     const onSubmit = async (data) => {
+      console.log('pic', profilePic, data)
       const updateRecord = {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -114,6 +126,21 @@ class ViewProfile extends React.Component {
       sessionStorage.setItem('id_token', response.token);
 
       this.setState({showEdit: false});
+
+      console.log(profilePic)
+
+      const formData = new FormData();
+
+      formData.append('file.png', profilePic);
+
+      const profileOption = {
+        method: 'POST',
+        body: formData,
+        redirect: 'follow',
+      };
+
+      let profilePicture = await this.Auth.fetch('/api/v1/users/profile/pic', profileOption);
+      console.log(profilePicture)
 
       Swal.fire({
         icon: "success",
@@ -153,6 +180,14 @@ class ViewProfile extends React.Component {
                 <TextField name={'first_name'}/>
                 <TextField name={'last_name'}/>
                 <TextField name={'username'}/>
+                <Form style={{marginBottom: '1rem'}}>
+                  <Form.File
+                      id="custom-file"
+                      label="Upload Profile Picture"
+                      type="file"
+                      onChange={(e) => savePic(e.target.files)}
+                  />
+                </Form>
                 <SubmitField/>
               </AutoForm>
             </Modal.Body>
