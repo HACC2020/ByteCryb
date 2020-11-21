@@ -18,7 +18,7 @@ INSERT INTO jobs (id, name, category_id, status, xml_id, num_indexed, size, poin
 INSERT INTO jobs (id, name, category_id, status, xml_id, num_indexed, size, points) VALUES (2, 'test2', 1, 1, 2, 0, 3, 5);
 
 INSERT INTO badges (id, name, score, description, color) VALUES (1, 'First Index', 1, 'Indexed first record', '#00ff00');
-INSERT INTO badges (id, name, score, description, color) VALUES (2, 'Baby Steps', 50, '50 Points', '87ceeb');
+INSERT INTO badges (id, name, score, description, color) VALUES (2, 'Baby Steps', 50, '50 Points', '#87ceeb');
 INSERT INTO badges (id, name, score, description, color) VALUES (3, 'Bronze', 100, '100 Points', '#cd7f32');
 INSERT INTO badges (id, name, score, description, color) VALUES (4, 'Copper', 200, '200 Points', '#b87333');
 INSERT INTO badges (id, name, score, description, color) VALUES (5, 'Gold', 1000, '1000 Points', '#ffd700');

@@ -109,6 +109,7 @@ public class ScoreController {
 			score.put("username", username);
 			score.put("user", userId);
 			score.put("score", dayScore);
+			score.put("picId", user.getPicId());
 			// add to result array of JSON objects
 			result.add(score);
 		}
@@ -141,6 +142,7 @@ public class ScoreController {
 			score.put("username", username);
 			score.put("user", userId);
 			score.put("score", monthScore);
+			score.put("picId", user.getPicId());
 			// add to result array of JSON objects
 			result.add(score);
 		}
@@ -173,6 +175,7 @@ public class ScoreController {
 			score.put("username", username);
 			score.put("user", userId);
 			score.put("score", monthScore);
+			score.put("picId", user.getPicId());
 			// add to result array of JSON objects
 			result.add(score);
 		}
@@ -202,6 +205,7 @@ public class ScoreController {
 			score.put("username", username);
 			score.put("user", userId);
 			score.put("score", monthScore);
+			score.put("picId", user.getPicId());
 			// add to result array of JSON objects
 			result.add(score);
 		}

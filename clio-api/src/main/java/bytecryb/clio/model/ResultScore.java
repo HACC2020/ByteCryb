@@ -1,5 +1,8 @@
 package bytecryb.clio.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class ResultScore {
 
 	private int rank;
@@ -9,6 +12,10 @@ public class ResultScore {
 	private String username;
 	
 	public int score;
+
+	@Getter
+	@Setter
+	public Long picId;
 
 	public ResultScore() {
 		super();
