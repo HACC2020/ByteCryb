@@ -4,11 +4,9 @@ import { withRouter } from 'react-router-dom';
 import {
   AutoForm,
   AutoField,
-  ErrorField,
   TextField,
   SelectField,
   SubmitField,
-  DateField
 } from 'uniforms-bootstrap4';
 
 import Ajv from 'ajv';

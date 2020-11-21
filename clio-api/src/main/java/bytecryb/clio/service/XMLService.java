@@ -42,8 +42,8 @@ public class XMLService {
             throw new FileException("Could not find file type");
         }
 
-        if (!fileType.equals("application/xml") || !fileType.equals("text/xml")) {
-            throw new UnsupportedFileException("File provided must be a PDF. Received Content-Type: " + fileType);
+        if (!fileType.equals("application/xml") && !fileType.equals("text/xml")) {
+            throw new UnsupportedFileException("File provided must be a XML. Received Content-Type: " + fileType);
         }
 
         Path dest = Paths.get((System.getProperty("user.dir") + "/data/xml/" + folder.toString()));
@@ -77,7 +77,7 @@ public class XMLService {
 
     public Resource downloadFileFromLocal(Long id) throws ResourceNotFoundException {
         XML result = this.xmlRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("PDF not found for ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("XML not found for ID: " + id));
         Path path = Paths.get(result.getPath());
         Resource resource = null;
         try {

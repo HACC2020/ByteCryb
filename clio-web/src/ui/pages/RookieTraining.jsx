@@ -1,18 +1,27 @@
 import React from "react";
-import { Container, Row, Col, Button, Accordion, Card } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Accordion,
+  Card,
+  Nav,
+} from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import {
   AutoForm,
   AutoField,
-  ErrorField,
+  ErrorsField,
   TextField,
   SelectField,
   SubmitField,
-  DateField,
 } from "uniforms-bootstrap4";
 import { bridge as schema } from "../../api/RookieTraining";
 import { Prompt } from "react-router";
 import { useEffect, isPrompt, shouldBlockNavigation } from "react";
+import Swal from "sweetalert2";
+import AuthService from "../../api/AuthService";
 
 class RookieTraining extends React.Component {
   constructor() {
@@ -20,15 +29,10 @@ class RookieTraining extends React.Component {
     this.state = {
       pageNum: 0,
     };
+    this.Auth = new AuthService();
   }
 
   render() {
-    window.addEventListener("beforeunload", (ev) => {
-      ev.preventDefault();
-      //put exit logic here
-      return (ev.returnValue = "Are you sure you want to close?");
-    });
-
     const onClickNext = () => {
       let num = this.state.pageNum;
       num++;
@@ -52,14 +56,53 @@ class RookieTraining extends React.Component {
             Upon completion of the guide, you'll be granted access to the rest
             of the site.
           </p>
-          <Button variant="primary" onClick={onClickNext}>
+          <Button style={{ backgroundColor: '#52B788', borderColor: '#52B788' }} onClick={onClickNext}>
             Press Next to Continue
           </Button>
         </Container>
       );
     }
 
-    console.log(this.state.pageNum);
+    // console.log(this.state.pageNum);
+
+    const onSubmit = async () => {
+      const options = {
+        method: "PUT",
+      };
+
+      const profile = await this.Auth.fetch("/api/v1/users/profile", {
+        method: "GET",
+      });
+
+      if (profile.role === "rookie") {
+        const user = await this.Auth.fetch(
+          "/api/v1/users/updateRole/indexer",
+          options
+        );
+        sessionStorage.setItem("role", "indexer");
+
+        console.log(user);
+      }
+
+      Swal.fire({
+        icon: "success",
+        title: "Submitted!",
+        text: "Navigating to landing page...",
+        timer: 1500,
+      });
+
+      setTimeout(() => {
+        this.props.history.push("/landing/");
+        this.props.history.go();
+      }, 1000);
+    };
+
+    const sticky = {
+      position: "-webkit-sticky",
+      position: "sticky",
+      top: "5.5rem",
+      alignSelf: "flex-start",
+    };
 
     return (
       <Container>
@@ -83,75 +126,34 @@ class RookieTraining extends React.Component {
         <Row>
           <Col xs={6}>
             <embed
+              style={sticky}
               src="./ChineseArrivals_1847-1870_00001.pdf"
               width="500rem"
               height="550rem"
             />
           </Col>
           <Col xs={5}>
-            <AutoForm schema={schema} onSubmit={console.log}>
+            <AutoForm schema={schema} onSubmit={() => onSubmit()}>
               <h4>Test Data</h4>
-              <AutoField name="name" />
-              <AutoField name="age" />
+              <AutoField name="name" help={"Only A-Z characters allowed"} />
+              <AutoField
+                name="age"
+                help={"Enter a number, or 'none' if no age shows"}
+              />
               <SelectField name="gender" allowedValues={["Male", "Female"]} />
-              <TextField name={"residence"} />
+              <TextField
+                name={"residence"}
+                help={"Only A-Z characters allowed"}
+              />
               <TextField name="dateOfArrival" placeholder={"01/23/1832"} />
-              {/*<DateField*/}
-              {/*    showInlineError*/}
-              {/*    name="dateOfArrival"*/}
-              {/*    max={new Date(1870, 1, 1)}*/}
-              {/*    min={new Date(1847, 1, 1)}/>*/}
-              <AutoField name="nameOfShip" />
-              <AutoField name="from" />
-
+              <AutoField
+                name="nameOfShip"
+                help={"Only A-Z characters allowed"}
+              />
+              <AutoField name="from" help={"Only A-Z characters allowed"} />
+              <ErrorsField />
               <SubmitField />
             </AutoForm>
-            {/*<Form>*/}
-            {/*  <Form.Row>*/}
-            {/*    <Form.Group as={Col} >*/}
-            {/*      <Form.Label>Name</Form.Label>*/}
-            {/*      <Form.Control placeholder="John Foo"/>*/}
-            {/*    </Form.Group>*/}
-
-            {/*    <Form.Group as={Col}>*/}
-            {/*      <Form.Label>Age</Form.Label>*/}
-            {/*      <Form.Control placeholder="12"/>*/}
-            {/*    </Form.Group>*/}
-            {/*  </Form.Row>*/}
-            {/*  <Form.Row>*/}
-            {/*    <Form.Group as={Col}>*/}
-            {/*      <Form.Label>Gender</Form.Label>*/}
-            {/*      <Form.Control as="select" defaultValue="Female">*/}
-            {/*        <option>Female</option>*/}
-            {/*        <option>Male</option>*/}
-            {/*      </Form.Control>*/}
-            {/*    </Form.Group>*/}
-            {/*  </Form.Row>*/}
-
-            {/*  <Form.Group>*/}
-            {/*    <Form.Label>Residence</Form.Label>*/}
-            {/*    <Form.Control placeholder="United States"/>*/}
-            {/*  </Form.Group>*/}
-
-            {/*  <Form.Group>*/}
-            {/*    <Form.Label>Date of Arrival</Form.Label>*/}
-            {/*    <Form.Control placeholder="August 23 1948"/>*/}
-            {/*  </Form.Group>*/}
-
-            {/*  <Form.Group>*/}
-            {/*    <Form.Label>Name of Ship</Form.Label>*/}
-            {/*    <Form.Control placeholder="Mayflower"/>*/}
-            {/*  </Form.Group>*/}
-
-            {/*  <Form.Group>*/}
-            {/*    <Form.Label>From</Form.Label>*/}
-            {/*    <Form.Control placeholder="New York"/>*/}
-            {/*  </Form.Group>*/}
-
-            {/*  <Button variant="primary" type="submit">*/}
-            {/*    Submit*/}
-            {/*  </Button>*/}
-            {/*</Form>*/}
           </Col>
         </Row>
       </Container>

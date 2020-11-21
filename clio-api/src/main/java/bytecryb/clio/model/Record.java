@@ -1,5 +1,7 @@
 package bytecryb.clio.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -51,6 +53,21 @@ public class Record {
     @Setter
     @Column(name = "approved", nullable = false)
     private boolean approved;
+
+    @Getter
+    @Setter
+    @Column(name = "submitted_by")
+    private Long submittedBy;
+
+    @Getter
+    @Setter
+    @Column(name = "submitted_on")
+    private Timestamp submittedOn;
+
+    @Getter
+    @Setter
+    @Column(name = "due")
+    private Timestamp due;
 
     @Getter
     @Setter
