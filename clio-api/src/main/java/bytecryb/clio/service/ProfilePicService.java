@@ -36,7 +36,7 @@ public class ProfilePicService {
                     "Only variants of .jpg plus .png are supported. Received Content-Type: " + fileType);
         }
 
-        Path dest = Paths.get((System.getProperty("user.dir") + "/data/profile_pic/"));
+        Path dest = Paths.get((System.getProperty("user.dir") + "/data/profile_pic"));
 
         if (!Files.exists(dest)) {
             Files.createDirectories(dest);
@@ -51,12 +51,7 @@ public class ProfilePicService {
         // Keep looking for the next avaliable filename with num
         while (path.toFile().exists()) {
             serialNum++;
-            System.out.println(fileName);
             String[] splitFileName = fileName.split("\\.");
-            for (String part : splitFileName) {
-                System.out.println("hello");
-                System.out.println(part.toString());
-            }
             if (splitFileName.length == 2) {
                 path = Paths.get(dest.toString() + "/" + splitFileName[0] + "(" + serialNum + ")." + splitFileName[1]);
             } else {

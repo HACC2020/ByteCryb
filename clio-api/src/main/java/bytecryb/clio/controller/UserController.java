@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -259,7 +260,13 @@ public class UserController {
 		// create CustomUser object to find role, scores, and badges
 		CustomUser currUser = this.userRepo.findByUsername(currUsername);
 
-		return ResponseEntity.ok(this.profilePicService.getProfilePicById(currUser.getPicId()));
+		Long picId = currUser.getPicId();
+
+		if (picId == null) {
+			throw new ResourceNotFoundException("You currently do not have porfile picture!");
+		}
+
+		return ResponseEntity.ok(this.profilePicService.getProfilePicById(picId));
 	}
 
 	@DeleteMapping("/users/profile/pic")
@@ -271,13 +278,19 @@ public class UserController {
 		// create CustomUser object to find role, scores, and badges
 		CustomUser currUser = this.userRepo.findByUsername(currUsername);
 
-		this.profilePicService.removeProfilePic(currUser.getPicId());
+		Long picId = currUser.getPicId();
+
+		if (picId == null) {
+			throw new ResourceNotFoundException("You currently do not have porfile picture!");
+		}
+
+		this.profilePicService.removeProfilePic(picId);
 
 		return ResponseEntity.ok(new String("Profile picture has been removed!"));
 	}
 
 	@PostMapping("/users/profile/pic")
-	public ResponseEntity<String> uploadPic(@RequestBody MultipartFile pic, HttpServletRequest request)
+	public ResponseEntity<String> uploadPic(@RequestParam("pic") MultipartFile pic, HttpServletRequest request)
 			throws Exception {
 		// get username
 		String jwtToken = extractJwtFromRequest(request);
@@ -285,6 +298,15 @@ public class UserController {
 
 		// create CustomUser object to find role, scores, and badges
 		CustomUser currUser = this.userRepo.findByUsername(currUsername);
+
+		Long picId = currUser.getPicId();
+
+		if (picId != null) {
+			try {
+				this.profilePicService.removeProfilePic(picId);
+			} catch (ResourceNotFoundException e) {
+			}
+		}
 
 		ProfilePic result = this.profilePicService.uploadProfilePic(pic);
 
